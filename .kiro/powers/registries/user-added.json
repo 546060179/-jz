@@ -1,0 +1,39 @@
+{
+  "powers": [
+    {
+      "name": "powers",
+      "description": "Custom power from https://github.com/kirodotdev/powers.git",
+      "source": {
+        "type": "repo",
+        "repositoryCloneUrl": "https://github.com/kirodotdev/powers.git",
+        "pathInRepo": "",
+        "repositoryBranch": "main"
+      },
+      "repositoryUrl": "https://github.com/kirodotdev/powers.git",
+      "autoInstall": false
+    },
+    {
+      "name": "figmatocode",
+      "description": "Custom power from https://github.com/bernaferrari/FigmaToCode.git",
+      "source": {
+        "type": "repo",
+        "repositoryCloneUrl": "https://github.com/bernaferrari/FigmaToCode.git",
+        "pathInRepo": "",
+        "repositoryBranch": "main"
+      },
+      "repositoryUrl": "https://github.com/bernaferrari/FigmaToCode.git",
+      "autoInstall": false
+    },
+    {
+      "name": "uidevelopmentkiropower",
+      "description": "Custom power from https://github.com/keyurgolani/UIDevelopmentKiroPower.git",
+      "source": {
+        "type": "repo",
+        "repositoryCloneUrl": "https://github.com/keyurgolani/UIDevelopmentKiroPower.git",
+        "pathInRepo": "",
+        "repositoryBranch": "main"
+      },
+      "repositoryUrl": "https://github.com/keyurgolani/UIDevelopmentKiroPower.git"
+    }
+  ]
+}

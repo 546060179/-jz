@@ -1,0 +1,32 @@
+{
+  "name": "fade-animation-library",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A lightweight cross-framework fade animation component library",
+  "scripts": {
+    "build": "pnpm --filter @fade-animation/core build && pnpm --filter @fade-animation/react --filter @fade-animation/vue build",
+    "test": "vitest --run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.4",
+    "@vitest/coverage-v8": "^2.1.0",
+    "@vue/compiler-sfc": "^3.5.30",
+    "fast-check": "^3.22.0",
+    "jsdom": "^29.0.1",
+    "tsup": "^8.5.1",
+    "typescript": "^5.3.0",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^2.1.0",
+    "vue": "^3.5.30"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  }
+}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fade Animation Library — Playground</title>
+<style>
+  :root {
+    --motion-t1: 100ms; --motion-t2: 150ms; --motion-t3: 300ms; --motion-t4: 500ms; --motion-t5: 700ms;
+    --motion-d1: 4px; --motion-d2: 8px; --motion-d3: 16px; --motion-d4: 32px; --motion-d5: 64px;
+    --motion-easing-productive: cubic-bezier(0.2, 0, 0.38, 0.9);
+    --motion-easing-expressive: cubic-bezier(0.4, 0.14, 0.3, 1);
+    --motion-easing-enter: cubic-bezier(0, 0, 0.3, 1);
+    --motion-easing-exit: cubic-bezier(0.4, 0, 1, 1);
+    --motion-easing-linear: linear;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #e0e0e0; padding: 32px; }
+  h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; color: #fff; }
+  .subtitle { color: #888; margin-bottom: 40px; font-size: 14px; }
+  h2 { font-size: 18px; font-weight: 500; margin: 32px 0 16px; color: #ccc; border-bottom: 1px solid #222; padding-bottom: 8px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .card {
+    background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 12px; padding: 24px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: #4a4a6e; }
+  .card .box {
+    width: 64px; height: 64px; border-radius: 8px; background: linear-gradient(135deg, #667eea, #764ba2);
+  }
+  .card .label { font-size: 13px; font-weight: 500; color: #aaa; }
+  .card .meta { font-size: 11px; color: #666; }
+</style>
+</head>
+<body>
+
+<h1>🎬 Fade Animation Library</h1>
+<p class="subtitle">点击卡片预览动效 · Motion Design Tokens Playground</p>
+
+<h2>Effect Presets</h2>
+<div class="grid" id="effects-grid"></div>
+
+<h2>Timing Scales</h2>
+<div class="grid" id="timing-grid"></div>
+
+<h2>Easing Curves</h2>
+<div class="grid" id="easing-grid"></div>
+
+<h2>Motion Intent</h2>
+<div class="grid" id="intent-grid"></div>
+
+<h2>Stagger Choreography</h2>
+<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+  <button class="stagger-btn" data-dir="forward">Forward →</button>
+  <button class="stagger-btn" data-dir="reverse">Reverse ←</button>
+  <button class="stagger-btn" data-dir="center">Center ↔</button>
+</div>
+<div id="stagger-row" style="display:flex;gap:12px;"></div>
+
+<script>
+// ============ Data ============
+const EFFECTS = [
+  { name: 'fade-in', label: '淡入', effects: [{ type: 'fade', from: 0, to: 1 }] },
+  { name: 'fade-out', label: '淡出', effects: [{ type: 'fade', from: 1, to: 0 }] },
+  { name: 'scale-fade-in', label: '缩放淡入', effects: [{ type: 'fade', from: 0, to: 1 }, { type: 'scale', from: 0.95, to: 1 }] },
+  { name: 'scale-fade-out', label: '缩放淡出', effects: [{ type: 'fade', from: 1, to: 0 }, { type: 'scale', from: 1, to: 0.95 }] },
+  { name: 'slide-up-in', label: '上滑淡入', effects: [{ type: 'fade', from: 0, to: 1 }, { type: 'slide', dir: 'up', dist: 16 }] },
+  { name: 'slide-down-out', label: '下滑淡出', effects: [{ type: 'fade', from: 1, to: 0 }, { type: 'slide', dir: 'down', dist: 16 }] },
+  { name: 'slide-left-in', label: '左滑淡入', effects: [{ type: 'fade', from: 0, to: 1 }, { type: 'slide', dir: 'left', dist: 16 }] },
+  { name: 'slide-right-in', label: '右滑淡入', effects: [{ type: 'fade', from: 0, to: 1 }, { type: 'slide', dir: 'right', dist: 16 }] },
+];
+
+const TIMINGS = [
+  { token: 't1', alias: 'extra-fast', ms: 100, use: '微交互' },
+  { token: 't2', alias: 'fast', ms: 150, use: 'tooltip' },
+  { token: 't3', alias: 'normal', ms: 300, use: '卡片' },
+  { token: 't4', alias: 'slow', ms: 500, use: '页面切换' },
+  { token: 't5', alias: 'extra-slow', ms: 700, use: '全屏过渡' },
+];
+
+const EASINGS = [
+  { name: 'productive', css: 'cubic-bezier(0.2, 0, 0.38, 0.9)', desc: '功能性' },
+  { name: 'expressive', css: 'cubic-bezier(0.4, 0.14, 0.3, 1)', desc: '表现性' },
+  { name: 'enter', css: 'cubic-bezier(0, 0, 0.3, 1)', desc: '进入' },
+  { name: 'exit', css: 'cubic-bezier(0.4, 0, 1, 1)', desc: '离开' },
+  { name: 'linear', css: 'linear', desc: '匀速' },
+];
+
+const INTENTS = [
+  { name: 'enter', timing: 't3', easing: 'enter', desc: '元素进入' },
+  { name: 'exit', timing: 't2', easing: 'exit', desc: '元素离开' },
+  { name: 'focus', timing: 't2', easing: 'expressive', desc: '吸引注意' },
+  { name: 'feedback', timing: 't1', easing: 'productive', desc: '操作反馈' },
+  { name: 'delight', timing: 't4', easing: 'expressive', desc: '品牌个性' },
+];
+
+// ============ Helpers ============
+function applyEffects(box, effects, duration, easing) {
+  // Reset to "from" state
+  let fromStyles = { opacity: 1, transform: '' };
+  let toStyles = { opacity: 1, transform: '' };
+  let transforms_from = [], transforms_to = [];
+
+  effects.forEach(e => {
+    if (e.type === 'fade') {
+      fromStyles.opacity = e.from;
+      toStyles.opacity = e.to;
+    } else if (e.type === 'scale') {
+      transforms_from.push(`scale(${e.from})`);
+      transforms_to.push(`scale(${e.to})`);
+    } else if (e.type === 'slide') {
+      const d = e.dist || 16;
+      if (e.dir === 'up') { transforms_from.push(`translateY(${d}px)`); }
+      else if (e.dir === 'down') { transforms_from.push(`translateY(${-d}px)`); }
+      else if (e.dir === 'left') { transforms_from.push(`translateX(${d}px)`); }
+      else if (e.dir === 'right') { transforms_from.push(`translateX(${-d}px)`); }
+      transforms_to.push('translateX(0) translateY(0)');
+    }
+  });
+
+  fromStyles.transform = transforms_from.join(' ') || 'none';
+  toStyles.transform = transforms_to.join(' ') || 'none';
+
+  box.style.transition = 'none';
+  box.style.opacity = fromStyles.opacity;
+  box.style.transform = fromStyles.transform;
+
+  requestAnimationFrame(() => {
+    box.style.transition = `all ${duration}ms ${easing}`;
+    box.style.opacity = toStyles.opacity;
+    box.style.transform = toStyles.transform;
+  });
+}

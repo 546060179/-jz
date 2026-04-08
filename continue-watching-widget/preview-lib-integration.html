@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1">
+<title>动效库集成验证 — BubbleExpand</title>
+<style>
+  body { margin: 0; background: #1a1a2e; color: #fff; font-family: system-ui; padding: 40px 20px; }
+  h2 { font-size: 16px; color: #888; margin: 24px 0 12px; }
+  .demo-row { display: flex; gap: 24px; align-items: center; margin: 16px 0; }
+  button { padding: 8px 16px; background: #333; color: #fff; border: 1px solid #555; border-radius: 6px; cursor: pointer; }
+  button:hover { background: #444; }
+  .label { font-size: 12px; color: #666; margin-top: 4px; }
+
+  /* 气泡样式 */
+  .bubble {
+    display: inline-flex; align-items: center;
+    height: 28px; border-radius: 8px;
+    background: linear-gradient(90deg, #FFD1C4, #FFD75F);
+    overflow: hidden; white-space: nowrap; position: relative;
+    opacity: 0;
+  }
+  .bubble-text {
+    color: #62241B; font-size: 10px; font-weight: 500;
+    padding: 6px 8px; opacity: 0; transform: translateX(8px);
+    will-change: opacity, transform;
+  }
+  .arrow {
+    position: absolute; top: 50%; transform: translateY(-50%); right: -8px;
+    width: 0; height: 0; opacity: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 9px solid #FFD65A;
+  }
+</style>
+</head>
+<body>
+
+<h1 style="font-size: 20px;">🔬 动效库集成验证</h1>
+<p style="color: #888; font-size: 13px;">对比手写动画 vs 使用 @fade-animation/core 库</p>
+
+<h2>BubbleExpand — 手写 Spring Bounce</h2>
+<div class="demo-row">
+  <button onclick="playOriginal()">播放</button>
+  <button onclick="resetOriginal()">重置</button>
+</div>
+<div style="position:relative;height:40px;margin:8px 0;">
+  <div id="bubble1" class="bubble" style="width:28px;">
+    <span id="text1" class="bubble-text">限时特惠 立即领取</span>
+    <div id="arrow1" class="arrow"></div>
+  </div>
+</div>
+<div class="label">手写 easeOutBounceBack (40行代码) + rAF 循环 + 手写 cubic-bezier 求解器</div>
+
+<h2>BubbleExpand — 使用库的 Spring 求解器</h2>
+<div class="demo-row">
+  <button onclick="playLib()">播放</button>
+  <button onclick="resetLib()">重置</button>
+</div>
+<div style="position:relative;height:40px;margin:8px 0;">
+  <div id="bubble2" class="bubble" style="width:28px;">
+    <span id="text2" class="bubble-text">限时特惠 立即领取</span>
+    <div id="arrow2" class="arrow"></div>
+  </div>
+</div>
+<div class="label">库的 createSpring(SPRING_PRESETS.bouncy) + EASING_CURVES.enter (0行自定义代码)</div>
+
+<h2>同时播放对比</h2>
+<div class="demo-row">
+  <button onclick="playOriginal();playLib();">同时播放</button>
+  <button onclick="resetOriginal();resetLib();">同时重置</button>
+</div>
+
+<script>
+// ============ 原版：手写 spring bounce ============
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function easeOutBounceBack(t) {
+  if (t < 0.65) { const p = t / 0.65; return (1 - Math.pow(1 - p, 3)) * 1.12; }
+  else if (t < 0.85) { const p = (t - 0.65) / 0.2; return lerp(1.12, 0.97, 1 - Math.pow(1 - p, 2)); }
+  else { const p = (t - 0.85) / 0.15; return lerp(0.97, 1.0, 1 - Math.pow(1 - p, 2)); }
+}
+
+function cubicBezierAt(t, p1x, p1y, p2x, p2y) {
+  const cx = 3*p1x, bx = 3*(p2x-p1x)-cx, ax = 1-cx-bx;
+  const cy = 3*p1y, by = 3*(p2y-p1y)-cy, ay = 1-cy-by;
+  const sX = tt => ((ax*tt+bx)*tt+cx)*tt;
+  const sY = tt => ((ay*tt+by)*tt+cy)*tt;
+  const dX = tt => (3*ax*tt+2*bx)*tt+cx;
+  let x = t;
+  for (let i = 0; i < 8; i++) { const err = sX(x)-t; if (Math.abs(err)<1e-6) break; const d = dX(x); if (Math.abs(d)<1e-6) break; x -= err/d; }
+  return sY(x);
+}
+
+const TARGET_W = 145;
+const COLLAPSED = 28;
+let raf1 = 0;
+
+function playOriginal() {
+  const el = document.getElementById('bubble1');
+  const text = document.getElementById('text1');
+  const arrow = document.getElementById('arrow1');
+  el.style.opacity = '1'; el.style.width = COLLAPSED + 'px';
+  text.style.opacity = '0'; text.style.transform = 'translateX(8px)'; text.style.transition = 'none';
+  arrow.style.opacity = '0'; arrow.style.transition = 'none';
+
+  let start = 0;
+  function expandTick(now) {
+    if (!start) start = now;
+    const t = Math.min((now - start) / 650, 1);
+    const e = easeOutBounceBack(t);
+    el.style.width = Math.max(COLLAPSED, lerp(COLLAPSED, TARGET_W, e)) + 'px';
+    if (t < 1) { raf1 = requestAnimationFrame(expandTick); }
+    else {
+      el.style.width = TARGET_W + 'px';
+      // text fade with hand-written cubic-bezier
+      text.style.transition = 'opacity 300ms cubic-bezier(0,0,0.3,1), transform 300ms cubic-bezier(0,0,0.3,1)';
+      arrow.style.transition = 'opacity 300ms cubic-bezier(0,0,0.3,1)';
+      requestAnimationFrame(() => { text.style.opacity = '1'; text.style.transform = 'translateX(0)'; arrow.style.opacity = '1'; });
+    }
+  }
+  raf1 = requestAnimationFrame(expandTick);
+}
+
+function resetOriginal() {
+  cancelAnimationFrame(raf1);
+  const el = document.getElementById('bubble1');
+  const text = document.getElementById('text1');
+  const arrow = document.getElementById('arrow1');
+  el.style.width = COLLAPSED + 'px'; el.style.opacity = '0';
+  text.style.opacity = '0'; text.style.transform = 'translateX(8px)'; text.style.transition = 'none';
+  arrow.style.opacity = '0'; arrow.style.transition = 'none';
+}
+
+// ============ 库版：使用 spring 求解器 ============
+// 内联 spring 求解器（模拟 @fade-animation/core 的 createSpring）
+function createSpring(config) {
+  const { stiffness = 100, damping = 10, mass = 1, velocity: iv = 0, restThreshold = 0.001 } = config;
+  let pos = 0, vel = iv;
+  return {
+    step(dt) {
+      const disp = pos - 1;
+      const sf = -stiffness * disp;
+      const df = -damping * vel;
+      vel += (sf + df) / mass * dt;
+      pos += vel * dt;
+      const atRest = Math.abs(vel) < restThreshold && Math.abs(pos - 1) < restThreshold;
+      if (atRest) { pos = 1; vel = 0; }
+      return { position: pos, velocity: vel, atRest };
+    },
+    reset() { pos = 0; vel = iv; }
+  };
+}
+
+const BOUNCY = { stiffness: 200, damping: 10, mass: 1 };
+let raf2 = 0;
+
+function playLib() {
+  const el = document.getElementById('bubble2');
+  const text = document.getElementById('text2');
+  const arrow = document.getElementById('arrow2');
+  el.style.opacity = '1'; el.style.width = COLLAPSED + 'px';
+  text.style.opacity = '0'; text.style.transform = 'translateX(8px)'; text.style.transition = 'none';
+  arrow.style.opacity = '0'; arrow.style.transition = 'none';
+
+  const spring = createSpring(BOUNCY);
+  const dt = 1/60;
+
+  function expandTick() {
+    const state = spring.step(dt);
+    const w = Math.max(COLLAPSED, COLLAPSED + (TARGET_W - COLLAPSED) * state.position);
+    el.style.width = w + 'px';
+
+    // 展开到 85% 时提前开始文字淡入
+    if (state.position > 0.85 && text.style.opacity === '0') {
+      const easing = 'cubic-bezier(0, 0, 0.3, 1)';
+      text.style.transition = `opacity 300ms ${easing}, transform 300ms ${easing}`;
+      arrow.style.transition = `opacity 300ms ${easing}`;
+      requestAnimationFrame(() => { text.style.opacity = '1'; text.style.transform = 'translateX(0)'; arrow.style.opacity = '1'; });
+    }
+
+    if (!state.atRest) { raf2 = requestAnimationFrame(expandTick); }
+    else {
+      el.style.width = TARGET_W + 'px';
+    }
+  }
+  raf2 = requestAnimationFrame(expandTick);
+}
+
+function resetLib() {
+  cancelAnimationFrame(raf2);
+  const el = document.getElementById('bubble2');
+  const text = document.getElementById('text2');
+  const arrow = document.getElementById('arrow2');
+  el.style.width = COLLAPSED + 'px'; el.style.opacity = '0';
+  text.style.opacity = '0'; text.style.transform = 'translateX(8px)'; text.style.transition = 'none';
+  arrow.style.opacity = '0'; arrow.style.transition = 'none';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0">
+<title>Notification Reward Popup - Spring Animation</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  width: 375px;
+  height: 812px;
+  overflow: hidden;
+  font-family: Rubik, -apple-system, sans-serif;
+  background: #1D1F1F;
+  position: relative;
+}
+
+/* ── 背景模拟 (BingeUp 首页) ── */
+.bg-home {
+  position: absolute;
+  inset: 0;
+  background: #1D1F1F;
+}
+
+/* ── Mask60 遮罩层 ── */
+.mask-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 10;
+  /* 由动效库控制 */
+  opacity: 0;
+}
+
+/* ── 弹窗容器 ── */
+/* Figma: layout_通知自定义弹窗_奖励_child, x:48, y:251, w:279, radius 20 */
+.popup-wrapper {
+  position: absolute;
+  top: 251px;
+  left: 48px;
+  width: 279px;
+  z-index: 20;
+  overflow: visible; /* 让 header 装饰溢出 */
+  border-radius: 20px;
+  /* 弹簧动效初始状态 */
+  opacity: 0;
+  transform: scale(0.3) translateY(40px);
+  transform-origin: center center;
+}
+
+/* ── 弹窗顶部装饰区 ── */
+/* Figma: pic_Receiveaward_popup, 279×160, mode=none (absolute children) */
+.popup-header {
+  position: relative;
+  width: 279px;
+  height: 160px;
+  overflow: visible; /* 让礼盒溢出到弹窗上方 */
+}
+
+/* 底部背景矩形 bg_rect (第一层) */
+/* Figma: x:0, y:72, 279×88, fill #232525, radius 20 20 0 0 */
+.popup-header-bg {
+  position: absolute;
+  left: 0;
+  top: 72px;
+  width: 279px;
+  height: 88px;
+  background: #232525;
+  border-radius: 20px 20px 0 0;
+}
+
+/* 发光椭圆 bg_circle */
+/* Figma: x:44.08, y:54.49, 190.83×44.48, gradient fill, blur(70px) */
+.popup-glow {
+  position: absolute;
+  left: 44.08px;
+  top: 54.49px;
+  width: 190.83px;
+  height: 44.48px;
+  border-radius: 50%;
+  background: linear-gradient(178deg, rgba(68,255,146,1) 0%, rgba(152,234,255,1) 86%);
+  filter: blur(70px);
+  pointer-events: none;
+}
+
+/* 渐变叠加层 bg_rect (第二层) - 使用 Figma 切图 */
+/* Figma: x:0, y:72, 279×88 */
+.popup-header-overlay {
+  position: absolute;
+  left: 0;
+  top: 72px;
+  width: 279px;
+  height: 88px;
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+}
+.popup-header-overlay img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+/* 礼盒图片 image 2427 */
+/* Figma: x:62.26, y:4, 133×140, scaleMode STRETCH + crop */
+.popup-trophy {
+  position: absolute;
+  left: 62.26px;
+  top: 4px;
+  width: 133px;
+  height: 140px;
+  object-fit: fill;
+  z-index: 2;
+  /* 弹簧动效初始状态 */
+  opacity: 0;
+  transform: scale(0) rotate(-8deg);
+}
+
+/* 金币图片 image 2426 */
+/* Figma: x:149.26, y:72, 80×80, scaleMode STRETCH + crop */
+.popup-coins {
+  position: absolute;
+  left: 149.26px;
+  top: 72px;
+  width: 80px;
+  height: 80px;
+  object-fit: fill;
+  z-index: 3;
+  opacity: 0;
+  transform: scale(0) translateY(10px);
+}
+
+/* 大星星 icon_unnamed_25 */
+/* Figma: x:55.69, y:20.24, 16.53×25.32, fill #FFF6D9, glow shadows */
+.popup-star-big {
+  position: absolute;
+  left: 55.69px;
+  top: 20.24px;
+  width: 16.53px;
+  height: 25.32px;
+  z-index: 4;
+}
+
+/* 小星星 icon_unnamed_6 */
+/* Figma: x:39.34, y:58.2, 6×6.19, fill #FFF6D9, glow shadows */
+.popup-star-small {
+  position: absolute;
+  left: 39.34px;
+  top: 58.2px;
+  width: 6px;
+  height: 6.19px;
+  z-index: 4;
+}
+
+/* ── 弹窗内容区 ── */
+.popup-body {
+  background: #232525;
+  border-radius: 0 0 20px 20px;
+  padding: 8px;
+}
+
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.popup-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 0 8px;
+}
+
+.popup-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #FFFFFF;
+  text-transform: capitalize;
+  text-align: center;
+}
+
+.popup-desc {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+  color: #C4C7D6;
+  text-align: center;
+}
+
+/* ── 按钮区 ── */
+.popup-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-later {
+  flex: 1;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #3B3F3F;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-family: Rubik, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.72);
+}
+
+.btn-receive {
+  flex: 1;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #9AEF5E;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  font-family: Rubik, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #141621;
+}
+
+.btn-receive:active { transform: scale(0.96); }
+.btn-later:active { transform: scale(0.96); }
+
+/* ── 控制面板 ── */
+.controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  gap: 8px;
+}
+.controls button {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #9AEF5E;
+  background: rgba(154,239,94,0.1);
+  color: #9AEF5E;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: Rubik, sans-serif;
+}
+.controls button:hover { background: rgba(154,239,94,0.2); }
+
+/* ── Spring 预设选择器 ── */
+.preset-selector {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 360px;
+}
+.preset-btn {
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid #555;
+  background: rgba(255,255,255,0.05);
+  color: #aaa;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: Rubik, sans-serif;
+  transition: all 0.2s;
+}
+.preset-btn.active {
+  border-color: #9AEF5E;
+  color: #9AEF5E;
+  background: rgba(154,239,94,0.15);
+}
+</style>
+</head>
+<body>
+
+<!-- 背景 -->
+<div class="bg-home"></div>
+
+<!-- 遮罩 -->
+<div class="mask-overlay" id="mask"></div>
+
+<!-- 弹窗 -->
+<div class="popup-wrapper" id="popup">
+  <!-- 顶部装饰 -->
+  <div class="popup-header">
+    <div class="popup-header-bg"></div>
+    <div class="popup-glow"></div>
+    <div class="popup-header-overlay"><img src="assets/popup-header-overlay.png" alt=""></div>
+    <img class="popup-trophy" id="trophy" src="assets/popup-trophy-526559.png" alt="">
+    <img class="popup-coins" id="coins" src="assets/popup-coins-622987.png" alt="">
+    <img class="popup-star-big" id="starBig" src="assets/popup-star-big.svg" alt="">
+    <img class="popup-star-small" id="starSmall" src="assets/popup-star-small.svg" alt="">
+  </div>
+  <!-- 内容 -->
+  <div class="popup-body">
+    <div class="popup-content">
+      <div class="popup-text">
+        <div class="popup-title">Receive xX award</div>
+        <div class="popup-desc">Turn on notification permission to get reward notifications.</div>
+      </div>
+      <div class="popup-buttons">
+        <button class="btn-later" id="btnLater">Later</button>
+        <button class="btn-receive" id="btnReceive">Receive</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Spring 预设选择 -->
+<div class="preset-selector" id="presetSelector">
+  <button class="preset-btn active" data-preset="bouncy">bouncy</button>
+  <button class="preset-btn" data-preset="gentle">gentle</button>
+  <button class="preset-btn" data-preset="snappy">snappy</button>
+  <button class="preset-btn" data-preset="slow">slow</button>
+  <button class="preset-btn" data-preset="noWobble">noWobble</button>
+  <button class="preset-btn" data-preset="custom">custom(350,12)</button>
+</div>
+
+<!-- 控制按钮 -->
+<div class="controls">
+  <button id="btnShow">Show Popup</button>
+  <button id="btnHide">Dismiss</button>
+  <button id="btnReplay">Replay</button>
+</div>
+
+<script type="module">
+/**
+ * 使用动效组件库的 Spring 物理引擎驱动弹窗弹簧动画
+ *
+ * 从 @fade-animation/core 导入 createSpring + SPRING_PRESETS
+ * 这里内联了 spring 求解器（与库中 spring.ts 完全一致），
+ * 方便 HTML 预览直接运行。
+ */
+
+// ── Spring 物理引擎（与 packages/core/src/spring.ts 一致）──
+const SPRING_PRESETS = {
+  gentle:   { stiffness: 120, damping: 14, mass: 1 },
+  snappy:   { stiffness: 300, damping: 20, mass: 1 },
+  bouncy:   { stiffness: 200, damping: 10, mass: 1 },
+  slow:     { stiffness: 80,  damping: 12, mass: 1.5 },
+  noWobble: { stiffness: 170, damping: 26, mass: 1 },
+  // 自定义：更强弹跳，适合弹窗出场
+  custom:   { stiffness: 350, damping: 12, mass: 1 },
+};
+
+function createSpring(config = {}) {
+  const {
+    stiffness = 100, damping = 10, mass = 1,
+    velocity: initV = 0, restThreshold = 0.001,
+  } = config;
+  let position = 0, velocity = initV;
+  return {
+    step(dt) {
+      const target = 1;
+      const springForce = -stiffness * (position - target);
+      const dampingForce = -damping * velocity;
+      velocity += ((springForce + dampingForce) / mass) * dt;
+      position += velocity * dt;
+      const atRest = Math.abs(velocity) < restThreshold && Math.abs(position - target) < restThreshold;
+      if (atRest) { position = target; velocity = 0; }
+      return { position, velocity, atRest };
+    },
+    reset() { position = 0; velocity = initV; },
+    current() {
+      const target = 1;
+      return { position, velocity, atRest: Math.abs(velocity) < restThreshold && Math.abs(position - target) < restThreshold };
+    },
+  };
+}
+
+// ── DOM ──
+const mask    = document.getElementById('mask');
+const popup   = document.getElementById('popup');
+const trophy  = document.getElementById('trophy');
+const coins   = document.getElementById('coins');
+
+let currentPreset = 'bouncy';
+let isVisible = false;
+let rafId = null;
+
+// ── 弹簧驱动弹窗出现（只有礼盒和金币有独立动效）──
+function showPopup() {
+  if (isVisible) return;
+  isVisible = true;
+  cancelAnimationFrame(rafId);
+
+  const config = SPRING_PRESETS[currentPreset];
+  const popupSpring = createSpring(config);
+  const maskSpring  = createSpring(SPRING_PRESETS.noWobble);
+
+  // 礼盒和金币的延迟弹簧
+  const trophySpring = createSpring({ ...config, stiffness: config.stiffness * 0.8 });
+  const coinsSpring  = createSpring({ ...config, stiffness: config.stiffness * 0.7 });
+
+  let trophyDelay = 6;  // ~100ms
+  let coinsDelay  = 10; // ~167ms
+  let frame = 0;
+  const dt = 1 / 60;
+
+  function animate() {
+    frame++;
+
+    // 遮罩淡入（无弹跳）
+    const ms = maskSpring.step(dt);
+    mask.style.opacity = ms.position;
+
+    // 弹窗弹簧
+    const ps = popupSpring.step(dt);
+    const scale = 0.3 + 0.7 * ps.position;
+    const ty = 40 * (1 - ps.position);
+    popup.style.opacity = Math.min(1, ps.position * 2);
+    popup.style.transform = `scale(${scale}) translateY(${ty}px)`;
+
+    // 礼盒弹簧（延迟）
+    if (frame > trophyDelay) {
+      const ts = trophySpring.step(dt);
+      const tRot = -8 * (1 - ts.position);
+      trophy.style.opacity = Math.min(1, ts.position * 2.5);
+      trophy.style.transform = `scale(${ts.position}) rotate(${tRot}deg)`;
+    }
+
+    // 金币弹簧（延迟）
+    if (frame > coinsDelay) {
+      const cs = coinsSpring.step(dt);
+      coins.style.opacity = Math.min(1, cs.position * 2.5);
+      coins.style.transform = `scale(${cs.position}) translateY(${10 * (1 - cs.position)}px)`;
+    }
+
+    const allRest = ps.atRest && ms.atRest
+      && (frame <= trophyDelay || trophySpring.current().atRest)
+      && (frame <= coinsDelay || coinsSpring.current().atRest);
+
+    if (!allRest) {
+      rafId = requestAnimationFrame(animate);
+    }
+  }
+
+  rafId = requestAnimationFrame(animate);
+}
+
+// ── 弹簧驱动弹窗消失 ──
+function hidePopup() {
+  if (!isVisible) return;
+  isVisible = false;
+  cancelAnimationFrame(rafId);
+
+  // 退出用快速 ease-out，不需要弹簧
+  const duration = 250;
+  const start = performance.now();
+
+  function animateOut(now) {
+    const t = Math.min(1, (now - start) / duration);
+    const ease = 1 - Math.pow(1 - t, 3); // ease-out cubic
+
+    mask.style.opacity = 1 - ease;
+    popup.style.opacity = 1 - ease;
+    popup.style.transform = `scale(${1 - 0.15 * ease}) translateY(${20 * ease}px)`;
+    trophy.style.opacity = 1 - ease;
+    coins.style.opacity = 1 - ease;
+
+    if (t < 1) {
+      rafId = requestAnimationFrame(animateOut);
+    } else {
+      resetState();
+    }
+  }
+
+  rafId = requestAnimationFrame(animateOut);
+}
+
+function resetState() {
+  mask.style.opacity = '0';
+  popup.style.opacity = '0';
+  popup.style.transform = 'scale(0.3) translateY(40px)';
+  trophy.style.opacity = '0';
+  trophy.style.transform = 'scale(0) rotate(-8deg)';
+  coins.style.opacity = '0';
+  coins.style.transform = 'scale(0) translateY(10px)';
+}
+
+// ── 控制按钮 ──
+document.getElementById('btnShow').addEventListener('click', showPopup);
+document.getElementById('btnHide').addEventListener('click', hidePopup);
+document.getElementById('btnLater').addEventListener('click', hidePopup);
+document.getElementById('btnReceive').addEventListener('click', hidePopup);
+document.getElementById('btnReplay').addEventListener('click', () => {
+  cancelAnimationFrame(rafId);
+  isVisible = false;
+  resetState();
+  setTimeout(showPopup, 100);
+});
+
+// ── 预设切换 ──
+document.getElementById('presetSelector').addEventListener('click', (e) => {
+  const btn = e.target.closest('.preset-btn');
+  if (!btn) return;
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentPreset = btn.dataset.preset;
+  // 自动 replay
+  cancelAnimationFrame(rafId);
+  isVisible = false;
+  resetState();
+  setTimeout(showPopup, 100);
+});
+
+// ── 自动播放 ──
+setTimeout(showPopup, 500);
+</script>
+</body>
+</html>

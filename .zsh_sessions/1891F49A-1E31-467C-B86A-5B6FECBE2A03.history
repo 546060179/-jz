@@ -1,0 +1,211 @@
+touch ~/Desktop/test.html
+open continue-watching-widget/preview-vipcard.html\
+
+open continue-watching-widget/preview-vipcard.html\
+
+python3 -m http.server 8765
+npx serve -p 8765 .
+# 1. å®ƒ©è£ƒ¥ Xcode Command Line Tools (iOS)\
+xcode-select --install\
+\
+# 2. å®ƒ©è£ƒ¥ JDK 17 (Android) â€ƒ´ çƒ´¨ Homebrew\
+brew install openjdk@17\
+sudo ln -sfn $(brew --prefix openjdk@17)/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk\
+
+open continue-watching.html
+wc -l continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+zip -r ~/Desktop/continue-watching-demo.zip continue-watching.html assets/
+open continue-watching.html
+rm -f ~/Desktop/continue-watching-demo.zip
+zip -r ~/Desktop/continue-watching-demo.zip continue-watching.html assets/
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+rm -f ~/Desktop/continue-watching-demo.zip
+zip -r ~/Desktop/continue-watching-demo.zip continue-watching.html assets/
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+open continue-watching.html
+rm -f ~/Desktop/continue-watching-demo.zip
+zip -r ~/Desktop/continue-watching-demo.zip continue-watching.html assets/
+rm -f ~/Desktop/continue-watching-demo.zip
+zip -r ~/Desktop/continue-watching-demo.zip continue-watching.html assets/
+mkdir -p ~/continue-watching-widget
+cd "/Users/ju/continue-watching-widget" && npm install
+cd "/Users/ju/continue-watching-widget" && npx tsup
+wc -l continue-watching.html
+wc -l ~/continue-watching.html
+open ~/continue-watching.html
+open ~/continue-watching.html
+which pnpm
+npm install -g pnpm
+npx corepack enable pnpm
+npx pnpm --version
+npx --yes pnpm --version
+npx --yes pnpm install
+npx --yes pnpm exec vitest --run 2>&1
+npx --yes pnpm add -Dw jsdom
+npx --yes pnpm exec vitest --run 2>&1
+pwd
+ls -la /Users/ju/packages/
+ls -la /Users/ju/pnpm-workspace.yaml /Users/ju/vitest.config.ts /Users/ju/package.json /Users/ju/tsconfig.json
+ls packages/core/src/setup.test.ts
+ls packages/core/src/setup.test.ts
+ls -la pnpm-workspace.yaml vitest.config.ts package.json
+ls -la /Users/ju/.kiro/specs/fade-animation-library/
+ls node_modules/.pnpm
+npx --yes pnpm install
+ls node_modules/.pnpm | head -20
+ls -la /Users/ju/node_modules/
+/Users/ju/node_modules/.bin/vitest --run
+find /Users/ju/packages -name "*.test.ts" 2>/dev/null
+/Users/ju/node_modules/.bin/vitest --run --config /Users/ju/vitest.config.ts
+npx vitest --run packages/core/src/resolveConfig.test.ts 2>&1
+cd "/Users/ju/packages/core" && npx vitest --run src/resolveConfig.test.ts
+npx vitest run --reporter=verbose packages/core
+npx vitest --run --passWithNoTests 2>&1 | tail -20
+npx tsc --noEmit --project packages/react/tsconfig.json 2>&1
+cd "/Users/ju/packages/react" && npx tsc --noEmit
+npx vitest --run 2>&1
+npx vitest run --reporter=verbose 2>&1
+ls node_modules/@vitejs/plugin-vue 2>/dev/null || echo "NOT INSTALLED"
+pnpm add -Dw @vitejs/plugin-vue @vue/compiler-sfc
+which npm
+export PATH="/usr/local/bin:$PATH" && npm install --save-dev @vitejs/plugin-vue @vue/compiler-sfc
+find /usr/local -name "pnpm" -type f 2>/dev/null
+export PATH="$HOME/.local/share/pnpm:$HOME/.local/state/pnpm:$PATH" && which pnpm 2>/dev/null || npx pnpm --version
+npx pnpm add -Dw @vitejs/plugin-vue @vue/compiler-sfc
+npx vitest --run 2>&1
+npx vitest --version 2>&1
+npx pnpm add -Dw @vitejs/plugin-vue@5
+npx vitest --run 2>&1
+npx vitest --run 2>&1
+npx vue-tsc --noEmit --project packages/vue/tsconfig.json 2>&1 || echo "---FALLBACK---"
+pnpm test 2>&1 | tail -30
+which npx && npx vitest run 2>&1 | tail -30
+npx vitest run --reporter=verbose 2>&1
+pnpm add -Dw tsup
+which npm
+export PATH="/usr/local/bin:$PATH" && which pnpm || npx pnpm --version
+npx pnpm add -Dw tsup
+npx pnpm approve-builds esbuild
+ld"]' --location project\
+npx pnpm install\
+exec npx pnpm install 2>&1\
+echo "test"\
+pwd\
+"
+pwd
+npx pnpm install
+npx pnpm add -Dw vite-plugin-dts
+npx pnpm run build
+npx pnpm run build
+npx pnpm run build
+ls -la pnpm-workspace.yaml
+pwd
+npx pnpm --dir /Users/ju run build
+npx pnpm --dir /Users/ju run build
+pnpm add @fade-animation/react @fade-animation/core
+open ~/continue-watching.html
+tar -czf /Users/ju/Desktop/fade-animation-library.tar.gz -C /Users/ju --exclude=node_modules --exclude=.git --exclude=.kiro --exclude=.npm --exclude=.local --exclude=.aws --exclude=.Trash --exclude=.vscode --exclude=Library --exclude=Desktop --exclude=Documents --exclude=Downloads --exclude=continue-watching.html --exclude=continue-watching-widget --exclude=.CFUserTextEncoding --exclude=.npmrc packages package.json pnpm-workspace.yaml tsconfig.json vitest.config.ts
+ls /Users/ju/Desktop/fade-animation-library.tar.gz
+ls -lh /Users/ju/Desktop/fade-animation-library.tar.gz
+open continue-watching-widget/preview-vipcard.html
+cd "/Users/ju/continue-watching-widget" && npm run build 2>&1
+open continue-watching-widget/preview-continue-watching.html
+open /Users/ju/continue-watching-widget/preview-continue-watching.html
+open "$HOME/continue-watching-widget/preview-continue-watching.html"
+ls -la ~/continue-watching-widget/preview-continue-watching.html
+open -a Safari ~/continue-watching-widget/preview-continue-watching.html
+/usr/bin/open ~/continue-watching-widget/preview-continue-watching.html
+which gradle 2>/dev/null || echo "gradle not found"
+cd "/Users/ju/Desktop/fade-animation-library/packages/android" && ./gradlew compileKotlin 2>&1
+cd "/Users/ju/continue-watching-widget" && npm run build 2>&1
+cd "/Users/ju/continue-watching-widget" && npm pack 2>&1
+cp ~/continue-watching-widget/react-continue-watching-1.0.0.tgz ~/Desktop/
+ls -lh ~/continue-watching-widget/react-continue-watching-1.0.0.tgz ~/Desktop/react-continue-watching-1.0.0.tgz 2>&1
+tar -czf ~/Desktop/continue-watching-all-platforms.tar.gz \\
+  -C ~/continue-watching-widget \\
+  src/ContinueWatching.tsx \\
+  src/easings.ts \\
+  src/index.ts \\
+  package.json \\
+  tsconfig.json \\
+  native/ios/ContinueWatchingView.swift \\
+  native/android/ContinueWatchingView.kt \\
+  dist/index.js \\
+  dist/index.mjs \\
+  dist/index.d.ts \\
+  dist/index.d.mts \\
+  README.md
+ls -lh ~/Desktop/continue-watching-all-platforms.tar.gz
+wc -l ~/continue-watching-widget/preview-continue-watching.html
+/usr/bin/open ~/Desktop/continue-watching-demo/continue-watching.html 2>&1
+ls ~/Desktop/continue-watching-demo/
+ls ~/Desktop/*.html 2>&1
+ls ~/continue-watching*.html 2>&1
+/usr/bin/open http://localhost:8765/preview-continue-watching.html
+sleep 3
+sleep 5
+/usr/bin/open "http://localhost:8765/preview-continue-watching.html"
+cd "/Users/ju/packages/ios" && swift build 2>&1
+which gradle 2>&1 || which java 2>&1
+java -version 2>&1
+git status 2>&1
+git init 2>&1
+rm -rf /Users/ju/packages/ios/.git
+git init
+zip -r /Users/ju/Desktop/fade-animation-android.zip packages/android/ -x "*.gradle/wrapper/*" "*.DS_Store"
+zip -r /Users/ju/Desktop/fade-animation-android.zip /Users/ju/packages/android/ -x "*.DS_Store"
+zip -r /Users/ju/Desktop/fade-animation-ios.zip /Users/ju/packages/ios/ -x "*.DS_Store" "*/.build/*"
+rm -rf /Users/ju/packages/ios/.git
+ls -la /Users/ju/packages/ios/.git 2>&1 || echo "No .git directory found"
+rm -f /Users/ju/Desktop/fade-animation-ios.zip
+cd "/Users/ju/packages" && zip -r /Users/ju/Desktop/fade-animation-ios.zip ios/ -x "*.DS_Store"
+ls -lh /Users/ju/Desktop/fade-animation-android.zip /Users/ju/Desktop/fade-animation-ios.zip
+ls node_modules/@vue/compiler-sfc 2>/dev/null || echo "NOT INSTALLED"
+ls -la /Users/ju/Desktop/fade-animation-ios.zip 2>&1
+unzip -l /Users/ju/Desktop/fade-animation-ios.zip
+npx -y serve -p 8765 .
+cat /Users/ju/package.json 2>/dev/null || echo "No root package.json"
+cat /Users/ju/pnpm-workspace.yaml 2>/dev/null || echo "No pnpm-workspace.yaml"
+cat /Users/ju/vitest.config.ts 2>/dev/null || echo "No vitest.config.ts"
+ls /Users/ju/node_modules/.pnpm/@testing-library+react*/node_modules/@testing-library/react/package.json 2>/dev/null | head -1
+ls /Users/ju/node_modules/.pnpm/@vue+test-utils*/node_modules/@vue/test-utils/package.json 2>/dev/null | head -1
+npx vitest --run 2>&1
+ls /Users/ju/node_modules/vue/dist/vue.esm-bundler.js 2>/dev/null && echo "EXISTS" || echo "NOT FOUND"
+ls /Users/ju/node_modules/.pnpm/vue@*/node_modules/vue/dist/vue.esm-bundler.js 2>/dev/null | head -1
+pnpm add -Dw vue
+npx pnpm add -Dw vue
+npx vitest --run 2>&1
+xcode-select --install
+xcode-select --install
+brew install openjdk@17
+brew install openjdk@17\
+sudo ln -sfn $(brew --prefix openjdk@17)/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk\
+
+brew install openjdk@17\
+sudo ln -sfn $(brew --prefix openjdk@17)/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk\
+
+sudo xcodebuild -license accept
+rm -rf ~/Library/Developer/Xcode/DerivedData

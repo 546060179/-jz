@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.npm/
+
+# Build outputs
+dist/
+build/
+.build/
+*.class
+
+# OS files
+.DS_Store
+.Trash/
+
+# IDE
+.vscode/
+*.swp
+
+# Gradle
+.gradle/
+packages/android/gradle/
+packages/android/.gradle/
+packages/android/build/
+
+# Swift
+packages/ios/.build/
+packages/ios/.swiftpm/
+
+# Env
+.aws/
+.CFUserTextEncoding
+
+# System
+Library/
+Documents/
+Downloads/
+Desktop/
+Movies/
+Music/
+Pictures/
+Public/
+
+# Misc
+*.log
+*.tsbuildinfo

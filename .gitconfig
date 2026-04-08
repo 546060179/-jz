@@ -1,0 +1,5 @@
+[safe]
+	directory = *
+[user]
+	name = 123
+	email = 123

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0, user-scalable=no">
+<title>Continue Watching 组件预览</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #000;
+  font-family: -apple-system, 'PingFang SC', 'Montserrat', sans-serif;
+  display: flex; justify-content: center;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+.phone {
+  width: 375px; height: 812px;
+  position: relative; overflow: hidden;
+  background: #111218;
+}
+
+/* Fake content cards */
+.content-area {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  overflow-y: auto; padding: 60px 16px 160px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.content-area::-webkit-scrollbar { display: none; }
+.card-row { display: flex; gap: 8px; }
+.card-placeholder {
+  width: 109px; height: 145px; border-radius: 4px;
+  background: linear-gradient(135deg, #1a1c22, #2a2c32);
+  position: relative; overflow: hidden;
+}
+.card-placeholder::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+  animation: shimmer 2s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.card-title {
+  width: 109px; height: 12px; margin-top: 6px;
+  background: #1a1c22; border-radius: 2px;
+}
+.card-col { display: flex; flex-direction: column; gap: 4px; }
+
+/* Tab bar */
+.tabbar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 83px; z-index: 10;
+  background: #191B21;
+}
+.tabbar-row {
+  display: flex; height: 53px;
+  align-items: stretch;
+}
+.tab-btn {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 2px; padding: 8px;
+}
+.tab-btn span { font-size: 10px; font-weight: 500; color: #9F9FA2; line-height: 1.6; }
+.tab-btn.active span { color: #fff; }
+.home-indicator {
+  width: 134px; height: 5px;
+  background: #fff; border-radius: 3px;
+  margin: 12px auto 0; opacity: 0.3;
+}
+
+/* ===== Continue Watching Animation ===== */
+.cw-container {
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 20;
+}
+.cw-banner {
+  position: absolute; bottom: 83px; left: 0; right: 0;
+  display: flex; align-items: center; gap: 12px;
+  padding: 4px 16px 4px 4px;
+  background: #26282E;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: auto;
+  will-change: transform, opacity, width, height, border-radius, padding, background, left, bottom, box-shadow, border;
+}
+.cw-cover {
+  width: 44.35px; height: 60px;
+  border-radius: 4px; object-fit: cover;
+  display: block; flex-shrink: 0;
+}
+.cw-info {
+  display: flex; flex-direction: column; gap: 2px;
+  flex: 1; min-width: 0; overflow: hidden;
+}
+.cw-title {
+  font-size: 12px; font-weight: 600; color: #fff;
+  line-height: 1.33;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cw-ep { font-size: 10px; font-weight: 500; color: #9F9FA2; line-height: 1.6; }
+.cw-play-btn, .cw-close-btn {
+  background: none; border: none; padding: 0;
+  cursor: pointer; line-height: 0; flex-shrink: 0;
+}
+.cw-widget-play, .cw-widget-close {
+  position: absolute; background: none; border: none;
+  padding: 0; cursor: pointer; line-height: 0;
+  opacity: 0; transition: opacity 0.35s ease;
+  pointer-events: auto;
+}
+.cw-widget-play {
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+.cw-widget-close { right: -7px; top: -7px; }
+
+/* Demo controls */
+.demo-ctrl {
+  position: absolute; top: 12px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 100; display: flex; gap: 8px;
+}
+.demo-btn {
+  background: #F6610F; color: #fff; border: none;
+  border-radius: 6px; padding: 8px 16px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  white-space: nowrap;
+}
+.demo-btn:hover { background: #e55a0e; }
+.demo-btn:active { transform: scale(0.96); }
+.demo-btn.secondary { background: #333; }
+.demo-btn.secondary:hover { background: #444; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <!-- Fake content -->
+  <div class="content-area" id="contentArea"></div>
+
+  <!-- Tab Bar -->
+  <div class="tabbar">
+    <div class="tabbar-row">
+      <div class="tab-btn active">
+        <svg width="24" height="24" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" fill="#fff"/></svg>
+        <span>Home</span>
+      </div>
+      <div class="tab-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="18" rx="1" stroke="#9F9FA2" stroke-width="1.5" fill="none"/><rect x="14" y="3" width="7" height="18" rx="1" stroke="#9F9FA2" stroke-width="1.5" fill="none"/></svg>
+        <span>Short</span>
+      </div>
+      <div class="tab-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24"><path d="M19 21l-7-4-7 4V5a2 2 0 012-2h10a2 2 0 012 2z" stroke="#9F9FA2" stroke-width="1.5" fill="none"/></svg>
+        <span>My List</span>
+      </div>
+      <div class="tab-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" stroke="#9F9FA2" stroke-width="1.5" fill="none"/><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="#9F9FA2" stroke-width="1.5" fill="none"/></svg>
+        <span>Profile</span>
+      </div>
+    </div>
+    <div class="home-indicator"></div>
+  </div>
+
+  <!-- Continue Watching Container -->
+  <div class="cw-container" id="cwContainer" style="display:none;">
+    <div class="cw-banner" id="cwBanner">
+      <!-- Cover -->
+      <img class="cw-cover" id="cwCover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='120' viewBox='0 0 90 120'%3E%3Crect fill='%23333' width='90' height='120'/%3E%3Ctext x='45' y='55' text-anchor='middle' fill='%23888' font-size='10' font-family='sans-serif'%3ECover%3C/text%3E%3Ctext x='45' y='70' text-anchor='middle' fill='%23666' font-size='8' font-family='sans-serif'%3E90×120%3C/text%3E%3C/svg%3E" alt="">
+      <!-- Info -->
+      <div class="cw-info" id="cwInfo">
+        <div class="cw-title">Genius Baby：daddy please take mommy away</div>
+        <div class="cw-ep">EP.1  /  EP.100</div>
+      </div>
+      <!-- Play -->
+      <button class="cw-play-btn" id="cwPlayBtn" aria-label="Play">
+        <svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#F6610F"/><polygon points="13,9 13,23 24,16" fill="#fff"/></svg>
+      </button>
+      <!-- Close -->
+      <button class="cw-close-btn" id="cwCloseBtn" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><line x1="4" y1="4" x2="16" y2="16" stroke="#9F9FA2" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="4" x2="4" y2="16" stroke="#9F9FA2" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <!-- Widget buttons (hidden initially) -->
+      <button class="cw-widget-play" id="cwWidgetPlay" aria-label="Play" style="display:none;">
+        <svg width="38" height="38" viewBox="0 0 38 38"><circle cx="19" cy="19" r="19" fill="rgba(0,0,0,0.45)"/><polygon points="15.5,11 15.5,27 28,19" fill="#fff"/></svg>
+      </button>
+      <button class="cw-widget-close" id="cwWidgetClose" aria-label="Dismiss" style="display:none;">
+        <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="9" fill="rgba(0,0,0,0.55)"/><line x1="5.5" y1="5.5" x2="12.5" y2="12.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/><line x1="12.5" y1="5.5" x2="5.5" y2="12.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Demo Controls -->
+  <div class="demo-ctrl">
+    <button class="demo-btn" id="btnShow">显示横幅</button>
+    <button class="demo-btn secondary" id="btnReset">重置</button>
+  </div>
+</div>
+
+<script>
+// ─── Generate fake content cards ───
+(function() {
+  const area = document.getElementById('contentArea');
+  let html = '';
+  for (let r = 0; r < 8; r++) {
+    html += '<div class="card-row">';
+    for (let c = 0; c < 3; c++) {
+      html += '<div class="card-col"><div class="card-placeholder"></div><div class="card-title"></div></div>';
+    }
+    html += '</div>';
+  }
+  area.innerHTML = html;
+})();
+
+// ─── Easing functions ───
+function lerp(a, b, t) { return a + (b - a) * t; }
+function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+function easeInOutCubic(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
+function easeOutBack(t) {
+  const c1 = 1.70158, c3 = c1 + 1;
+  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+}
+
+// ─── Animation Engine ───
+const TIMING = {
+  slideUp: 450,
+  collapseDelay: 3000,
+  fadeOut: 300,
+  shrink: 400,
+  morph: 550,
+  dismiss: 300,
+};
+
+const COVER_W = 44.35, COVER_H = 60;
+const BANNER_H = COVER_H + 8;
+const COLLAPSED_W = COVER_W + 8;
+const COLLAPSED_H = COVER_H + 8;
+const WIDGET = { w: 90, h: 120, left: 0, bottom: 91 };
+const PHONE_W = 375;
+
+let phase = 'hidden';
+let raf = 0;
+let timer = null;
+
+const container = document.getElementById('cwContainer');
+const banner = document.getElementById('cwBanner');
+const cover = document.getElementById('cwCover');
+const info = document.getElementById('cwInfo');
+const playBtn = document.getElementById('cwPlayBtn');
+const closeBtn = document.getElementById('cwCloseBtn');
+const widgetPlay = document.getElementById('cwWidgetPlay');
+const widgetClose = document.getElementById('cwWidgetClose');
+const btnShow = document.getElementById('btnShow');
+const btnReset = document.getElementById('btnReset');
+
+// ─── Show banner ───
+function showBanner() {
+  if (phase !== 'hidden') return;
+  resetStyles();
+  container.style.display = '';
+  phase = 'sliding-up';
+  runAnimation('slide-up');
+}
+
+// ─── Reset ───
+function resetAll() {
+  cancelAnimationFrame(raf);
+  clearTimeout(timer);
+  phase = 'hidden';
+  container.style.display = 'none';
+  resetStyles();
+}
+
+function resetStyles() {
+  banner.style.cssText = '';
+  banner.className = 'cw-banner';
+  info.style.opacity = '1';
+  playBtn.style.opacity = '1';
+  playBtn.style.display = '';
+  closeBtn.style.opacity = '1';
+  closeBtn.style.display = '';
+  cover.style.cssText = '';
+  cover.className = 'cw-cover';
+  widgetPlay.style.display = 'none';
+  widgetPlay.style.opacity = '0';
+  widgetClose.style.display = 'none';
+  widgetClose.style.opacity = '0';
+}
+
+// ─── Core animation runner (rAF-based, frame-perfect) ───
+function runAnimation(startPhase) {
+  let animPhase = startPhase;
+  let phaseStart = 0;
+
+  function tick(now) {
+    if (phase === 'hidden') return;
+    if (!phaseStart) phaseStart = now;
+    const elapsed = now - phaseStart;
+
+    if (animPhase === 'slide-up') {
+      const t = Math.min(elapsed / TIMING.slideUp, 1);
+      const e = easeOutCubic(t);
+      banner.style.transform = `translateY(${(1 - e) * 100}%)`;
+      banner.style.opacity = String(Math.min(t * 3, 1));
+
+      if (t >= 1) {
+        banner.style.transform = 'none';
+        banner.style.opacity = '1';
+        phase = 'banner';
+        // Auto-collapse after delay
+        timer = setTimeout(() => {
+          if (phase === 'banner') startCollapse();
+        }, TIMING.collapseDelay);
+        return;
+      }
+    }
+    else if (animPhase === 'fade-content') {
+      const t = Math.min(elapsed / TIMING.fadeOut, 1);
+      const e = easeOutCubic(t);
+      info.style.opacity = String(1 - e);
+      playBtn.style.opacity = String(1 - e);
+      closeBtn.style.opacity = String(1 - e);
+
+      if (t >= 1) {
+        info.style.display = 'none';
+        playBtn.style.display = 'none';
+        closeBtn.style.display = 'none';
+        animPhase = 'shrink';
+        phaseStart = now;
+        phase = 'shrinking';
+      }
+    }
+    else if (animPhase === 'shrink') {
+      const t = Math.min(elapsed / TIMING.shrink, 1);
+      const e = easeInOutCubic(t);
+
+      banner.style.width = lerp(PHONE_W, COLLAPSED_W, e) + 'px';
+      banner.style.height = lerp(BANNER_H, COLLAPSED_H, e) + 'px';
+      banner.style.borderRadius = t < 0.5 ? '8px 8px 0 0' : lerp(8, 4, (t - 0.5) * 2) + 'px';
+      banner.style.padding = `${lerp(4, 0, e)}px ${lerp(16, 0, e)}px ${lerp(4, 0, e)}px ${lerp(4, 0, e)}px`;
+
+      // Fade out background
+      const bgOpacity = lerp(1, 0, Math.max(0, (t - 0.5) * 2));
+      banner.style.background = `rgba(38, 40, 46, ${bgOpacity})`;
+
+      // Cover fills the shrinking container
+      cover.style.width = '100%';
+      cover.style.height = '100%';
+      cover.style.borderRadius = 'inherit';
+
+      if (t >= 1) {
+        animPhase = 'morph';
+        phaseStart = now;
+        phase = 'morphing';
+        banner.style.padding = '0';
+        banner.style.overflow = 'visible';
+        banner.style.background = 'none';
+        banner.style.right = 'auto';
+      }
+    }
+    else if (animPhase === 'morph') {
+      const t = Math.min(elapsed / TIMING.morph, 1);
+      const e = easeOutBack(t);
+      const eSmooth = easeOutCubic(t);
+
+      banner.style.left = lerp(0, WIDGET.left, e) + 'px';
+      banner.style.bottom = lerp(83, 83 + WIDGET.bottom, e) + 'px';
+      banner.style.width = lerp(COLLAPSED_W, WIDGET.w, e) + 'px';
+      banner.style.height = lerp(COLLAPSED_H, WIDGET.h, e) + 'px';
+      banner.style.borderRadius = lerp(4, 8, eSmooth) + 'px';
+      banner.style.boxShadow = `4px 4px 16px rgba(0,0,0,${eSmooth * 0.4})`;
+      banner.style.border = `1px solid rgba(255,255,255,${eSmooth * 0.15})`;
+
+      if (t >= 1) {
+        phase = 'widget';
+        banner.style.pointerEvents = 'auto';
+        // Show widget buttons
+        widgetPlay.style.display = '';
+        widgetClose.style.display = '';
+        requestAnimationFrame(() => {
+          widgetPlay.style.opacity = '1';
+          widgetClose.style.opacity = '1';
+        });
+        return;
+      }
+    }
+    else if (animPhase === 'dismiss') {
+      const t = Math.min(elapsed / TIMING.dismiss, 1);
+      const e = easeOutCubic(t);
+      banner.style.opacity = String(1 - e);
+      banner.style.transform = `scale(${lerp(1, 0.7, e)}) translateY(${lerp(0, 30, e)}px)`;
+
+      if (t >= 1) {
+        phase = 'hidden';
+        container.style.display = 'none';
+        return;
+      }
+    }
+
+    raf = requestAnimationFrame(tick);
+  }
+
+  raf = requestAnimationFrame(tick);
+}
+
+// ─── Collapse (close button or auto) ───
+function startCollapse() {
+  clearTimeout(timer);
+  cancelAnimationFrame(raf);
+  phase = 'fading-content';
+  runAnimation('fade-content');
+}
+
+// ─── Dismiss widget ───
+function dismissWidget() {
+  if (phase !== 'widget') return;
+  phase = 'dismissing';
+  banner.style.pointerEvents = 'none';
+  runAnimation('dismiss');
+}
+
+// ─── Event listeners ───
+btnShow.addEventListener('click', showBanner);
+btnReset.addEventListener('click', resetAll);
+closeBtn.addEventListener('click', () => {
+  if (phase === 'banner') startCollapse();
+});
+widgetClose.addEventListener('click', dismissWidget);
+widgetPlay.addEventListener('click', () => alert('Play clicked!'));
+playBtn.addEventListener('click', () => alert('Play clicked!'));
+</script>
+</body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0">
+<title>优惠券弹窗 - 奖励动效</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  width: 375px;
+  height: 812px;
+  overflow: hidden;
+  font-family: 'PingFang SC', -apple-system, sans-serif;
+  background: #0D0E10;
+  position: relative;
+}
+
+/* ── 背景播放器模拟 ── */
+.bg-player {
+  position: absolute;
+  top: 0; left: 0;
+  width: 375px; height: 708px;
+  background: #1a1a1a;
+}
+
+/* ── Mask-b60 黑色60%遮罩 ── */
+.mask-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 375px; height: 812px;
+  background: rgba(0,0,0,0.6);
+  z-index: 1;
+  /* 动效：淡入 */
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* ── 呼吸光 (glow burst) ── */
+/* Figma: x:0, y:218, 375×375 */
+.glow-light {
+  position: absolute;
+  top: 218px; left: 0;
+  width: 375px; height: 375px;
+  z-index: 2;
+  pointer-events: none;
+  /* 动效：从中心爆发放大 + 弹簧overshoot */
+  transform-origin: center center;
+  transform: scale(0);
+  opacity: 0;
+  animation: glowBurst 0.65s 0.05s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+             glowBreathe 3s 0.75s ease-in-out infinite;
+}
+.glow-light img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+/* ── 标题组 "恭喜获得免费权益" ── */
+/* Figma: x:48, y:184, 280×72 */
+.title-group {
+  position: absolute;
+  top: 184px; left: 48px;
+  width: 280px; height: 72px;
+  z-index: 10;
+  /* 动效：弹簧缩放弹出 */
+  transform: scale(0);
+  opacity: 0;
+  animation: springPop 0.6s 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* 流光贴图层 - Figma: 文字线条光1, x:0 y:23, 280×49 */
+.shimmer-layer {
+  position: absolute;
+  top: 23px; left: 0;
+  width: 280px; height: 49px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.shimmer-layer img {
+  position: absolute;
+  top: 0; left: -280px;
+  width: 280px; height: 49px;
+  object-fit: cover;
+  /* 流光动效：延迟后循环从左滑到右 */
+  animation: shimmerSlide 2.8s 0.8s ease-in-out infinite;
+}
+
+/* 标题文字 - Figma: x:10 y:0, 260×52 */
+.title-text {
+  position: absolute;
+  top: 0; left: 10px;
+  width: 260px; height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'LangKeJiangHuLianMeng', 'PingFang SC', sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1.439;
+  background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(249,222,90,1) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 6px rgba(255,200,50,0.35));
+}
+
+/* ── 红包卡片组 ── */
+/* Figma: x:48, y:256, 280×300 */
+.card-group {
+  position: absolute;
+  top: 256px; left: 48px;
+  width: 280px; height: 300px;
+  z-index: 10;
+  /* 动效：从中心弹簧放大弹出 + overshoot */
+  transform: scale(0);
+  opacity: 0;
+  animation: springPop 0.7s 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* 红包底图 - Figma: x:0 y:0, 280×300 */
+.envelope-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 280px; height: 300px;
+  object-fit: fill;
+}
+
+/* 品牌标签 - Figma: x:89 y:0, 102×26 */
+.brand-tag {
+  position: absolute;
+  top: 0; left: 89px;
+  width: 102px; height: 26px;
+  z-index: 2;
+}
+.brand-tag img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+/* "看视频" 装饰 - Figma: x:62 y:64, 156×46 */
+.watch-video {
+  position: absolute;
+  top: 64px; left: 62px;
+  width: 156px; height: 46px;
+  z-index: 2;
+}
+.watch-video img {
+  width: 100%; height: 100%;
+}
+.watch-video .label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'LangKeJiangHuLianMeng', 'PingFang SC', sans-serif;
+  font-size: 32px;
+  color: #333;
+  letter-spacing: 0.04em;
+}
+
+/* 免费解锁文字 - Figma: x:45 y:122, 190×28 */
+.unlock-text {
+  position: absolute;
+  top: 122px; left: 45px;
+  width: 190px; height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #FF383C;
+  line-height: 1.4;
+  z-index: 2;
+}
+
+/* 按钮区域 - Figma: x:44 y:218, 192×68 */
+.btn-area {
+  position: absolute;
+  top: 218px; left: 44px;
+  width: 192px; height: 68px;
+  z-index: 2;
+}
+.cta-btn {
+  position: relative;
+  width: 192px; height: 60px;
+  margin-top: 8px;
+  border-radius: 30px;
+  overflow: hidden;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+.cta-btn img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.cta-btn .text {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: 100%; height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: #FFF;
+  gap: 2px;
+}
+.cta-btn .text b {
+  font-size: 20px;
+}
+/* 按钮流光 */
+.cta-btn .sweep {
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: skewX(-20deg);
+  z-index: 3;
+  animation: btnSweep 2.5s 1s ease-in-out infinite;
+}
+
+/* ── 关闭按钮 ── */
+/* Figma: x:170 y:568, 36×36 */
+.close-btn {
+  position: absolute;
+  top: 568px; left: 170px;
+  width: 36px; height: 36px;
+  z-index: 20;
+  cursor: pointer;
+  opacity: 0;
+  animation: fadeIn 0.3s 0.9s forwards;
+}
+.close-btn img {
+  width: 100%; height: 100%;
+}
+
+/* ── 粒子容器 ── */
+.particles {
+  position: absolute;
+  top: 0; left: 0;
+  width: 375px; height: 812px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ── 金色光线放射 ── */
+.light-rays {
+  position: absolute;
+  /* 光线中心对齐呼吸光中心: y:218+375/2=405.5, x:187.5 */
+  top: 405px; left: 187px;
+  width: 0; height: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  animation: raysIn 0.8s 0.05s ease-out forwards;
+}
+.ray {
+  position: absolute;
+  top: 0; left: -1px;
+  width: 2px; height: 180px;
+  background: linear-gradient(to top, rgba(255,215,0,0.5), transparent);
+  transform-origin: bottom center;
+}
+
+/* ══════ Keyframes ══════ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes glowBurst {
+  0%   { transform: scale(0); opacity: 0; }
+  50%  { transform: scale(1.12); opacity: 1; }
+  70%  { transform: scale(0.95); opacity: 0.85; }
+  100% { transform: scale(1); opacity: 0.5; }
+}
+
+@keyframes glowBreathe {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%      { opacity: 0.6; transform: scale(1.04); }
+}
+
+@keyframes springPop {
+  0%   { transform: scale(0); opacity: 0; }
+  55%  { transform: scale(1.08); opacity: 1; }
+  72%  { transform: scale(0.96); }
+  86%  { transform: scale(1.02); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shimmerSlide {
+  0%   { left: -280px; opacity: 0; }
+  8%   { opacity: 0.9; }
+  45%  { left: 280px; opacity: 0.9; }
+  55%  { opacity: 0; }
+  100% { left: 280px; opacity: 0; }
+}
+
+@keyframes particleBurst {
+  0%   { transform: translate(0,0) scale(0); opacity: 1; }
+  15%  { opacity: 1; transform: scale(1.3); }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+@keyframes raysIn {
+  0%   { opacity: 0; transform: scale(0.2) rotate(0deg); }
+  40%  { opacity: 0.5; }
+  100% { opacity: 0.1; transform: scale(1) rotate(20deg); }
+}
+
+@keyframes btnSweep {
+  0%   { left: -100%; }
+  40%  { left: 160%; }
+  100% { left: 160%; }
+}
+</style>
+</head>
+<body>
+
+<!-- 背景播放器 -->
+<div class="bg-player"></div>
+
+<!-- Mask-b60 遮罩 -->
+<div class="mask-overlay"></div>
+
+<!-- 金色光线放射 -->
+<div class="light-rays" id="lightRays"></div>
+
+<!-- 呼吸光 / 金色光晕爆发 -->
+<div class="glow-light">
+  <img src="assets/glow-burst.png" alt="">
+</div>
+
+<!-- 粒子 -->
+<div class="particles" id="particles"></div>
+
+<!-- 标题组: 恭喜获得免费权益 + 流光 -->
+<div class="title-group">
+  <div class="shimmer-layer">
+    <img src="assets/shimmer-light.png" alt="">
+  </div>
+  <div class="title-text">恭喜获得免费权益</div>
+</div>
+
+<!-- 红包卡片组 -->
+<div class="card-group">
+  <img src="assets/red-envelope-441e57.png" class="envelope-bg" alt="">
+  <div class="brand-tag">
+    <img src="assets/brand-tag-bg.png" alt="">
+  </div>
+  <div class="watch-video">
+    <img src="assets/watch-video-frame.svg" alt="">
+    <span class="label">"看视频"</span>
+  </div>
+  <div class="unlock-text">免费解锁第22-23集</div>
+  <div class="btn-area">
+    <button class="cta-btn">
+      <img src="assets/btn-texture.png" alt="">
+      <span class="text"><b id="countNum">3</b>秒后解锁</span>
+      <div class="sweep"></div>
+    </button>
+  </div>
+</div>
+
+<!-- 关闭按钮 -->
+<div class="close-btn" id="closeBtn">
+  <img src="assets/close-btn.svg" alt="">
+</div>
+
+<script>
+/* ── 金色光线 ── */
+const raysEl = document.getElementById('lightRays');
+for (let i = 0; i < 14; i++) {
+  const r = document.createElement('div');
+  r.className = 'ray';
+  r.style.transform = `rotate(${i * (360 / 14)}deg)`;
+  r.style.opacity = String(0.3 + Math.random() * 0.7);
+  r.style.height = (140 + Math.random() * 60) + 'px';
+  raysEl.appendChild(r);
+}
+
+/* ── 金色粒子爆发 ── */
+/* 粒子中心 = 呼吸光中心 (187.5, 405.5) */
+const particlesEl = document.getElementById('particles');
+const cx = 187.5, cy = 405.5;
+const goldColors = ['#FFD700','#FFAC13','#FFE88A','#FF8C00','#FFF4CC','#FFB800','#FFFBE5'];
+
+for (let i = 0; i < 40; i++) {
+  const p = document.createElement('div');
+  const angle = (Math.PI * 2 * i) / 40 + (Math.random() - 0.5) * 0.3;
+  const dist = 80 + Math.random() * 180;
+  const tx = Math.cos(angle) * dist;
+  const ty = Math.sin(angle) * dist;
+  const size = 2 + Math.random() * 6;
+  const color = goldColors[i % goldColors.length];
+  const delay = Math.random() * 0.15;
+  const dur = 0.7 + Math.random() * 0.5;
+
+  p.style.cssText = `
+    position: absolute;
+    border-radius: 50%;
+    left: ${cx}px;
+    top: ${cy}px;
+    width: ${size}px;
+    height: ${size}px;
+    background: ${color};
+    box-shadow: 0 0 ${size * 2}px ${color}, 0 0 ${size * 4}px ${color}44;
+    opacity: 0;
+    --tx: ${tx}px;
+    --ty: ${ty}px;
+    animation: particleBurst ${dur}s ${delay}s ease-out forwards;
+  `;
+  particlesEl.appendChild(p);
+}
+
+/* ── 倒计时 ── */
+let count = 3;
+const countEl = document.getElementById('countNum');
+const timer = setInterval(() => {
+  count--;
+  if (count > 0) {
+    countEl.textContent = String(count);
+  } else {
+    countEl.parentElement.innerHTML = '立即解锁';
+    clearInterval(timer);
+  }
+}, 1000);
+
+/* ── 关闭 ── */
+document.getElementById('closeBtn').addEventListener('click', () => {
+  document.body.style.transition = 'opacity 0.3s';
+  document.body.style.opacity = '0';
+});
+</script>
+</body>
+</html>

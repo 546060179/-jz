@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "installedPowers": [
+    {
+      "name": "figma",
+      "registryId": "kiro-recommended"
+    },
+    {
+      "name": "uidevelopmentkiropower",
+      "registryId": "user-added"
+    }
+  ],
+  "dismissedAutoInstalls": []
+}

@@ -1,0 +1,31 @@
+{
+  "name": "@fade-animation/vue",
+  "version": "0.1.0",
+  "description": "Vue components for fade animation library",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest --run"
+  },
+  "dependencies": {
+    "@fade-animation/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": ">=3.3.0"
+  },
+  "devDependencies": {
+    "vue": "^3.4.0",
+    "@vue/test-utils": "^2.4.0"
+  },
+  "license": "MIT"
+}

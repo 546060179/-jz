@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0, user-scalable=no">
+<title>iOS ContinueWatchingView 模拟</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #000; font-family: 'Montserrat', sans-serif; display: flex; justify-content: center; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+.phone { width: 375px; height: 812px; position: relative; overflow: hidden; background: #111218; }
+
+/* Simulates the parent UIView (self) — full screen, clipsToBounds=false */
+.ios-self {
+  position: absolute; top: 0; left: 0; width: 375px; height: 812px;
+  pointer-events: none; /* isUserInteractionEnabled = false initially */
+  z-index: 20;
+}
+
+/* bannerContainer — absolute positioned UIView */
+.banner-container {
+  position: absolute;
+  background: rgb(38, 40, 46);
+  overflow: hidden; /* clipsToBounds = true */
+  border-radius: 8px 8px 0 0;
+  display: none; /* isHidden = true */
+}
+
+/* coverImageView — absolute inside bannerContainer */
+.cover-img {
+  position: absolute;
+  object-fit: cover;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* infoStack — absolute inside bannerContainer */
+.info-stack {
+  position: absolute;
+  display: flex; flex-direction: column; gap: 2px;
+  overflow: hidden;
+}
+.info-title { font-size: 12px; font-weight: 600; color: #fff; line-height: 1.33; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.info-subtitle { font-size: 10px; font-weight: 500; color: #9F9FA2; line-height: 1.6; }
+
+/* playButton — absolute inside bannerContainer */
+.play-btn, .close-btn { position: absolute; cursor: pointer; line-height: 0; }
+
+/* widget buttons */
+.widget-play, .widget-close { position: absolute; cursor: pointer; line-height: 0; opacity: 0; display: none; }
+
+/* Tab bar */
+.tabbar { position: absolute; bottom: 0; left: 0; right: 0; height: 83px; z-index: 10; background: #191B21; }
+.tabbar-row { display: flex; height: 53px; align-items: stretch; }
+.tab-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 8px; }
+.tab-btn span { font-size: 10px; font-weight: 500; color: #9F9FA2; }
+.tab-btn.active span { color: #fff; }
+.home-indicator { width: 134px; height: 5px; background: #fff; border-radius: 3px; margin: 12px auto 0; opacity: 0.3; }
+
+/* Demo */
+.demo-ctrl { position: absolute; top: 10px; left: 10px; z-index: 100; display: flex; gap: 6px; }
+.demo-btn { background: #F6610F; color: #fff; border: none; border-radius: 6px; padding: 8px 12px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.label { position: absolute; top: 10px; right: 10px; z-index: 100; background: rgba(0,0,0,0.7); color: #0f0; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-family: monospace; }
+
+/* Content placeholder */
+.content-placeholder { position: absolute; top: 120px; left: 16px; right: 16px; display: flex; gap: 8px; }
+.card-placeholder { width: 109px; height: 145px; background: #23252A; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+  <!-- Content placeholders -->
+  <div class="content-placeholder">
+    <div class="card-placeholder"></div>
+    <div class="card-placeholder"></div>
+    <div class="card-placeholder"></div>
+  </div>
+
+  <!-- iOS ContinueWatchingView simulation -->
+  <div class="ios-self" id="iosSelf">
+    <div class="banner-container" id="bc">
+      <img class="cover-img" id="cover" src="assets/banner_cover-ccc438.png" alt="">
+      <div class="info-stack" id="info">
+        <div class="info-title">Genius Baby：daddy please take mommy away</div>
+        <div class="info-subtitle">EP.1  /  EP.100</div>
+      </div>
+      <div class="play-btn" id="playBtn">
+        <svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#F6610F"/><path d="M13 9.5V22.5L24 16L13 9.5Z" fill="#fff"/></svg>
+      </div>
+      <div class="close-btn" id="closeBtn">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><line x1="4" y1="4" x2="16" y2="16" stroke="#9F9FA2" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="4" x2="4" y2="16" stroke="#9F9FA2" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="widget-play" id="wPlay">
+        <svg width="38" height="38" viewBox="0 0 38 38"><circle cx="19" cy="19" r="19" fill="rgba(0,0,0,0.45)"/><path d="M15.5 11V27L28 19L15.5 11Z" fill="#fff"/></svg>
+      </div>
+      <div class="widget-close" id="wClose">
+        <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="9" fill="rgba(0,0,0,0.55)"/><line x1="5.5" y1="5.5" x2="12.5" y2="12.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/><line x1="12.5" y1="5.5" x2="5.5" y2="12.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="tabbar">
+    <div class="tabbar-row">
+      <div class="tab-btn active"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" fill="#fff"/></svg><span>Home</span></div>
+      <div class="tab-btn"><svg width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="18" rx="1" stroke="#9F9FA2" stroke-width="1.5" fill="none"/><rect x="14" y="3" width="7" height="18" rx="1" stroke="#9F9FA2" stroke-width="1.5" fill="none"/></svg><span>Short</span></div>
+      <div class="tab-btn"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M19 21l-7-4-7 4V5a2 2 0 012-2h10a2 2 0 012 2z" stroke="#9F9FA2" stroke-width="1.5" fill="none"/></svg><span>My List</span></div>
+      <div class="tab-btn"><svg width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" stroke="#9F9FA2" stroke-width="1.5" fill="none"/><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="#9F9FA2" stroke-width="1.5" fill="none"/></svg><span>Profile</span></div>
+    </div>
+    <div class="home-indicator"></div>
+  </div>
+
+  <div class="demo-ctrl">
+    <button class="demo-btn" onclick="replay(1)">▶ 正常</button>
+    <button class="demo-btn" onclick="replay(5)">🐢 0.2x</button>
+    <button class="demo-btn" onclick="resetAll()">↺ 重置</button>
+  </div>
+  <div class="label" id="phaseLabel">hidden</div>
+</div>
+
+<script>
+// ============================================================
+// EXACT 1:1 SIMULATION OF iOS ContinueWatchingView.swift
+// Using absolute positioning (UIView.frame) instead of flexbox
+// ============================================================
+
+// --- Config (from Swift) ---
+const COVER_W = 44.35, COVER_H = 60;
+const WIDGET_W = 90, WIDGET_H = 120;
+const WIDGET_OFFSET_X = 0, WIDGET_OFFSET_Y = 91;
+const BOTTOM_INSET = 83; // tabbar height
+const PHONE_H = 812, PHONE_W = 375;
+
+const BANNER_H = COVER_H + 8; // 68
+const COLLAPSED_W = COVER_W + 8; // 52.35
+const COLLAPSED_H = COVER_H + 8; // 68
+
+const TIMING = {
+  slideUp: 0.45, collapseDelay: 3.0, fadeOut: 0.3,
+  shrink: 0.4, morph: 0.55, dismiss: 0.3
+};
+
+// --- Easing (from Swift) ---
+function lerp(a, b, t) { return a + (b - a) * t; }
+function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+function easeInOutCubic(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
+function easeOutBack(t) { const c1=1.70158, c3=c1+1; return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2); }
+
+// --- Elements ---
+const bc = document.getElementById('bc');
+const cover = document.getElementById('cover');
+const info = document.getElementById('info');
+const playBtn = document.getElementById('playBtn');
+const closeBtn = document.getElementById('closeBtn');
+const wPlay = document.getElementById('wPlay');
+const wClose = document.getElementById('wClose');
+const label = document.getElementById('phaseLabel');
+const iosSelf = document.getElementById('iosSelf');
+
+let phase = 'hidden';
+let timeScale = 1;
+let collapseTimer = null;
+</script>
+
+<script>
+// --- layoutBanner() — exact copy from Swift ---
+function layoutBanner() {
+  const w = PHONE_W;
+  const h = BANNER_H;
+  // bannerContainer.frame = CGRect(x:0, y:bounds.height-bottomInset-h, w, h)
+  bc.style.left = '0px';
+  bc.style.top = (PHONE_H - BOTTOM_INSET - h) + 'px';
+  bc.style.width = w + 'px';
+  bc.style.height = h + 'px';
+
+  const pad = 4;
+  // coverImageView.frame = CGRect(x:pad, y:pad, w:coverSize.width, h:coverSize.height)
+  cover.style.left = pad + 'px';
+  cover.style.top = pad + 'px';
+  cover.style.width = COVER_W + 'px';
+  cover.style.height = COVER_H + 'px';
+
+  const infoX = pad + COVER_W + 12;
+  const btnSize = 32;
+  const closeSize = 20;
+  const rightPad = 16;
+  const playX = w - rightPad - closeSize - 12 - btnSize;
+
+  // infoStack.frame
+  info.style.left = infoX + 'px';
+  info.style.top = pad + 'px';
+  info.style.width = (playX - infoX - 8) + 'px';
+  info.style.height = COVER_H + 'px';
+
+  // playButton.frame
+  playBtn.style.left = playX + 'px';
+  playBtn.style.top = ((h - btnSize) / 2) + 'px';
+  playBtn.style.width = btnSize + 'px';
+  playBtn.style.height = btnSize + 'px';
+
+  // closeButton.frame
+  closeBtn.style.left = (w - rightPad - closeSize) + 'px';
+  closeBtn.style.top = ((h - closeSize) / 2) + 'px';
+  closeBtn.style.width = closeSize + 'px';
+  closeBtn.style.height = closeSize + 'px';
+}
+
+// --- show() ---
+function show() {
+  if (phase !== 'hidden') return;
+  phase = 'sliding-up';
+  label.textContent = 'slidingUp';
+  bc.style.display = 'block';
+  bc.style.overflow = 'hidden';
+  bc.style.background = 'rgb(38,40,46)';
+  bc.style.borderRadius = '8px 8px 0 0';
+  bc.style.opacity = '1';
+  bc.style.transform = 'none';
+  bc.style.boxShadow = 'none';
+  bc.style.border = 'none';
+
+  // Reset subviews
+  info.style.opacity = '1'; info.style.display = 'flex';
+  playBtn.style.opacity = '1'; playBtn.style.display = 'block';
+  closeBtn.style.opacity = '1'; closeBtn.style.display = 'block';
+  wPlay.style.opacity = '0'; wPlay.style.display = 'none';
+  wClose.style.opacity = '0'; wClose.style.display = 'none';
+  cover.style.borderRadius = '4px';
+
+  layoutBanner();
+
+  // Start off-screen: transform = translateY(bannerHeight)
+  bc.style.transform = `translateY(${BANNER_H}px)`;
+  bc.style.opacity = '0';
+
+  startAnim('slide-up');
+}
+</script>
+
+<script>
+// --- Animation engine ---
+let animPhase = '';
+let phaseStart = 0;
+let rafId = 0;
+
+function startAnim(p) {
+  animPhase = p;
+  phaseStart = 0;
+  cancelAnimationFrame(rafId);
+  rafId = requestAnimationFrame(tick);
+}
+function stopAnim() { cancelAnimationFrame(rafId); }
+
+function tick(now) {
+  if (phase === 'hidden') return;
+  if (!phaseStart) phaseStart = now;
+  const elapsed = (now - phaseStart) / 1000; // seconds, like CADisplayLink
+
+  if (animPhase === 'slide-up') tickSlideUp(elapsed, now);
+  else if (animPhase === 'fade-content') tickFadeContent(elapsed, now);
+  else if (animPhase === 'shrink') tickShrink(elapsed, now);
+  else if (animPhase === 'morph') tickMorph(elapsed, now);
+  else if (animPhase === 'dismiss') tickDismiss(elapsed, now);
+  else return;
+
+  rafId = requestAnimationFrame(tick);
+}
+
+// --- tickSlideUp (exact Swift logic) ---
+function tickSlideUp(elapsed) {
+  const t = Math.min(elapsed / (TIMING.slideUp * timeScale), 1);
+  const e = easeOutCubic(t);
+  bc.style.transform = `translateY(${(1 - e) * BANNER_H}px)`;
+  bc.style.opacity = String(Math.min(t * 3, 1));
+
+  if (t >= 1) {
+    bc.style.transform = 'none';
+    bc.style.opacity = '1';
+    phase = 'banner';
+    label.textContent = 'banner';
+    stopAnim();
+    collapseTimer = setTimeout(() => {
+      if (phase === 'banner') {
+        phase = 'fading-content';
+        label.textContent = 'fadingContent';
+        startAnim('fade-content');
+      }
+    }, TIMING.collapseDelay * 1000 * timeScale);
+  }
+}
+
+// --- tickFadeContent (exact Swift logic) ---
+function tickFadeContent(elapsed) {
+  const t = Math.min(elapsed / (TIMING.fadeOut * timeScale), 1);
+  const e = easeOutCubic(t);
+  info.style.opacity = String(1 - e);
+  playBtn.style.opacity = String(1 - e);
+  closeBtn.style.opacity = String(1 - e);
+
+  if (t >= 1) {
+    // DON'T hide — keep in layout (opacity:0)
+    info.style.opacity = '0';
+    playBtn.style.opacity = '0';
+    closeBtn.style.opacity = '0';
+    animPhase = 'shrink';
+    phaseStart = 0;
+    phase = 'shrinking';
+    label.textContent = 'shrinking';
+  }
+}
+</script>
+
+<script>
+// --- tickShrink (exact Swift logic) ---
+function tickShrink(elapsed) {
+  const t = Math.min(elapsed / (TIMING.shrink * timeScale), 1);
+  const e = easeInOutCubic(t);
+
+  const w = lerp(PHONE_W, COLLAPSED_W, e);
+  const h = lerp(BANNER_H, COLLAPSED_H, e);
+  const y = PHONE_H - BOTTOM_INSET - h;
+
+  bc.style.left = '0px';
+  bc.style.top = y + 'px';
+  bc.style.width = w + 'px';
+  bc.style.height = h + 'px';
+
+  // Padding transitions from banner padding to zero (matching HTML)
+  const padTop = lerp(4, 0, e);
+  const padLeft = lerp(4, 0, e);
+
+  // Cover moves with padding but keeps its size
+  cover.style.left = padLeft + 'px';
+  cover.style.top = padTop + 'px';
+  // width/height stay at COVER_W × COVER_H (set in layoutBanner)
+
+  // Corner radius
+  const radius = t < 0.5 ? 8 : lerp(8, 4, (t - 0.5) * 2);
+  if (t < 0.5) {
+    bc.style.borderRadius = '8px 8px 0 0';
+  } else {
+    bc.style.borderRadius = radius + 'px';
+  }
+
+  // Background fade
+  const bgAlpha = lerp(1, 0, Math.max(0, (t - 0.5) * 2));
+  bc.style.background = `rgba(38, 40, 46, ${bgAlpha})`;
+
+  if (t >= 1) {
+    animPhase = 'morph';
+    phaseStart = 0;
+    phase = 'morphing';
+    label.textContent = 'morphing';
+    bc.style.background = 'transparent';
+    bc.style.overflow = 'visible'; // clipsToBounds = false
+
+    // Snap cover to fill collapsed container for morph start
+    cover.style.left = '0px';
+    cover.style.top = '0px';
+    cover.style.width = COLLAPSED_W + 'px';
+    cover.style.height = COLLAPSED_H + 'px';
+    cover.style.borderRadius = '4px';
+
+    // Hide other elements
+    info.style.display = 'none';
+    playBtn.style.display = 'none';
+    closeBtn.style.display = 'none';
+  }
+}
+
+// --- tickMorph (exact Swift logic) ---
+function tickMorph(elapsed) {
+  const t = Math.min(elapsed / (TIMING.morph * timeScale), 1);
+  const e = easeOutBack(t);
+  const eSmooth = easeOutCubic(t);
+
+  const startBottom = BOTTOM_INSET; // 83
+  const endBottom = BOTTOM_INSET + 8; // 91
+
+  const x = lerp(0, WIDGET_OFFSET_X, e);
+  const bottom = lerp(startBottom, endBottom, e);
+  const w = lerp(COLLAPSED_W, WIDGET_W, e);
+  const h = lerp(COLLAPSED_H, WIDGET_H, e);
+  const y = PHONE_H - bottom - h;
+
+  bc.style.left = x + 'px';
+  bc.style.top = y + 'px';
+  bc.style.width = w + 'px';
+  bc.style.height = h + 'px';
+
+  // Cover fills container
+  cover.style.left = '0px';
+  cover.style.top = '0px';
+  cover.style.width = w + 'px';
+  cover.style.height = h + 'px';
+
+  const radius = lerp(4, 8, eSmooth);
+  bc.style.borderRadius = radius + 'px';
+  cover.style.borderRadius = radius + 'px';
+
+  // Shadow + border
+  bc.style.boxShadow = `4px 4px 16px rgba(0,0,0,${eSmooth * 0.4})`;
+  bc.style.border = `1px solid rgba(255,255,255,${eSmooth * 0.15})`;
+
+  if (t >= 1) {
+    phase = 'widget';
+    label.textContent = 'widget';
+    stopAnim();
+    // Show widget buttons
+    wPlay.style.display = 'block';
+    wClose.style.display = 'block';
+    wPlay.style.left = ((w - 38) / 2) + 'px';
+    wPlay.style.top = ((h - 38) / 2) + 'px';
+    wClose.style.left = (w - 11) + 'px';
+    wClose.style.top = '-7px';
+    // Fade in
+    requestAnimationFrame(() => {
+      wPlay.style.transition = 'opacity 0.35s ease';
+      wClose.style.transition = 'opacity 0.35s ease';
+      wPlay.style.opacity = '1';
+      wClose.style.opacity = '1';
+    });
+  }
+}
+
+// --- tickDismiss (exact Swift logic) ---
+function tickDismiss(elapsed) {
+  const t = Math.min(elapsed / (TIMING.dismiss * timeScale), 1);
+  const e = easeOutCubic(t);
+
+  bc.style.opacity = String(1 - e);
+  const scale = lerp(1, 0.7, e);
+  const ty = lerp(0, 30, e);
+  bc.style.transform = `scale(${scale}) translateY(${ty}px)`;
+
+  if (t >= 1) {
+    phase = 'hidden';
+    label.textContent = 'hidden';
+    stopAnim();
+    bc.style.display = 'none';
+    bc.style.transform = 'none';
+    bc.style.opacity = '1';
+  }
+}
+</script>
+
+<script>
+// --- Event handlers ---
+closeBtn.addEventListener('click', () => {
+  if (phase === 'banner') {
+    clearTimeout(collapseTimer);
+    phase = 'fading-content';
+    label.textContent = 'fadingContent';
+    startAnim('fade-content');
+  }
+});
+wClose.addEventListener('click', () => {
+  if (phase === 'widget') {
+    phase = 'dismissing';
+    label.textContent = 'dismissing';
+    startAnim('dismiss');
+  }
+});
+
+// --- Controls ---
+function replay(scale) {
+  resetAll();
+  timeScale = scale;
+  setTimeout(show, 150);
+}
+function resetAll() {
+  clearTimeout(collapseTimer);
+  stopAnim();
+  phase = 'hidden';
+  label.textContent = 'hidden';
+  bc.style.display = 'none';
+  bc.style.transform = 'none';
+  bc.style.opacity = '1';
+  bc.style.overflow = 'hidden';
+  bc.style.boxShadow = 'none';
+  bc.style.border = 'none';
+}
+
+// Auto-play
+setTimeout(() => { timeScale = 1; show(); }, 800);
+</script>
+</body>
+</html>

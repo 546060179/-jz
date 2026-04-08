@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>继续观看 - ShortMax</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #000;
+  font-family: 'Montserrat', -apple-system, 'PingFang SC', sans-serif;
+  display: flex; justify-content: center;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+.phone {
+  width: 375px; height: 812px;
+  position: relative; overflow: hidden;
+  background: #111218;
+}
+.scroll-area {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll-area::-webkit-scrollbar { display: none; }
+
+.header-bg {
+  position: absolute; top: 0; left: 0;
+  width: 375px; height: 140px; z-index: 0;
+}
+.header-bg-color {
+  position: absolute; top: 0; left: 0;
+  width: 375px; height: 168px;
+  background: linear-gradient(180deg, rgba(66,39,20,1) 50%, rgba(66,39,20,0) 100%);
+}
+.header-bg-img {
+  position: absolute; top: 0; left: 0;
+  width: 375px; height: 147px; object-fit: cover;
+}
+.header { position: sticky; top: 0; z-index: 30; }
+.status-bar {
+  height: 44px; padding: 0 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.status-time {
+  font-family: 'SF Pro Text', -apple-system, sans-serif;
+  font-weight: 600; font-size: 15px; color: #fff;
+  letter-spacing: -0.02em; margin-left: 21px; margin-top: 2px;
+}
+.status-icons { display: flex; align-items: center; gap: 5px; margin-right: 14px; }
+.search-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 16px; height: 32px;
+}
+.search-box {
+  flex: 1; height: 32px;
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 12px;
+  background: rgba(255,255,255,0.1);
+  border: 0.5px solid rgba(255,255,255,0.25);
+  border-radius: 4px;
+  backdrop-filter: blur(20px);
+}
+.search-text {
+  flex: 1; font-size: 10px; font-weight: 500; color: #828386;
+  line-height: 1.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.search-icon { width: 16px; height: 16px; flex-shrink: 0; }
+.welfare-icon { width: 36px; height: 36px; flex-shrink: 0; }
+.tab-nav {
+  display: flex; align-items: center; gap: 20px;
+  padding: 0 16px; height: 40px; position: relative;
+}
+.tab-item-nav {
+  font-size: 14px; font-weight: 500; color: #9F9FA2;
+  line-height: 1.43; letter-spacing: -0.02em;
+  white-space: nowrap; cursor: pointer; position: relative;
+}
+.tab-item-nav.faded { color: #828386; }
+.tab-item-nav.active {
+  font-size: 18px; font-weight: 700; color: #fff;
+  line-height: 1.33; letter-spacing: 0;
+}
+.tab-item-nav.active::after {
+  content: ''; position: absolute; bottom: -2px; left: 50%;
+  transform: translateX(-50%); width: 16px; height: 3px;
+  background: linear-gradient(90deg, #FF710B, #FF351C); border-radius: 2px;
+}
+.badge-720 {
+  position: absolute; right: 16px; top: 4px;
+  background: #FA1C24; border-radius: 100px;
+  padding: 0 4px 1px; font-size: 10px; font-weight: 500;
+  color: #fff; line-height: 1.6; height: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="scroll-area" id="scrollArea">
+    <div class="header-bg">
+      <div class="header-bg-color"></div>
+      <img class="header-bg-img" src="assets/header_bg.png" alt="">
+    </div>
+    <div class="header">
+      <div class="status-bar">
+        <span class="status-time">9:27</span>
+        <div class="status-icons">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="3" width="2" height="6" rx="0.5"/><rect x="4" y="2" width="2" height="7" rx="0.5"/><rect x="8" y="1" width="2" height="8" rx="0.5"/><rect x="12" y="0" width="2" height="9" rx="0.5"/></svg>
+          <svg width="15" height="12" viewBox="0 0 16 12" fill="#fff"><path d="M8 1.6C5.5 1.6 3.2 2.6 1.5 4.3L0 2.8C2.1.7 4.9-.4 8-.4s5.9 1.1 8 3.2L14.5 4.3C12.8 2.6 10.5 1.6 8 1.6zM8 5.6c-1.7 0-3.2.7-4.3 1.8L2.2 5.9C3.7 4.4 5.7 3.6 8 3.6s4.3.8 5.8 2.3L12.3 7.4C11.2 6.3 9.7 5.6 8 5.6zM8 9.6c-.8 0-1.6.3-2.1.9L8 12.6l2.1-2.1C9.6 9.9 8.8 9.6 8 9.6z"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12"><rect x="0" y="0" width="22" height="12" rx="2" stroke="#fff" stroke-opacity="0.35" fill="none"/><rect x="1" y="1" width="18" height="10" rx="1" fill="#fff"/><rect x="23" y="3.5" width="2" height="5" rx="1" fill="#fff" opacity="0.4"/></svg>
+        </div>
+      </div>
+      <div class="search-row">
+        <div class="search-box">
+          <span class="search-text">Lycan Princess Won't Be Your Luna</span>
+          <svg class="search-icon" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#CCCDD4" stroke-width="1.2"/><line x1="11" y1="11" x2="14" y2="14" stroke="#CCCDD4" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <img class="welfare-icon" src="assets/icon_welfare.svg" alt="">
+      </div>
+      <div class="tab-nav">
+        <span class="tab-item-nav active">Popular</span>
+        <span class="tab-item-nav">VIP</span>
+        <span class="tab-item-nav">Rankings</span>
+        <span class="tab-item-nav">Categories</span>
+        <span class="tab-item-nav faded">Marriage</span>
+        <span class="tab-item-nav">Werewolf</span>
+        <span class="tab-item-nav">Fantasy</span>
+        <span class="badge-720">+720</span>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+
+  <!-- ====== ANIMATION LAYER (absolute positioned inside .phone) ====== -->
+  <!-- This single div is the animated element that morphs through all states -->
+  <div class="anim-container" id="animContainer"></div>
+
+  <!-- Tab Bar -->
+  <div class="tabbar" id="tabbar">
+    <div class="tabbar-row">
+      <div class="tab-btn active">
+        <svg width="24" height="24" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" fill="#fff"/></svg>
+        <span>Home</span>
+      </div>
+      <div class="tab-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="18" rx="1" stroke="#9F9FA2" stroke-width="1.5" fill="none"/><rect x="14" y="3" width="7" height="18" rx="1" stroke="#9F9FA2" stroke-width="1.5" fill="none"/></svg>
+        <span>Short</span>
+      </div>
+      <div class="tab-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24"><path d="M19 21l-7-4-7 4V5a2 2 0 012-2h10a2 2 0 012 2z" stroke="#9F9FA2" stroke-width="1.5" fill="none"/></svg>
+        <span>My List</span>
+      </div>
+      <div class="tab-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" stroke="#9F9FA2" stroke-width="1.5" fill="none"/><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="#9F9FA2" stroke-width="1.5" fill="none"/></svg>
+        <span>Profile</span>
+      </div>
+    </div>
+    <div class="home-indicator"></div>
+  </div>
+
+  <div class="demo-ctrl">
+    <button class="demo-btn" onclick="replay()">▶ 播放动效</button>
+    <button class="demo-btn" onclick="replaySlow()">🐢 0.2x 慢放</button>
+    <button class="demo-btn" onclick="resetAll()">↺ 重置</button>
+  </div>
+</div>
+
+<style>
+/* === Content Cards === */
+.content { padding: 12px 0; display: flex; flex-direction: column; gap: 28px; position: relative; z-index: 1; }
+.feed3 { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
+.card-row { display: flex; gap: 8px; }
+.card3 { width: 109px; display: flex; flex-direction: column; gap: 8px; }
+.card3-cover { width: 109px; height: 145px; border-radius: 4px; position: relative; overflow: hidden; }
+.card3-cover img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.card3-label { position: absolute; top: 0; right: 0; background: #F60F32; border-radius: 0 0 0 4px; padding: 1px 4px; font-size: 10px; font-weight: 500; color: #fff; line-height: 1.2; }
+.card3-label.new { background: #34C11C; }
+.card3-label.dub { background: #0FA5F6; }
+.card3-views { position: absolute; bottom: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: flex-end; gap: 2px; padding: 2px 4px; background: linear-gradient(180deg, rgba(17,18,24,0) 0%, rgba(17,18,24,0.5) 50%); }
+.card3-views svg { width: 12px; height: 12px; }
+.card3-views span { font-size: 10px; font-weight: 600; color: #fff; line-height: 1.6; }
+.card3-info { display: flex; flex-direction: column; gap: 4px; }
+.card3-name { font-size: 11px; font-weight: 500; color: #fff; line-height: 1.45; height: 32px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; word-break: break-word; }
+.card3-tag { display: inline-flex; align-items: center; gap: 2px; padding: 0 4px; height: 16px; background: #23252A; border-radius: 2px; border: 0.5px solid rgba(255,255,255,0.1); width: fit-content; }
+.card3-tag span { font-size: 10px; font-weight: 500; color: #9F9FA2; line-height: 1.6; }
+.card3-tag.orange { background: rgba(246,97,15,0.15); border: none; }
+.card3-tag.orange span { color: #F6610F; }
+
+.section-hdr { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.section-title { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.33; flex: 1; }
+
+.feed-h { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
+.h-scroll { display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -16px; padding: 0 16px; }
+.h-scroll::-webkit-scrollbar { display: none; }
+.card-h { width: 134px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; }
+.card-h-cover { width: 134px; height: 178px; border-radius: 4px; position: relative; overflow: hidden; border: 0.5px solid #2B2A2D; }
+.card-h-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-h-views { position: absolute; bottom: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: flex-end; gap: 2px; padding: 2px 4px; background: linear-gradient(180deg, rgba(17,18,24,0) 0%, rgba(17,18,24,0.5) 50%); }
+.card-h-views svg { width: 12px; height: 12px; }
+.card-h-views span { font-size: 10px; font-weight: 600; color: #fff; line-height: 1.6; }
+.card-h-info { display: flex; flex-direction: column; gap: 4px; }
+.card-h-name { font-size: 12px; font-weight: 500; color: #fff; line-height: 1.33; height: 32px; letter-spacing: -0.02em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; word-break: break-word; text-align: center; }
+.card-h-date { font-size: 10px; font-weight: 500; color: #9F9FA2; line-height: 1.6; }
+.card-h-btn { display: flex; align-items: center; justify-content: center; gap: 4px; padding: 4px 12px; background: #fff; border-radius: 4px; font-size: 12px; font-weight: 500; color: #23252A; line-height: 1.33; }
+.card-h-btn svg { width: 16px; height: 16px; }
+
+.feed2 { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
+.feed2-grid { display: flex; gap: 12px; }
+.feed2-col { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+.card2 { display: flex; flex-direction: column; gap: 8px; }
+.card2-cover { width: 100%; aspect-ratio: 109/145; border-radius: 4px; position: relative; overflow: hidden; }
+.card2-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card2-label { position: absolute; top: 0; right: 0; background: #F60F32; border-radius: 0 0 0 4px; padding: 1px 4px; font-size: 10px; font-weight: 500; color: #fff; line-height: 1.2; }
+.card2-views { position: absolute; bottom: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: flex-end; gap: 2px; padding: 2px 4px; background: linear-gradient(180deg, rgba(17,18,24,0) 0%, rgba(17,18,24,0.5) 50%); }
+.card2-views svg { width: 12px; height: 12px; }
+.card2-views span { font-size: 10px; font-weight: 600; color: #fff; line-height: 1.6; }
+.card2-info { display: flex; flex-direction: column; gap: 4px; }
+.card2-name { font-size: 11px; font-weight: 500; color: #fff; line-height: 1.45; height: 32px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; word-break: break-word; }
+.card2-tag { display: inline-flex; align-items: center; gap: 2px; padding: 0 4px; height: 16px; background: #23252A; border-radius: 2px; border: 0.5px solid rgba(255,255,255,0.1); width: fit-content; }
+.card2-tag span { font-size: 10px; font-weight: 500; color: #9F9FA2; line-height: 1.6; }
+.card2-tag.orange { background: rgba(246,97,15,0.15); border: none; }
+.card2-tag.orange span { color: #F6610F; }
+
+.ranking-card { background: #191B21; border-radius: 8px; padding: 12px; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; }
+.ranking-hdr { display: flex; align-items: center; justify-content: center; width: 100%; position: relative; z-index: 1; }
+.ranking-hdr-title { font-size: 14px; font-weight: 700; line-height: 1.43; text-align: center; }
+.ranking-hdr-title.green { background: linear-gradient(90deg, #93E685, #34C11C); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.ranking-hdr-title.orange { background: linear-gradient(90deg, #FFB790, #F6610F); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.ranking-list { display: flex; flex-direction: column; gap: 8px; width: 100%; position: relative; z-index: 1; }
+.ranking-item { display: flex; align-items: center; gap: 8px; width: 100%; }
+.ranking-thumb { width: 36px; height: 48px; border-radius: 2px; position: relative; overflow: hidden; flex-shrink: 0; }
+.ranking-num { position: absolute; bottom: 0; left: 0; width: 17.6px; height: 17.6px; }
+.ranking-num svg { width: 22px; height: 22px; margin: -2px 0 0 -2px; }
+.ranking-num span { position: absolute; top: 4px; left: 3px; font-family: 'Oswald'; font-size: 10px; font-weight: 700; color: #fff; line-height: 1.5; }
+.ranking-meta { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.ranking-name { font-size: 10px; font-weight: 500; color: #CCCDD4; line-height: 1.2; height: 24px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; word-break: break-word; }
+.ranking-views { display: flex; align-items: center; gap: 4px; }
+.ranking-views svg { width: 12px; height: 12px; }
+.ranking-views span { font-size: 9px; font-weight: 600; color: #fff; line-height: 1.78; }
+.ranking-footer { display: flex; align-items: center; justify-content: center; gap: 2px; width: 100%; position: relative; z-index: 1; }
+.ranking-footer span { font-size: 10px; font-weight: 500; color: #9F9FA2; line-height: 1.6; }
+
+.bottom-spacer { height: 160px; }
+</style>
+
+<style>
+/* === Tab Bar === */
+.tabbar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 83px; z-index: 10;
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  background: #191B21;
+}
+.tabbar-row { display: flex; height: 53px; align-items: stretch; }
+.tab-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 8px; }
+.tab-btn span { font-size: 10px; font-weight: 500; color: #9F9FA2; line-height: 1.6; }
+.tab-btn.active span { color: #fff; }
+.home-indicator { width: 134px; height: 5px; background: #fff; border-radius: 3px; margin: 12px auto 0; opacity: 0.3; }
+
+/* === Animation Container === */
+.anim-container {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* === Demo Controls === */
+.demo-ctrl { position: absolute; top: 50px; right: 10px; z-index: 100; display: flex; flex-direction: column; gap: 6px; }
+.demo-btn { background: #F6610F; color: #fff; border: none; border-radius: 6px; padding: 6px 10px; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.demo-btn:hover { background: #e55a0e; }
+</style>
+
+<script>
+// === SVG Icons ===
+const playSvg = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3.21 1.5L9.5 6L3.21 10.5V1.5Z" fill="#fff"/></svg>`;
+const arrowSvg = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.25 2.5L8.25 6L4.25 9.5" stroke="#9F9FA2" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const arrowBigSvg = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.5 4L14 10L7.5 16" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const fireSvg = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1C6 1 2 4.5 2 7.5C2 9.7 3.8 11 6 11C8.2 11 10 9.7 10 7.5C10 4.5 6 1 6 1Z" fill="#F6610F"/></svg>`;
+
+const cards3 = [
+  [{ img:'assets/card_1.png', name:"Lycan Princess Won't Be Your Luna", label:'Hot', lc:'', views:'667.3M', tag:'Monthly List', tagExtra:'Top5.' },
+   { img:'assets/card_2.png', name:'Sinful Love With Alphas', label:'New', lc:'new', views:'93.3M', tag:'Secret Baby' },
+   { img:'assets/card_3.png', name:'Sweet Rebirth Fated Revenge', label:'', lc:'', views:'667.3M', tag:'Revenge' }],
+  [{ img:'assets/card_4.png', name:"Mommy, We Need Daddy! CEO's Escaped Wife Returns", label:'Dubbed', lc:'dub', views:'667.3M', tag:'CEO' },
+   { img:'assets/card_5.png', name:"Mommy, We Need Daddy! CEO's Escaped Wife Returns", label:'Dubbed', lc:'dub', views:'667.3M', tag:'Secret Baby' },
+   { img:'assets/card_6.png', name:'Sweet Rebirth Fated Revenge', label:'', lc:'', views:'667.3M', tag:'Revenge' }],
+  [{ img:'assets/card_7.png', name:"Mommy, We Need Daddy! CEO's Escaped Wife Returns", label:'', lc:'', views:'667.3M', tag:'CEO' },
+   { img:'assets/card_8.png', name:'Sweet Rebirth Fated Revenge', label:'', lc:'', views:'667.3M', tag:'Revenge' },
+   { img:'assets/card_9.png', name:'The Forbidden Alpha', label:'Hot', lc:'', views:'667.3M', tag:'Most Popular List', tagExtra:'Top3.' }]
+];
+const comingSoon = [
+  { img:'assets/coming_1.png', name:'A Rejeitada Luna Voltou com um Filho', date:'2025-06-24', views:'667.3M' },
+  { img:'assets/coming_2.png', name:"Daddy CEO'S Escaped Wife", date:'2025-06-29', views:'667.3M', btn:'Reserved' },
+  { img:'assets/coming_3.png', name:'Amarte en el momento equivocado', date:'2025-06-29', views:'667.3M' }
+];
+const rankingNew = [
+  { name:"Mommy, We Need Daddy! CEO's Escaped Wife Returns", views:'667.3M' },
+  { name:'The Trap Of Devil Billionaire', views:'667.3M' },
+  { name:'Awakening rejected mate', views:'667.3M' }
+];
+const rankingPop = [
+  { name:"Mommy, We Need Daddy! CEO's Escaped Wife Returns", views:'147.1 M' },
+  { name:'The Trap Of Devil Billionaire', views:'133.6 M' },
+  { name:'Awakening rejected mate', views:'114.9 M' },
+  { name:"Billionaire's Substitute Bride", views:'99.8 M' }
+];
+
+function rc3(c) {
+  return `<div class="card3"><div class="card3-cover"><img src="${c.img}" alt="" loading="lazy">${c.label?`<div class="card3-label ${c.lc}">${c.label}</div>`:''}<div class="card3-views">${playSvg}<span>${c.views}</span></div></div><div class="card3-info"><div class="card3-name">${c.name}</div><div class="card3-tag${c.tagExtra?' orange':''}"><span>${c.tag}</span>${c.tagExtra?`<span>${c.tagExtra}</span>`:''}${arrowSvg}</div></div></div>`;
+}
+function rcH(c) {
+  const bt=c.btn||'Remind Me';
+  const bi=c.btn==='Reserved'?`<svg viewBox="0 0 16 16" fill="none"><path d="M6.5 11.5L3 8l1-1 2.5 2.5 5-5 1 1z" fill="#23252A"/></svg>`:`<svg viewBox="0 0 16 16" fill="none"><path d="M8 1v6M8 11v1M5 8h6" stroke="#23252A" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="8" r="6.5" stroke="#23252A" stroke-width="1.2"/></svg>`;
+  return `<div class="card-h"><div class="card-h-cover"><img src="${c.img}" alt="" loading="lazy"><div class="card-h-views">${playSvg}<span>${c.views}</span></div></div><div class="card-h-info"><div class="card-h-name">${c.name}</div><div class="card-h-date">${c.date}</div><div class="card-h-btn">${bi}${bt}</div></div></div>`;
+}
+function rRI(r,i,color) {
+  const nc=color==='green'?'#34C11C':'#F6610F';
+  const vi=color==='orange'?fireSvg:playSvg;
+  const vs=color==='orange'?'font-weight:700;color:#F6610F;':'';
+  return `<div class="ranking-item"><div class="ranking-thumb"><div style="width:36px;height:48px;background:linear-gradient(135deg,#333,#666);border-radius:2px;"></div><div class="ranking-num"><svg viewBox="0 0 22 22"><polygon points="0,0 17.6,0 17.6,12 8.8,17.6 0,12" fill="${nc}"/></svg><span>${i+1}</span></div></div><div class="ranking-meta"><div class="ranking-name">${r.name}</div><div class="ranking-views">${vi}<span style="${vs}">${r.views}</span></div></div></div>`;
+}
+
+let h='';
+h+='<div class="feed3">';
+cards3.forEach(row=>{h+='<div class="card-row">';row.forEach(c=>h+=rc3(c));h+='</div>';});
+h+='</div>';
+h+='<div class="feed-h"><div class="section-hdr"><span class="section-title">Coming Soon</span>'+arrowBigSvg+'</div><div class="h-scroll">';
+comingSoon.forEach(c=>h+=rcH(c));
+h+='</div></div>';
+h+='<div class="feed2"><div class="section-hdr"><span class="section-title">Recommend For you</span></div><div class="feed2-grid"><div class="feed2-col">';
+h+=`<div class="card2"><div class="card2-cover"><img src="assets/card_4.png" alt="" loading="lazy"><div class="card2-label">Hot</div><div class="card2-views">${playSvg}<span>667.3M</span></div></div><div class="card2-info"><div class="card2-name">Daddy CEO'S Escaped Wife</div><div class="card2-tag"><span>Secret Baby, Playboy, Modern</span></div></div></div>`;
+h+=`<div class="card2"><div class="card2-cover"><img src="assets/card_5.png" alt="" loading="lazy"><div class="card2-views">${playSvg}<span>667.3M</span></div></div><div class="card2-info"><div class="card2-name">Mommy, We Need Daddy! CEO's Escaped Wife Returns</div><div class="card2-tag"><span>Secret Baby, Playboy, Modern</span></div></div></div>`;
+h+=`<div class="card2"><div class="card2-cover"><img src="assets/card_3.png" alt="" loading="lazy"><div class="card2-label" style="background:#F6610F;">Original</div><div class="card2-views">${playSvg}<span>667.3M</span></div></div><div class="card2-info"><div class="card2-name">My Mistaken Lover</div><div class="card2-tag"><span>Secret Baby, Playboy, Modern</span></div><div class="card2-tag orange"><span>Raking Monthly Top5</span>${arrowSvg}</div></div></div>`;
+h+='<div class="ranking-card" style="border:1px solid;border-image:linear-gradient(124deg,rgba(52,193,28,1) 0%,rgba(52,193,28,0) 29%) 1;border-radius:8px;"><div class="ranking-hdr"><div class="ranking-hdr-title green">New Drama</div></div><div class="ranking-list">';
+rankingNew.forEach((r,i)=>h+=rRI(r,i,'green'));
+h+='</div><div class="ranking-footer"><span>Explore More</span>'+arrowSvg+'</div></div>';
+h+=`<div class="card2"><div class="card2-cover"><img src="assets/card_6.png" alt="" loading="lazy"><div class="card2-views">${playSvg}<span>667.3M</span></div></div><div class="card2-info"><div class="card2-name">After Revenge Duvorce</div><div class="card2-tag"><span>Secret Baby, Playboy, Modern</span></div></div></div>`;
+h+=`<div class="card2"><div class="card2-cover"><img src="assets/card_1.png" alt="" loading="lazy"><div class="card2-label">Hot</div><div class="card2-views">${playSvg}<span>667.3M</span></div></div><div class="card2-info"><div class="card2-name">The Unwanted Bride Of Atticus Fawn</div><div class="card2-tag"><span>Secret Baby, Playboy, Modern</span></div></div></div>`;
+h+='</div><div class="feed2-col">';
+h+='<div class="ranking-card" style="border:1px solid;border-image:linear-gradient(124deg,rgba(246,97,15,1) 0%,rgba(246,97,15,0) 29%) 1;border-radius:8px;"><div class="ranking-hdr"><div class="ranking-hdr-title orange">Most Popular</div></div><div class="ranking-list">';
+rankingPop.forEach((r,i)=>h+=rRI(r,i,'orange'));
+h+='</div><div class="ranking-footer"><span>Explore More</span>'+arrowSvg+'</div></div>';
+h+=`<div class="card2"><div class="card2-cover"><img src="assets/card_7.png" alt="" loading="lazy"><div class="card2-label">Hot</div><div class="card2-views">${playSvg}<span>667.3M</span></div></div><div class="card2-info"><div class="card2-name">My Mistaken Lover</div><div class="card2-tag"><span>Secret Baby, Playboy, Modern</span></div><div class="card2-tag orange"><span>4th in Most Popular</span>${arrowSvg}</div></div></div>`;
+h+=`<div class="card2"><div class="card2-cover"><img src="assets/card_8.png" alt="" loading="lazy"><div class="card2-label">Hot</div><div class="card2-views">${playSvg}<span>667.3M</span></div></div><div class="card2-info"><div class="card2-name">Billionaire's Abused Lover</div><div class="card2-tag"><span>Secret Baby, Playboy, Modern</span></div></div></div>`;
+h+=`<div class="card2"><div class="card2-cover"><img src="assets/card_9.png" alt="" loading="lazy"><div class="card2-views">${playSvg}<span>667.3M</span></div></div><div class="card2-info"><div class="card2-name">Imprisoned Sinful Desire</div><div class="card2-tag"><span>Secret Baby, Playboy, Modern</span></div></div></div>`;
+h+=`<div class="card2"><div class="card2-cover"><img src="assets/card_2.png" alt="" loading="lazy"><div class="card2-views">${playSvg}<span>667.3M</span></div></div><div class="card2-info"><div class="card2-name">The Forbidden Alpha</div><div class="card2-tag"><span>Secret Baby, Playboy, Modern</span></div></div></div>`;
+h+=`<div class="card2"><div class="card2-cover"><img src="assets/card_1.png" alt="" loading="lazy"><div class="card2-views">${playSvg}<span>667.3M</span></div></div><div class="card2-info"><div class="card2-name">Daddy CEO'S Escaped Wife</div><div class="card2-tag"><span>Secret Baby, Playboy, Modern</span></div></div></div>`;
+h+='</div></div></div>';
+h+='<div class="bottom-spacer"></div>';
+document.getElementById('content').innerHTML = h;
+</script>
+
+<script>
+// ================================================================
+// FRAME-PERFECT ANIMATION ENGINE
+// Using Web Animations API + requestAnimationFrame for precise control
+//
+// Timeline (matching the Figma prototype video):
+// Phase 1 (0-400ms): Banner slides up from below tabbar
+// Phase 2 (400ms-3400ms): Banner stays visible, user can interact
+// Phase 3 (3400ms-3700ms): Info/play/close fade out
+// Phase 4 (3700ms-4200ms): Banner background shrinks to cover size
+// Phase 5 (4200ms-4900ms): Cover morphs to floating widget position
+// Phase 6 (4900ms+): Widget idle with play/close overlay
+// ================================================================
+
+const ac = document.getElementById('animContainer');
+const phone = document.getElementById('phone');
+
+// Figma-exact dimensions
+const PHONE_W = 375, PHONE_H = 812;
+const TABBAR_H = 83;
+const BANNER_H = 68; // 4px top padding + 60px cover + 4px bottom padding
+const COVER_W = 44.35, COVER_H = 60;
+const WIDGET_W = 90, WIDGET_H = 120, WIDGET_R = 8;
+const WIDGET_LEFT = 0, WIDGET_BOTTOM = TABBAR_H + 8;
+
+let currentAnim = null;
+let state = 'idle';
+let timeScale = 1; // 1 = normal, 5 = 5x slower
+
+// Banner HTML template (Figma-exact layout)
+function bannerHTML(infoOpacity, playOpacity, closeOpacity) {
+  return `
+    <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;">
+      <img src="assets/banner_cover-ccc438.png" style="width:${COVER_W}px;height:${COVER_H}px;border-radius:4px;object-fit:cover;display:block;flex-shrink:0;">
+      <div style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;overflow:hidden;opacity:${infoOpacity};transition:opacity 0.3s ease;">
+        <div style="font-size:12px;font-weight:600;color:#fff;line-height:1.33;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Genius Baby：daddy please take mommy away</div>
+        <div style="font-size:10px;font-weight:500;color:#9F9FA2;line-height:1.6;">EP.1  /  EP.100</div>
+      </div>
+      <div style="flex-shrink:0;width:32px;height:32px;opacity:${playOpacity};transition:opacity 0.3s ease;">
+        <svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#F6610F"/><path d="M13 9.5V22.5L24 16L13 9.5Z" fill="#fff"/></svg>
+      </div>
+    </div>
+    <div id="bannerCloseBtn" style="flex-shrink:0;width:20px;height:20px;cursor:pointer;opacity:${closeOpacity};transition:opacity 0.3s ease;">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><line x1="4" y1="4" x2="16" y2="16" stroke="#9F9FA2" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="4" x2="4" y2="16" stroke="#9F9FA2" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>`;
+}
+
+// Widget HTML template
+function widgetHTML() {
+  return `
+    <img src="assets/banner_cover-ccc438.png" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;">
+    <div id="widgetPlayBtn" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);cursor:pointer;line-height:0;opacity:0;transition:opacity 0.35s ease;">
+      <svg width="38" height="38" viewBox="0 0 38 38"><circle cx="19" cy="19" r="19" fill="rgba(0,0,0,0.45)"/><path d="M15.5 11V27L28 19L15.5 11Z" fill="#fff"/></svg>
+    </div>
+    <div id="widgetCloseBtn" style="position:absolute;right:-7px;top:-7px;cursor:pointer;line-height:0;opacity:0;transition:opacity 0.35s ease;">
+      <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="9" fill="rgba(0,0,0,0.55)"/><line x1="5.5" y1="5.5" x2="12.5" y2="12.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/><line x1="12.5" y1="5.5" x2="5.5" y2="12.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </div>`;
+}
+
+// Utility: set ac position/size using bottom-based coordinates
+function setBox(left, bottom, width, height, radius, bg, shadow, border) {
+  ac.style.left = left + 'px';
+  ac.style.bottom = bottom + 'px';
+  ac.style.width = width + 'px';
+  ac.style.height = height + 'px';
+  ac.style.borderRadius = radius;
+  ac.style.background = bg || '';
+  ac.style.boxShadow = shadow || 'none';
+  ac.style.border = border || 'none';
+}
+
+// Utility: lerp
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+// Easing functions
+function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+function easeInOutCubic(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
+function easeOutBack(t) { const c1=1.70158; const c3=c1+1; return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2); }
+function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+
+// ================================================================
+// MAIN ANIMATION SEQUENCE
+// ================================================================
+function runAnimation() {
+  if (state !== 'idle') return;
+  state = 'running';
+
+  // Banner full-width state
+  const B_LEFT = 0;
+  const B_BOTTOM = TABBAR_H; // sits right on top of tabbar
+  const B_WIDTH = PHONE_W;
+  const B_RADIUS = '8px 8px 0 0';
+  const B_BG = '#26282E';
+
+  // Banner collapsed to just cover
+  const C_WIDTH = COVER_W + 8; // 4px padding each side
+  const C_HEIGHT = COVER_H + 8;
+  const C_LEFT = 0;
+  const C_BOTTOM = TABBAR_H;
+
+  // Widget final state
+  const W_LEFT = WIDGET_LEFT;
+  const W_BOTTOM = WIDGET_BOTTOM;
+  const W_WIDTH = WIDGET_W;
+  const W_HEIGHT = WIDGET_H;
+
+  // ---- Phase 1: Slide up ----
+  ac.innerHTML = bannerHTML(1, 1, 1);
+  ac.style.display = 'flex';
+  ac.style.alignItems = 'center';
+  ac.style.gap = '12px';
+  ac.style.padding = '4px 16px 4px 4px';
+  ac.style.overflow = 'hidden';
+  ac.style.pointerEvents = 'auto';
+  ac.style.opacity = '1';
+  ac.style.transform = 'none';
+
+  setBox(B_LEFT, B_BOTTOM, B_WIDTH, BANNER_H, B_RADIUS, B_BG, 'none', 'none');
+
+  // Start off-screen (below)
+  ac.style.transform = 'translateY(100%)';
+  ac.style.opacity = '0';
+
+  // Bind close button
+  const closeBtn = document.getElementById('bannerCloseBtn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      if (state === 'banner-visible') skipToCollapse();
+    });
+  }
+
+  let startTime = null;
+  let phase = 'slide-up';
+  let collapseStartTime = null;
+
+  function tick(now) {
+    if (state === 'idle') return; // cancelled
+    if (!startTime) startTime = now;
+    const elapsed = now - startTime;
+
+    if (phase === 'slide-up') {
+      // 0 → 450ms: slide up with spring
+      const dur = 450 * timeScale;
+      const t = Math.min(elapsed / dur, 1);
+      const e = easeOutCubic(t);
+      ac.style.transform = `translateY(${(1 - e) * 100}%)`;
+      ac.style.opacity = String(Math.min(t * 3, 1)); // fade in fast
+
+      if (t >= 1) {
+        ac.style.transform = 'none';
+        ac.style.opacity = '1';
+        phase = 'banner-wait';
+        state = 'banner-visible';
+        startTime = now;
+      }
+      requestAnimationFrame(tick);
+    }
+    else if (phase === 'banner-wait') {
+      // Wait 3 seconds then auto-collapse
+      if (elapsed >= 3000 * timeScale) {
+        skipToCollapse();
+      } else {
+        requestAnimationFrame(tick);
+      }
+    }
+    else if (phase === 'fade-content') {
+      // 0 → 300ms: fade out info, play, close
+      if (!collapseStartTime) collapseStartTime = now;
+      const ce = now - collapseStartTime;
+      const dur = 300 * timeScale;
+      const t = Math.min(ce / dur, 1);
+      const e = easeOutCubic(t);
+
+      // Fade out text and buttons
+      const info = ac.querySelector('div > div:nth-child(2)');
+      const play = ac.querySelector('div > div:nth-child(3)');
+      const close = ac.querySelector('#bannerCloseBtn');
+      if (info) info.style.opacity = String(1 - e);
+      if (play) play.style.opacity = String(1 - e);
+      if (close) close.style.opacity = String(1 - e);
+
+      if (t >= 1) {
+        phase = 'shrink-banner';
+        collapseStartTime = now;
+      }
+      requestAnimationFrame(tick);
+    }
+    else if (phase === 'shrink-banner') {
+      // 0 → 400ms: shrink banner width from full to cover size
+      const ce = now - collapseStartTime;
+      const dur = 400 * timeScale;
+      const t = Math.min(ce / dur, 1);
+      const e = easeInOutCubic(t);
+
+      const curW = lerp(B_WIDTH, C_WIDTH, e);
+      const curH = lerp(BANNER_H, C_HEIGHT, e);
+      const curR = t < 0.5 ? '8px 8px 0 0' : `${lerp(8, 4, (t-0.5)*2)}px`;
+
+      ac.style.width = curW + 'px';
+      ac.style.height = curH + 'px';
+      ac.style.borderRadius = curR;
+      ac.style.padding = `${lerp(4, 0, e)}px ${lerp(16, 0, e)}px ${lerp(4, 0, e)}px ${lerp(4, 0, e)}px`;
+
+      // Fade out background
+      const bgOpacity = lerp(1, 0, Math.max(0, (t - 0.5) * 2));
+      ac.style.background = `rgba(38, 40, 46, ${bgOpacity})`;
+
+      if (t >= 1) {
+        phase = 'morph-to-widget';
+        collapseStartTime = now;
+        // Switch to widget content
+        ac.innerHTML = widgetHTML();
+        ac.style.display = 'block';
+        ac.style.padding = '0';
+        ac.style.overflow = 'visible';
+        ac.style.background = 'none';
+
+        // Start from cover position
+        setBox(C_LEFT, C_BOTTOM, C_WIDTH, C_HEIGHT, '4px', 'none', 'none', 'none');
+      }
+      requestAnimationFrame(tick);
+    }
+    else if (phase === 'morph-to-widget') {
+      // 0 → 550ms: morph from cover position to widget position with overshoot
+      const ce = now - collapseStartTime;
+      const dur = 550 * timeScale;
+      const t = Math.min(ce / dur, 1);
+      const e = easeOutBack(t);
+
+      const curL = lerp(C_LEFT, W_LEFT, e);
+      const curB = lerp(C_BOTTOM, W_BOTTOM, e);
+      const curW = lerp(C_WIDTH, W_WIDTH, e);
+      const curH = lerp(C_HEIGHT, W_HEIGHT, e);
+      const curR = lerp(4, WIDGET_R, easeOutCubic(t));
+
+      ac.style.left = curL + 'px';
+      ac.style.bottom = curB + 'px';
+      ac.style.width = curW + 'px';
+      ac.style.height = curH + 'px';
+      ac.style.borderRadius = curR + 'px';
+
+      // Shadow fades in
+      const shadowT = easeOutCubic(t);
+      ac.style.boxShadow = `4px 4px 16px rgba(0,0,0,${shadowT * 0.4})`;
+      ac.style.border = `1px solid rgba(255,255,255,${shadowT * 0.15})`;
+
+      if (t >= 1) {
+        phase = 'widget-idle';
+        state = 'widget';
+        ac.style.pointerEvents = 'auto';
+
+        // Show play and close buttons
+        const playBtn = document.getElementById('widgetPlayBtn');
+        const closeBtn2 = document.getElementById('widgetCloseBtn');
+        if (playBtn) playBtn.style.opacity = '1';
+        if (closeBtn2) {
+          closeBtn2.style.opacity = '1';
+          closeBtn2.addEventListener('click', dismissWidget);
+        }
+        return; // stop animation loop
+      }
+      requestAnimationFrame(tick);
+    }
+  }
+
+  function skipToCollapse() {
+    if (phase !== 'banner-wait' && phase !== 'slide-up') return;
+    phase = 'fade-content';
+    state = 'collapsing';
+    ac.style.pointerEvents = 'none';
+    collapseStartTime = null;
+    // Don't reset startTime, just continue the rAF loop
+    if (phase === 'fade-content') requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
+}
+
+// ================================================================
+// DISMISS WIDGET
+// ================================================================
+function dismissWidget() {
+  if (state !== 'widget') return;
+  state = 'dismissing';
+  ac.style.pointerEvents = 'none';
+
+  const startTime = performance.now();
+  const dur = 300 * timeScale;
+
+  function tick(now) {
+    const t = Math.min((now - startTime) / dur, 1);
+    const e = easeOutCubic(t);
+
+    ac.style.opacity = String(1 - e);
+    ac.style.transform = `scale(${lerp(1, 0.7, e)}) translateY(${lerp(0, 30, e)}px)`;
+
+    if (t >= 1) {
+      ac.style.display = 'none';
+      ac.style.cssText = '';
+      ac.innerHTML = '';
+      state = 'idle';
+      return;
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+// ================================================================
+// CONTROLS
+// ================================================================
+function replay() {
+  resetAll();
+  timeScale = 1;
+  setTimeout(runAnimation, 150);
+}
+
+function replaySlow() {
+  resetAll();
+  timeScale = 5;
+  setTimeout(runAnimation, 150);
+}
+
+function resetAll() {
+  state = 'idle';
+  ac.style.cssText = '';
+  ac.innerHTML = '';
+  ac.style.display = 'none';
+}
+
+// Auto-play on load
+setTimeout(runAnimation, 800);
+</script>
+
+</body>
+</html>

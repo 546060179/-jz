@@ -1,0 +1,74 @@
+{
+  "name": "notification_reward_popup",
+  "description": "BingeUp 通知奖励弹窗 — 礼盒与金币弹簧动效",
+  "layers": {
+    "trophy": {
+      "description": "礼盒弹簧弹入，延迟 ~100ms",
+      "delayMs": 100,
+      "spring": {
+        "stiffness": 160,
+        "damping": 10,
+        "mass": 1
+      },
+      "from": {
+        "opacity": 0,
+        "scaleX": 0,
+        "scaleY": 0,
+        "rotation": -8
+      },
+      "to": {
+        "opacity": 1,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "ios": {
+        "method": "UIView.animate(usingSpringWithDamping:)",
+        "duration": 0.8,
+        "delay": 0.15,
+        "dampingRatio": 0.5,
+        "initialSpringVelocity": 0
+      },
+      "android": {
+        "method": "SpringAnimation",
+        "stiffness": 160,
+        "dampingRatio": 0.354,
+        "startDelay": 100
+      }
+    },
+    "coins": {
+      "description": "金币弹簧弹入，延迟 ~167ms",
+      "delayMs": 167,
+      "spring": {
+        "stiffness": 140,
+        "damping": 10,
+        "mass": 1
+      },
+      "from": {
+        "opacity": 0,
+        "scaleX": 0,
+        "scaleY": 0,
+        "translateY": 10
+      },
+      "to": {
+        "opacity": 1,
+        "scaleX": 1,
+        "scaleY": 1,
+        "translateY": 0
+      },
+      "ios": {
+        "method": "UIView.animate(usingSpringWithDamping:)",
+        "duration": 0.85,
+        "delay": 0.22,
+        "dampingRatio": 0.48,
+        "initialSpringVelocity": 0
+      },
+      "android": {
+        "method": "SpringAnimation",
+        "stiffness": 140,
+        "dampingRatio": 0.354,
+        "startDelay": 167
+      }
+    }
+  }
+}
