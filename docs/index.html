@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KINETIC UI - 跨端动效组件库</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rubik:wght@400;600;700&family=Montserrat:wght@600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--c:#186CE5;--ch:#6AADFF;--bg:#151515;--bg2:#171717;--bg3:#1C1C1C;--t1:#FFFFFF;--t2:rgba(255,255,255,.6);--t3:rgba(255,255,255,.4);--bd:rgba(217,217,217,.12);--r:24px;--hh:68px;--ff:'PingFang SC',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--mono:'Fira Code',monospace;--rubik:'Rubik',var(--ff)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ff);color:var(--t1);background:var(--bg);line-height:1.6}
+a{color:var(--ch);text-decoration:none}
+code{font-family:var(--mono);font-size:.85em;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:var(--ch)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#444;border-radius:20px}
+
+.hd{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--hh);background:var(--bg);display:flex;align-items:center;padding:18px 40px;justify-content:space-between}
+.hd-logo{font-family:var(--rubik);font-size:24px;font-weight:700;color:#fff;cursor:pointer;display:flex;align-items:center;gap:12px;line-height:1em}
+.hd-logo-icon{width:32px;height:32px;border-radius:8px;flex-shrink:0;overflow:hidden}
+.hd-r{display:flex;align-items:center;gap:32px}
+.hd-search-wrap{position:relative;width:270px}
+.hd-search{width:100%;height:40px;border-radius:100px;border:none;background:rgba(255,255,255,.12);backdrop-filter:blur(40px);padding:10px 44px 10px 20px;font-size:14px;font-weight:400;outline:none;color:var(--t1);font-family:var(--ff);line-height:1.43}
+.hd-search::placeholder{color:var(--t3)}
+.hd-search:focus{box-shadow:0 0 0 1px var(--c);background:rgba(255,255,255,.16)}
+.hd-search-ico{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none}
+.hd-kbd{display:none}
+.hd-link{font-size:14px;font-weight:600;color:#fff;cursor:pointer;text-decoration:none;font-family:var(--ff);line-height:1.43;transition:opacity .2s;opacity:.85}
+.hd-link:hover{opacity:1}
+
+.wrap{display:flex;margin-top:var(--hh);min-height:calc(100vh - var(--hh))}
+.side{width:300px;min-width:190px;max-width:500px;flex-shrink:0;position:fixed;top:var(--hh);left:0;height:calc(100vh - var(--hh));overflow:hidden;padding:20px;background:var(--bg);z-index:50}
+.side-resize{position:absolute;top:0;right:0;width:4px;height:100%;cursor:col-resize;z-index:51}
+.side-resize:hover,.side-resize.dragging{background:var(--c);opacity:.5}
+.main{flex:1;margin-left:300px;padding:40px 40px 40px 40px;background:var(--bg);animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.side-head{display:none}
+.side-icon{display:none}
+.side-title{display:none}
+.side-sub{display:none}
+
+/* Sidebar — Figma KINETIC UI style */
+.side-inner{background:rgba(255,255,255,.02);border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:24px;height:calc(100vh - var(--hh) - 40px);overflow-y:auto;scrollbar-width:none}
+.side-inner::-webkit-scrollbar{width:6px;background:transparent}
+.side-inner::-webkit-scrollbar-thumb{background:transparent;border-radius:20px;transition:background .3s}
+.side-inner.scrolling::-webkit-scrollbar-thumb{background:#444}
+.side-inner.scrolling{scrollbar-width:thin;scrollbar-color:#444 transparent}
+.sg{padding:12px 24px;font-size:16px;font-weight:600;color:var(--t2);margin-top:0}
+.side-group{display:flex;flex-direction:column;gap:4px;border-top:1px solid rgba(217,217,217,.12);padding-top:0}
+.side-group:first-of-type{border-top:none}
+
+.si{display:block;padding:12px 24px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;border-radius:20px;transition:all .2s ease;line-height:1.33}
+.si:hover{color:var(--t1);background:rgba(255,255,255,.06)}
+.si.on{color:#fff !important;background:var(--c) !important;border-radius:20px;box-shadow:0 2px 8px rgba(24,108,229,.3)}
+.si-top{display:block;padding:12px 24px;font-size:16px;font-weight:600;color:var(--t2);background:transparent;border-radius:20px;cursor:pointer;text-align:left;border:none;transition:all .2s ease}
+.si-top:hover{background:rgba(255,255,255,.06);color:var(--t1)}
+.si-top.on{color:#fff !important;background:var(--c) !important;box-shadow:0 2px 8px rgba(24,108,229,.3)}
+.si .cnt{display:none}
+.si-ico{display:none}
+.side-ver{padding:12px 24px;font-family:'Montserrat',var(--ff);font-size:12px;font-weight:600;color:var(--t2);background:none;border-radius:12px;margin-top:8px;text-align:center}
+
+.pg-t{font-family:var(--rubik);font-size:32px;font-weight:700;margin-bottom:24px;color:var(--t1);line-height:1.375}
+.pg-d{font-size:14px;font-weight:400;color:var(--t2);margin-bottom:40px;line-height:1.43}
+
+
+/* Inline search in content area */
+.ov-search{position:relative;margin-bottom:24px}
+.ov-search input{width:100%;height:40px;border-radius:8px;border:1px solid var(--bd);background:var(--bg2);padding:0 16px 0 40px;font-size:14px;color:var(--t1);outline:none}
+.ov-search input::placeholder{color:var(--t3)}
+.ov-search input:focus{border-color:var(--c)}
+.ov-search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none}
+.sec{margin-bottom:32px}
+.sec h2{font-size:17px;font-weight:600;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--bd);color:var(--t1)}
+.sec p{font-size:13px;color:var(--t2);line-height:1.8;margin-bottom:6px}
+
+/* Category section */
+.cat-sec{margin-bottom:40px;scroll-margin-top:80px}
+.cat-sec:last-child{margin-bottom:0}
+.cat-sec h3{font-family:var(--rubik);font-size:24px;font-weight:700;color:var(--t1);margin-bottom:24px;display:flex;align-items:center;gap:8px;line-height:1.833}
+.cat-sec h3 span{font-family:var(--rubik);font-size:12px;font-weight:600;color:#fff;background:rgba(255,255,255,.1);padding:4px 8px;border-radius:8px}
+
+.cases{display:grid;grid-template-columns:repeat(5,1fr);gap:24px}
+.case{display:flex;flex-direction:column;border:none;cursor:pointer;transition:transform .25s ease,box-shadow .25s ease;background:transparent;overflow:hidden;border-radius:var(--r);min-width:0;border:1px solid transparent}
+.case:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.4);border-color:var(--c)}
+.case-preview{height:158px;background:var(--bg2);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;border-radius:var(--r) var(--r) 0 0}
+.case-preview .cp-wrap{transform:scale(1.6);display:flex;align-items:center;justify-content:center}
+.case-info{padding:20px 16px;background:var(--bg3);border-radius:0 0 var(--r) var(--r)}
+.case-name{font-size:14px;font-weight:600;color:#fff;line-height:1.43}
+.case-eng{font-size:11px;color:var(--t3);margin-top:2px;font-family:var(--mono)}
+.case-desc{display:none}
+
+.demo-replay{position:absolute;bottom:8px;right:8px;padding:3px 10px;border-radius:4px;font-size:10px;background:rgba(46,91,255,.15);color:var(--ch);border:1px solid rgba(46,91,255,.2);cursor:pointer;transition:opacity .15s;font-family:var(--ff)}
+
+/* Detail page — Ant Design style */
+.dt-title{font-size:30px;font-weight:600;color:var(--t1);margin-bottom:12px}
+.dt-desc{font-size:14px;color:var(--t2);line-height:1.8;margin-bottom:20px}
+.dt-import{margin-bottom:24px;padding:12px 16px;background:var(--bg3);border:1px solid var(--bd);border-radius:6px;font-family:var(--mono);font-size:13px;color:var(--t2)}
+.dt-section{margin-bottom:32px}
+.dt-section h2{font-size:20px;font-weight:600;color:var(--t1);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.dt-section h2 a{font-size:12px;color:var(--t3);margin-left:8px;font-weight:400}
+.dt-section h2 a:hover{color:var(--c)}
+.dt-when{font-size:14px;color:var(--t2);line-height:2}
+.dt-when li{list-style:none;padding-left:0}
+.dt-demo-box{border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin-bottom:16px}
+.dt-demo-preview{padding:40px;background:var(--bg3);display:flex;align-items:center;justify-content:center;min-height:160px;position:relative;cursor:pointer}
+.dt-demo-preview .cp-wrap{transform:scale(2);display:flex;align-items:center;justify-content:center}
+.dt-demo-preview:hover .demo-replay{opacity:1}
+.dt-demo-meta{padding:12px 16px;border-top:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
+.dt-demo-title{font-size:14px;font-weight:500;color:var(--t1)}
+.dt-demo-desc{font-size:13px;color:var(--t2);padding:0 16px 12px;line-height:1.7}
+.dt-demo-actions{display:flex;gap:8px}
+.dt-demo-actions button{background:none;border:none;color:var(--t3);cursor:pointer;padding:4px;font-size:14px}
+.dt-demo-actions button:hover{color:var(--t1)}
+.dt-api{margin-bottom:32px}
+.dt-api h2{font-size:20px;font-weight:600;color:var(--t1);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.dt-nav{position:fixed;right:24px;top:calc(var(--hh) + 24px);width:140px;font-size:12px;border-left:1px solid var(--bd);padding-left:0}
+.dt-nav a{display:block;padding:3px 0 3px 12px;color:var(--t3);cursor:pointer;transition:all .12s;line-height:1.6;border-left:2px solid transparent;margin-left:-1px}
+.dt-nav a:hover{color:var(--t1)}
+.dt-nav a.on{color:var(--c);border-left-color:var(--c)}
+.dt-prev-next{display:flex;justify-content:space-between;padding:24px 0;border-top:1px solid var(--bd);margin-top:32px}
+.dt-prev-next a{font-size:14px;color:var(--ch);cursor:pointer}
+.dt-prev-next a:hover{color:var(--c)}
+
+/* Visual Editor */
+.dt-editor{display:grid;grid-template-columns:320px 1fr;gap:16px;border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin-bottom:16px;background:var(--bg3)}
+.dt-editor-panel{padding:16px;border-right:1px solid var(--bd);display:flex;flex-direction:column;gap:14px;background:rgba(255,255,255,.02)}
+.dt-editor-row{display:flex;flex-direction:column;gap:6px}
+.dt-editor-row label{font-size:12px;color:var(--t3);font-weight:500;display:flex;justify-content:space-between;align-items:center}
+.dt-editor-row label .v{color:var(--ch);font-family:var(--mono)}
+.dt-editor-row input[type=range]{width:100%;accent-color:var(--c);cursor:pointer}
+.dt-editor-row input[type=range]:disabled{opacity:.4;cursor:not-allowed}
+.dt-editor-row select{width:100%;height:32px;border-radius:6px;border:1px solid var(--bd);background:var(--bg2);color:var(--t1);padding:0 10px;font-size:13px;outline:none;cursor:pointer;font-family:var(--ff)}
+.dt-editor-row select:focus{border-color:var(--c)}
+.dt-editor-row select:disabled{opacity:.4;cursor:not-allowed}
+.dt-editor-preview{padding:32px;display:flex;align-items:center;justify-content:center;min-height:200px;position:relative;cursor:pointer;background:var(--bg2)}
+.dt-editor-preview .cp-wrap{transform:scale(2);display:flex;align-items:center;justify-content:center}
+.dt-editor-reset{position:absolute;top:12px;right:12px;padding:4px 12px;border-radius:4px;font-size:11px;background:rgba(255,255,255,.06);border:1px solid var(--bd);color:var(--t2);cursor:pointer;font-family:var(--ff)}
+.dt-editor-reset:hover{background:rgba(24,108,229,.1);color:var(--ch)}
+.dt-editor-code-wrap{border-top:1px solid var(--bd);grid-column:1 / -1;background:var(--bg3)}
+.dt-editor-tabs{display:flex;border-bottom:1px solid var(--bd);background:rgba(255,255,255,.02)}
+.dt-editor-tab{padding:8px 16px;font-size:12px;font-weight:500;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;font-family:var(--ff);background:none;border-left:none;border-right:none;border-top:none}
+.dt-editor-tab:hover{color:var(--t1)}
+.dt-editor-tab.on{color:var(--ch);border-bottom-color:var(--c)}
+.dt-editor-code{padding:14px 16px;font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--t2);overflow-x:auto;white-space:pre;margin:0}
+.dt-editor-hint{grid-column:1 / -1;padding:14px 16px;font-size:12px;color:#fbbf24;background:rgba(250,204,21,.06);border-top:1px solid rgba(250,204,21,.12);line-height:1.6}
+@media(max-width:800px){.dt-editor{grid-template-columns:1fr}.dt-editor-panel{border-right:none;border-bottom:1px solid var(--bd)}}
+
+/* AI Prompt button */
+.dt-ai-prompt{margin:24px 0;padding:20px;border:1px solid var(--bd);border-radius:8px;background:linear-gradient(135deg,rgba(24,108,229,.06),rgba(106,173,255,.03));display:flex;justify-content:space-between;align-items:center;gap:16px}
+.dt-ai-prompt-text{flex:1;min-width:0}
+.dt-ai-prompt-title{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.dt-ai-prompt-desc{font-size:12px;color:var(--t3);line-height:1.6}
+.dt-ai-prompt-btn{flex-shrink:0;padding:10px 20px;border-radius:6px;background:var(--c);color:#fff;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:var(--ff);display:inline-flex;align-items:center;gap:6px}
+.dt-ai-prompt-btn:hover{background:#2e7cf0;transform:translateY(-1px);box-shadow:0 4px 12px rgba(24,108,229,.3)}
+.dt-ai-prompt-btn.copied{background:#52c41a}
+.dt-ai-prompt-controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.dt-ai-prompt-select{height:40px;padding:0 12px;border-radius:6px;border:1px solid var(--bd);background:var(--bg2);color:var(--t1);font-size:13px;font-family:var(--ff);outline:none;cursor:pointer;min-width:130px}
+.dt-ai-prompt-select:focus{border-color:var(--c)}
+@media(max-width:700px){.dt-ai-prompt{flex-direction:column;align-items:stretch}.dt-ai-prompt-controls{flex-direction:column}.dt-ai-prompt-btn,.dt-ai-prompt-select{width:100%}}
+@media(max-width:1200px){.dt-nav{display:none}}
+.dt-code-block{margin-bottom:0}
+.dt-code-label{font-size:13px;font-weight:600;color:var(--t1);padding:12px 0 6px;border-top:1px solid var(--bd)}
+
+.ct{border:1px solid var(--bd);border-radius:var(--r);margin:12px 0;overflow:hidden;position:relative}
+.ct-tabs{display:flex;border-bottom:1px solid var(--bd);background:rgba(255,255,255,.02)}
+.ct-tab{padding:8px 16px;font-size:12px;font-weight:500;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.ct-tab:hover{color:var(--t1)}
+.ct-tab.on{color:var(--ch);border-bottom-color:var(--c)}
+.ct-body{padding:14px 16px;font-family:var(--mono);font-size:12px;line-height:1.7;overflow-x:auto;white-space:pre;background:var(--bg3);max-height:300px;overflow-y:auto;color:var(--t2)}
+
+.warn{margin:8px 0;padding:12px 16px;border-radius:4px;background:rgba(250,204,21,.06);border:1px solid rgba(250,204,21,.12);font-size:12px;color:#fbbf24;line-height:1.6}
+.tip{margin:8px 0;padding:12px 16px;border-radius:4px;background:rgba(46,91,255,.06);border:1px solid rgba(46,91,255,.12);font-size:12px;color:var(--ch);line-height:1.6}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+.tbl th{text-align:left;padding:8px 10px;background:rgba(255,255,255,.02);font-weight:600;color:var(--t2);border-bottom:1px solid var(--bd)}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--bd);color:var(--t2)}
+.tbl td:first-child{color:var(--t1);font-weight:500}
+
+.ft{padding:32px 48px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(67,70,86,.1);background:var(--bg);font-size:12px;color:var(--t3)}
+.ft-links{display:flex;gap:24px}
+.ft-links a{color:var(--t3);font-size:12px}
+.ft-links a:hover{color:var(--t1)}
+
+@keyframes cShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@keyframes cPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.88);opacity:.5}}
+@keyframes cBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes cSpin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+@keyframes cFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes cRipple{0%{box-shadow:0 0 0 0 rgba(46,91,255,.4)}100%{box-shadow:0 0 0 10px rgba(46,91,255,0)}}
+@keyframes cMarquee{0%{transform:translateX(16px)}100%{transform:translateX(-24px)}}
+@keyframes cShimmerSweep{0%{transform:translateX(-100%) rotate(-25deg)}100%{transform:translateX(300%) rotate(-25deg)}}
+@keyframes cSeqPop{0%{transform:scale(0.3);opacity:0}60%{transform:scale(1.1);opacity:1}100%{transform:scale(1);opacity:1}}
+
+@media(max-width:1200px){.cases{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:900px){.side{display:none}.main{margin-left:0;padding:20px}.mob-nav{display:flex}.hd-search-wrap{width:200px}.hd-search{width:100%}.hd-link{display:none}.cases{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:680px){.cases{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.cases{grid-template-columns:1fr}.main{padding:12px}}
+
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--bg2);border-top:1px solid var(--bd);padding:6px 8px;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.mob-nav a{flex-shrink:0;padding:6px 12px;border-radius:4px;font-size:11px;color:var(--t3);white-space:nowrap;cursor:pointer}
+.mob-nav a.on{background:rgba(46,91,255,.1);color:var(--ch);font-weight:600}
+
+.ct-copy{position:absolute;top:8px;right:8px;padding:4px 12px;border-radius:4px;font-size:11px;background:rgba(255,255,255,.04);border:1px solid var(--bd);color:var(--t3);cursor:pointer;opacity:0;transition:all .2s;font-family:var(--ff)}
+.ct-copy:hover{background:rgba(46,91,255,.1);color:var(--ch)}
+.ct:hover .ct-copy{opacity:1}
+
+.search-drop{position:absolute;top:calc(100% + 4px);right:0;width:340px;max-height:400px;overflow-y:auto;background:var(--bg2);border:1px solid var(--bd);border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.5);display:none;z-index:200;padding:8px 0}
+.search-drop.show{display:block}
+.sr-item{padding:10px 16px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:8px;color:var(--t2);border-radius:4px;margin:0 4px}
+.sr-item:hover,.sr-item.sr-active{background:rgba(46,91,255,.08);color:var(--t1)}
+.sr-item .sr-cat{font-size:10px;color:var(--t3);background:rgba(255,255,255,.04);padding:2px 8px;border-radius:2px;margin-left:auto;flex-shrink:0}
+.sr-item .sr-desc{font-size:11px;color:var(--t3);margin-left:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px}
+.sr-item mark{background:rgba(46,91,255,.25);color:var(--ch);border-radius:1px;padding:0 1px}
+.sr-empty{padding:20px;text-align:center;color:var(--t3);font-size:12px}
+.sr-hint{padding:6px 16px;font-size:10px;color:var(--t3);border-top:1px solid var(--bd);display:flex;gap:12px;align-items:center}
+.sr-hint kbd{padding:1px 5px;border-radius:2px;background:var(--bg3);font-size:10px;color:var(--t3);border:1px solid var(--bd)}
+
+.back-top{position:fixed;bottom:24px;right:24px;width:40px;height:40px;border-radius:50%;background:var(--c);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(24,108,229,.4);z-index:90;transition:all .25s ease}
+.back-top:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(24,108,229,.5)}
+.back-top.show{display:flex}
+@media(max-width:900px){.back-top{bottom:72px;right:16px}}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div class="hd-logo" onclick="showPage('intro')"><div class="hd-logo-icon"><img src="data:image/png;base64,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" style="width:127%;height:127%;display:block;margin:-13.5% 0 0 -13.5%"></div>Kinetic UI</div>
+  <div class="hd-r">
+    <div class="hd-search-wrap">
+      <span class="hd-search-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span>
+      <input class="hd-search" placeholder="输入关键词搜索...">
+      <div class="search-drop" id="searchDrop"></div>
+    </div>
+    <a class="hd-link" onclick="showPage('overview')">组件库</a>
+    <a class="hd-link" href="https://github.com/546060179/jiuzhou" target="_blank" style="display:flex;align-items:center" title="GitHub"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="side" id="sidebar"><div class="side-resize" id="sideResize"></div></aside>
+  <main class="main" id="content"></main>
+</div>
+
+<footer class="ft"><span>© 2025 KINETIC UI</span><div class="ft-links"><a href="https://github.com/546060179/jiuzhou" target="_blank">使用文档</a><a href="https://github.com/546060179/jiuzhou" target="_blank">API 参考</a><a href="https://github.com/546060179/jiuzhou" target="_blank">问题反馈</a></div></footer>
+<div class="mob-nav" id="mobNav"></div>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="回到顶部"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg></button>
+<script>
+// ============================================================
+// DATA — categories and cases
+// ============================================================
+var NAV = [
+  {id:'overview', label:'全部动效', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>'},
+  {id:'popup', label:'弹窗/浮层', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>', count:8},
+  {id:'transition', label:'页面转场', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>', count:5},
+  {id:'feedback', label:'操作反馈', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', count:5},
+  {id:'loading', label:'加载状态', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3v4h4"/><path d="M19 21v-4h-4"/><path d="M5 7a9 9 0 0 1 14.7 3"/><path d="M19 17A9 9 0 0 1 4.3 14"/></svg>', count:5},
+  {id:'list', label:'列表/编排', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>', count:6},
+  {id:'emphasis', label:'强调/引导', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="12" r="3"/></svg>', count:4},
+  {id:'gesture', label:'手势交互', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v6"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8a8 8 0 0 0 16 0v-3a2 2 0 0 0-4 0"/></svg>', count:4},
+  {id:'cautions', label:'更新内容', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'},
+];
+
+var CASES = {
+popup: [
+  {id:'modal', name:'Modal 弹窗', icon:'🪟', desc:'确认对话框、表单弹窗、图片预览', tags:['scale-fade','常用'],
+   effect:'scale-fade-in', duration:300, easing:'expressive',
+   scenario:'用户点击按钮后弹出确认框，半透明遮罩淡入，弹窗内容从 scale(0.95) 缩放+淡入弹出。关闭时反向播放。',
+   react:'import { Motion, Fade, Presence } from "@fade-animation/react";\n\n// 推荐：Presence 自动管理进入/退出生命周期\n<Presence>\n  {open && (\n    <Fade key="overlay" in intent="enter">\n      <div className="overlay" onClick={onClose} />\n    </Fade>\n  )}\n  {open && (\n    <Motion key="modal" in effect="scale-fade-in" intent="enter">\n      <div className="modal">{children}</div>\n    </Motion>\n  )}\n</Presence>',
+   vue:'<Presence>\n  <Fade v-if="open" key="overlay" in intent="enter">\n    <div class="overlay" @click="close" />\n  </Fade>\n  <Motion v-if="open" key="modal" in effect="scale-fade-in" intent="enter">\n    <div class="modal">{{ content }}</div>\n  </Motion>\n</Presence>',
+   swift:'// 遮罩\nUIView.animate(withDuration: 0.3) {\n  self.overlay.alpha = 1\n}\n// 弹窗\nlet animator = MotionAnimator(targetView: modalView)\nanimator.start(entering: true, effects: EffectPresets.scaleFadeIn)',
+   kotlin:'// 遮罩\noverlay.animate().alpha(1f).setDuration(300).start()\n// 弹窗\nMotionAnimator(modalView).start(\n  entering = true,\n  effects = EffectPresets.SCALE_FADE_IN\n)',
+   cautions:['推荐用 Presence 管理挂载/卸载，动画完成后自动销毁 DOM','遮罩和内容分开动画，遮罩用 Fade，内容用 Motion','弹窗打开时禁止背景滚动 (body overflow:hidden)','ESC 键和点击遮罩都要触发关闭动画','iOS 上 present(animated:true) 自带动画，避免重复'],
+   tips:['推荐 scale(0.95)+fade 组合，微妙不夸张','transform-origin 默认 center，从按钮弹出时改为按钮位置','Android: DialogFragment 自带动画，可用 setStyle 自定义']},
+  {id:'toast', name:'Toast 提示', icon:'💬', desc:'操作成功/失败的轻量提示', tags:['slide-up','fade'],
+   effect:'slide-up-in', duration:150, easing:'enter',
+   scenario:'用户完成操作后，底部滑入一条提示消息，3秒后自动淡出消失。',
+   react:'<Motion in={show} effect="slide-up-in" intent="enter">\n  <div className="toast">{message}</div>\n</Motion>\n\n// 自动消失\nuseEffect(() => {\n  if(show) setTimeout(() => setShow(false), 3000);\n}, [show]);',
+   vue:'<Motion :in="show" effect="slide-up-in" intent="enter">\n  <div class="toast">{{ message }}</div>\n</Motion>',
+   swift:'let toast = ToastView(message: text)\nview.addSubview(toast)\nMotionAnimator(targetView: toast).start(\n  entering: true,\n  effects: EffectPresets.slideUpIn,\n  options: FadeOptions(intent: .enter)\n)\nDispatchQueue.main.asyncAfter(deadline: .now() + 3) {\n  MotionAnimator(targetView: toast).start(\n    entering: false,\n    effects: EffectPresets.slideUpIn,\n    options: FadeOptions(intent: .exit))\n}',
+   kotlin:'Snackbar.make(view, message, Snackbar.LENGTH_SHORT)\n  .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)\n  .show()',
+   cautions:['进入动画要快(150ms)，不要让用户等','多条 Toast 要排队，不要重叠','3-5秒后自动消失','不要遮挡重要操作按钮','Android 优先用 Snackbar'],
+   tips:['底部滑入比顶部更不打扰','hover/touch 时暂停自动消失计时','退出用 slide-down+fade']},
+  {id:'drawer', name:'抽屉面板', icon:'📂', desc:'侧边导航、筛选面板、购物车', tags:['slide','常用'],
+   effect:'slide-right', duration:300, easing:'enter',
+   scenario:'点击菜单图标，侧边栏从左侧滑入，同时半透明遮罩淡入。支持手势拖拽关闭。',
+   react:'<Fade in={open} intent="enter">\n  <div className="overlay" onClick={close} />\n</Fade>\n<Motion in={open}\n  effect={[{type:"slide",direction:"right",distance:280}]}\n  intent="enter"\n>\n  <nav className="drawer">{menu}</nav>\n</Motion>',
+   vue:'<Fade :in="open" intent="enter">\n  <div class="overlay" @click="close" />\n</Fade>\n<Motion :in="open"\n  :effect="[{type:\'slide\',direction:\'right\',distance:280}]"\n>\n  <nav class="drawer">{{ menu }}</nav>\n</Motion>',
+   swift:'UIView.animate(withDuration: 0.3) {\n  self.drawerView.transform = .identity\n  self.overlay.alpha = 1\n}',
+   kotlin:'drawerLayout.openDrawer(GravityCompat.START)',
+   cautions:['slide distance 要等于抽屉实际宽度','遮罩和面板分开动画','支持手势拖拽关闭(spring 回弹)','打开时禁止背景滚动','RTL 语言方向要镜像'],
+   tips:['手势关闭用 spring 物理更自然','Android 优先用 DrawerLayout','iOS 用 UIPresentationController']},
+  {id:'actionsheet', name:'操作面板', icon:'📋', desc:'分享、拍照选择、确认删除', tags:['slide-up','常用'],
+   effect:'slide-up-in', duration:300, easing:'enter',
+   scenario:'点击"更多"按钮，操作面板从底部滑入。包含多个操作选项和取消按钮。',
+   react:'<Fade in={open} intent="enter">\n  <div className="overlay" onClick={close} />\n</Fade>\n<Motion in={open} effect="slide-up-in" intent="enter">\n  <div className="action-sheet">\n    {actions.map(a => <button key={a.key}>{a.label}</button>)}\n    <button onClick={close}>取消</button>\n  </div>\n</Motion>',
+   vue:'<Motion :in="open" effect="slide-up-in" intent="enter">\n  <div class="action-sheet">...</div>\n</Motion>',
+   swift:'let sheet = UIAlertController(title: nil, message: nil,\n  preferredStyle: .actionSheet)\nsheet.addAction(UIAlertAction(title: "分享", style: .default))\nsheet.addAction(UIAlertAction(title: "取消", style: .cancel))\npresent(sheet, animated: true)',
+   kotlin:'val sheet = BottomSheetDialog(context)\nsheet.setContentView(R.layout.action_sheet)\nsheet.show()',
+   cautions:['从底部滑入，不要从中间弹出','取消按钮和其他选项要有视觉分隔','危险操作用红色标记','iPhone X+ 底部安全区域要适配','Android 优先用 BottomSheetDialog'],
+   tips:['iOS 优先用 UIAlertController(.actionSheet)','手势下滑关闭用 spring','选项超过5个用可滚动列表']},
+  {id:'notification', name:'通知横幅', icon:'🔔', desc:'推送通知、应用内消息提醒', tags:['slide-down','fade'],
+   effect:'slide-down', duration:200, easing:'enter',
+   scenario:'收到新消息时，通知横幅从顶部滑入，显示标题和摘要，5秒后自动上滑消失。',
+   react:'<Motion in={show}\n  effect={[{type:"fade"},{type:"slide",direction:"down",distance:20}]}\n  intent="enter"\n>\n  <div className="notification">\n    <img src={icon} /><span>{title}</span>\n  </div>\n</Motion>',
+   vue:'<Motion :in="show" :effect="[{type:\'fade\'},{type:\'slide\',direction:\'down\',distance:20}]">\n  <div class="notification">...</div>\n</Motion>',
+   swift:'let banner = NotificationBanner(title: title)\nview.addSubview(banner)\nMotionAnimator(targetView: banner).start(\n  entering: true,\n  effects: [.fade(from:0,to:1), .slide(direction:.down, distance:20)]\n)',
+   kotlin:'// 应用内通知\nMotionAnimator(bannerView).start(\n  entering = true,\n  effects = listOf(\n    MotionEffect.Fade(0f, 1f),\n    MotionEffect.Slide(SlideDirection.DOWN, 20f)\n  )\n)',
+   cautions:['不要遮挡状态栏','5秒后自动消失','多条排队不堆叠','用户可上滑手势关闭','进入要快(200ms)'],
+   tips:['顶部滑入+fade 最自然','点击跳转对应页面','退出用上滑+fade out']},
+  {id:'continue-watching', name:'最近播放浮层', desc:'底部浮入的继续播放提示条，含封面、标题、播放和关闭按钮', tags:['slide-up','collapse','ShortMax'],
+   effect:'slide-up + morph', duration:450, easing:'cubic-bezier(0, 0, 0.3, 1)',
+   scenario:'用户打开 App 首页时，底部浮入一条"继续播放"提示条，显示上次观看的剧集封面、标题和集数。3秒后自动收缩为小浮窗。点击播放继续观看，点击关闭消失。',
+   react:'import { ContinueWatching } from "./ContinueWatching";\n\n// 使用方式\n<ContinueWatching\n  cover="https://example.com/cover.jpg"\n  title="Genius Baby: daddy please take ..."\n  subtitle="EP.1 / EP.100"\n  autoShow={true}\n  autoShowDelay={500}    // 延迟 500ms 后滑入\n  collapseDelay={3000}   // 展示 3 秒后自动收缩\n  slideUpDuration={450}  // 滑入动画 450ms\n  fadeOutDuration={300}  // 文字淡出 300ms\n  shrinkDuration={400}   // 横条收缩 400ms\n  morphDuration={550}    // 变形为小浮窗 550ms\n  onPlay={() => navigate("/player/" + id)}\n  onDismiss={() => setShowBar(false)}\n  onCollapsed={() => console.log("已收缩为小浮窗")}\n/>\n\n// 动画阶段 (Phase):\n// hidden → sliding-up → banner → fading-content → shrinking → morphing → widget\n// 缓动函数: easeOutCubic(滑入) → easeInOutCubic(收缩) → easeOutBack(变形)',
+   vue:'<!-- Vue 中使用相同的组件 -->\n<ContinueWatching\n  cover="cover.jpg"\n  title="剧名"\n  subtitle="EP.1 / EP.100"\n  :auto-show="true"\n  :collapse-delay="3000"\n  @play="goPlayer"\n  @dismiss="hideBar"\n  @collapsed="onCollapsed"\n/>',
+   swift:'import UIKit\n\n// iOS 原生实现 (ContinueWatchingView)\nclass ContinueWatchingView: UIView {\n  var timing = CWTiming()  // 动画时间配置\n  // timing.slideUpDuration = 0.45\n  // timing.collapseDelay = 3.0\n  // timing.fadeOutDuration = 0.3\n  // timing.shrinkDuration = 0.4\n  // timing.morphDuration = 0.55\n}\n\n// 使用方式\nlet bar = ContinueWatchingView()\nbar.configure(\n  cover: UIImage(named: "cover"),\n  title: "Genius Baby",\n  subtitle: "EP.1 / EP.100"\n)\nbar.delegate = self\nview.addSubview(bar)\nbar.show()  // 触发 5 阶段动画序列\n\n// 动画阶段枚举:\n// enum CWPhase {\n//   case hidden, slidingUp, banner,\n//        fadingContent, shrinking, morphing, widget\n// }\n// 使用 CADisplayLink 驱动帧动画\n// 缓动: easeOutCubic / easeInOutCubic / easeOutBack',
+   kotlin:'import com.example.continuewatching.*\n\n// Android 原生实现 (ContinueWatchingView)\nval bar = ContinueWatchingView(context)\nbar.timing = CWTiming(\n  slideUpDuration = 450L,\n  collapseDelay = 3000L,\n  fadeOutDuration = 300L,\n  shrinkDuration = 400L,\n  morphDuration = 550L\n)\nbar.configure(\n  coverUrl = "https://example.com/cover.jpg",\n  title = "Genius Baby",\n  subtitle = "EP.1 / EP.100"\n)\nbar.listener = object : ContinueWatchingListener {\n  override fun onPlayClicked() { navigateToPlayer(id) }\n  override fun onDismissed() { hideBar() }\n}\ncontainer.addView(bar)\nbar.show()\n\n// 动画阶段枚举:\n// enum class CWPhase {\n//   HIDDEN, SLIDING_UP, BANNER,\n//   FADING_CONTENT, SHRINKING, MORPHING, WIDGET\n// }\n// 使用 Choreographer 驱动帧动画\n// 缓动: easeOutCubic / easeInOutCubic / easeOutBack',
+   cautions:['动画分为 5 个阶段，需要严格按顺序编排','slide-up 时长 450ms，不要太快也不要太慢','收缩动画要用 spring 阻尼，避免生硬','小浮窗不要遮挡底部 Tab 栏','关闭按钮要足够大（44x44 触摸区域）','3秒自动收缩时间可配置'],
+   tips:['使用 sequence 编排多阶段动画','收缩过程: 文字 fadeOut → 宽度 shrink → 圆角 morph','小浮窗位置固定在左下角，不随页面滚动','iOS 用 UIViewPropertyAnimator 可以暂停/恢复动画','Android 用 TransitionManager 做布局变化动画']},
+  {id:'bubble-expand', name:'气泡展开', desc:'从点弹性展开为气泡，含文字淡入', tags:['spring','BubbleExpand'],
+   effect:'spring-expand', duration:650, easing:'cubic-bezier(0.4, 0.14, 0.3, 1)',
+   scenario:'短剧播放页右侧出现金色气泡从小圆点弹性展开，显示"限时免费"提示文字。展开完成后文字淡入。',
+   react:'// BubbleExpand 组件\nimport { BubbleExpand } from "./BubbleExpand";\n\n<BubbleExpand\n  text="限时免费"\n  background="linear-gradient(135deg, #FFD65A, #FF9500)"\n  textColor="#62241B"\n  expandDuration={650}\n  textFadeDuration={300}\n  showArrow={true}\n  arrowDirection="right"\n  autoPlay={true}\n  autoPlayDelay={300}\n/>',
+   vue:'<BubbleExpand\n  text="限时免费"\n  :expand-duration="650"\n  :text-fade-duration="300"\n  :auto-play="true"\n/>',
+   swift:'let bubble = BubbleExpandView()\nbubble.text = "限时免费"\nbubble.expandDuration = 0.65\nbubble.textFadeDuration = 0.3\nbubble.showArrow = true\nbubble.arrowDirection = .right\nview.addSubview(bubble)\nbubble.play()\n// 展开缓动: cubic-bezier(0.4, 0.14, 0.3, 1)\n// 弹跳: 阻尼谐振子 zeta=0.5, omega=9.0',
+   kotlin:'val bubble = BubbleExpandView(context)\nbubble.text = "限时免费"\nbubble.expandDuration = 650L\nbubble.textFadeDuration = 300L\nbubble.showArrow = true\ncontainer.addView(bubble)\nbubble.play()\n// 弹跳: SpringAnimation stiffness=200, damping=10',
+   cautions:['展开用 expressive 缓动，不要 linear','弹跳幅度控制在 10-15%','文字淡入在展开完成后才开始','气泡宽度自适应文字'],
+   tips:['expandDuration 650ms 是调优后的最佳时长','弹跳缓动: 阻尼谐振子 zeta=0.5 omega=9.0','文字淡入延迟 0ms 紧接展开结束效果最自然']},
+  {id:'vip-flip', name:'VIP 翻转弹窗', desc:'绕 X 轴翻转出现的 VIP 优惠弹窗，配合缩放和淡入', tags:['flip','scale-fade','VIP'],
+   effect:'flip + scale + fade', duration:500, easing:'expressive',
+   scenario:'用户进入会员页面时，VIP 限时优惠弹窗从 X 轴 90° 翻转到 0°，同时从 0.85 缩放到 1，配合淡入效果。',
+   react:'import { Motion, Fade, Presence } from "@fade-animation/react";\n\nconst FLIP_IN = [\n  { type: "fade", from: 0, to: 1 },\n  { type: "flip", axis: "x", from: 90, to: 0, perspective: 1000 },\n  { type: "scale", from: 0.85, to: 1 },\n];\n\n<Presence>\n  {visible && (\n    <Fade key="mask" in intent="enter">\n      <div className="mask" onClick={onClose} />\n    </Fade>\n  )}\n  {visible && (\n    <Motion\n      key="popup"\n      in\n      effect={FLIP_IN}\n      duration={500}\n      easing="expressive"\n    >\n      <VipCouponCard onSubscribe={onSubscribe} />\n    </Motion>\n  )}\n</Presence>',
+   vue:'<Presence>\n  <Fade v-if="visible" key="mask" in intent="enter">\n    <div class="mask" @click="close" />\n  </Fade>\n  <Motion\n    v-if="visible"\n    key="popup"\n    in\n    :effect="[\n      { type: \'fade\' },\n      { type: \'flip\', axis: \'x\', from: 90, to: 0, perspective: 1000 },\n      { type: \'scale\', from: 0.85, to: 1 },\n    ]"\n    :duration="500"\n    easing="expressive"\n  >\n    <VipCouponCard />\n  </Motion>\n</Presence>',
+   swift:'import FadeAnimation\n\nlet effects: [MotionEffect] = [\n  .fade(from: 0, to: 1),\n  .flip(axis: .x, from: 90, to: 0, perspective: 1000),\n  .scale(from: 0.85, to: 1)\n]\nMotionAnimator(\n  targetView: popup,\n  options: FadeOptions(duration: 500, curve: .easeOut)\n).start(entering: true, effects: effects)',
+   kotlin:'import com.fadeanimation.*\n\nval effects = listOf(\n  MotionEffect.Fade(0f, 1f),\n  MotionEffect.Flip(axis = FlipAxis.X, from = 90f, to = 0f, perspective = 1000f),\n  MotionEffect.Scale(0.85f, 1f)\n)\nMotionAnimator(\n  popup,\n  FadeOptions(duration = 500L)\n).start(entering = true, effects = effects)',
+   cautions:['perspective 设为 1000px 保证翻转自然','flip + scale 组合比单独 flip 更有层次','遮罩先于弹窗 50ms 淡入','关闭时反向播放翻转效果'],
+   tips:['flip-x 从上方翻入比 flip-y 更适合弹窗','scale 从 0.85 开始比 0.95 更有冲击力','配合倒计时增加紧迫感']},
+  ],
+transition: [
+  {id:'fade-in', name:'淡入/淡出', icon:'🌫', desc:'最基础的透明度过渡', tags:['fade','基础'],
+   effect:'fade-in', duration:300, easing:'enter',
+   scenario:'页面内容加载完成后淡入显示，Tab 切换时旧面板淡出新面板淡入。',
+   react:'<Fade in={show} intent="enter">\n  <Content />\n</Fade>',
+   vue:'<Fade :in="show" intent="enter">\n  <Content />\n</Fade>',
+   swift:'view.fadeIn(options: FadeOptions(intent: .enter))',
+   kotlin:'view.fadeIn(options = FadeOptions(intent = MotionIntent.ENTER))',
+   cautions:['时长不超过 500ms','确保元素已完成布局再触发','配合 prefers-reduced-motion'],
+   tips:['推荐用 intent="enter" 自动推导参数','列表项淡入用 FadeGroup+stagger']},
+  {id:'blur-in', name:'模糊进入', icon:'🌁', desc:'从模糊到清晰的过渡', tags:['blur','fade'],
+   effect:'blur-fade-in', duration:500, easing:'expressive',
+   scenario:'背景虚化、图片渐进加载、毛玻璃效果过渡。',
+   react:'<Motion in={show} effect="blur-fade-in" timing="slow">\n  <Image />\n</Motion>',
+   vue:'<Motion :in="show" effect="blur-fade-in" timing="slow">\n  <Image />\n</Motion>',
+   swift:'animator.start(entering: true, effects: EffectPresets.blurFadeIn)',
+   kotlin:'animator.start(entering = true, effects = EffectPresets.BLUR_FADE_IN)',
+   cautions:['blur 是 GPU 密集操作，避免多元素同时使用','Android API 31+ 才支持','模糊半径不超过 12px'],
+   tips:['图片渐进加载: 先缩略图+blur，大图加载完 blur-fade-in','背景虚化用 backdrop-filter']},
+  {id:'flip-in', name:'3D 翻转', icon:'🔄', desc:'卡片翻面、翻牌效果', tags:['flip','3D'],
+   effect:'flip-y-in', duration:400, easing:'expressive',
+   scenario:'会员卡翻转显示二维码、记忆翻牌游戏、优惠券翻转。',
+   react:'<Motion in={flipped}\n  effect={[{type:"flip",axis:"y",from:0,to:180}]}\n>\n  <CardFace />\n</Motion>',
+   vue:'<Motion :in="flipped" :effect="[{type:\'flip\',axis:\'y\',from:0,to:180}]">\n  <CardFace />\n</Motion>',
+   swift:'UIView.transition(with: card, duration: 0.5,\n  options: .transitionFlipFromRight) {\n  self.showBack()\n}',
+   kotlin:'ObjectAnimator.ofFloat(card, "rotationY", 0f, 180f)\n  .setDuration(400).start()',
+   cautions:['设置 backface-visibility:hidden','perspective 600-1000px','flip 和 rotate 不能同时用','低端设备可能卡顿'],
+   tips:['正反面 absolute 定位重叠','翻到 90° 时切换内容','iOS: .transitionFlipFromRight 最简单']},
+  {id:'collapse', name:'折叠展开', icon:'📐', desc:'FAQ、设置项、手风琴面板', tags:['collapse','fade'],
+   effect:'collapse-in', duration:300, easing:'expressive',
+   scenario:'FAQ 点击问题展开答案，设置项展开详细选项，评论区展开更多。',
+   react:'<Motion in={expanded}\n  effect={[{type:"collapse"},{type:"fade"}]}\n>\n  <Answer />\n</Motion>',
+   vue:'<Motion :in="expanded" :effect="[{type:\'collapse\'},{type:\'fade\'}]">\n  <Answer />\n</Motion>',
+   swift:'animator.start(entering: expanded, effects: EffectPresets.collapseIn)',
+   kotlin:'animator.start(entering = expanded, effects = EffectPresets.COLLAPSE_IN)',
+   cautions:['首次渲染不播放动画','展开完成后 max-height 设为 none','内容有图片时高度可能变化','手风琴模式同时只展开一个'],
+   tips:['collapse+fade 组合最自然','collapsedHeight 非零可做"查看更多"','手风琴: 维护 activeIndex']},
+  {id:'slide-in', name:'滑入过渡', desc:'页面或面板从指定方向滑入，配合淡入', tags:['slide','fade','常用'],
+   effect:'slide-fade-in', duration:300, easing:'enter',
+   scenario:'Tab 切换时新面板从右侧滑入，返回时从左侧滑入。路由切换的页面过渡。',
+   react:'<Motion in={show}\n  effect={[{type:"fade"},{type:"slide",direction:"right",distance:30}]}\n  intent="enter"\n>\n  <PageContent />\n</Motion>',
+   vue:'<Motion :in="show"\n  :effect="[{type:\'fade\'},{type:\'slide\',direction:\'right\',distance:30}]"\n  intent="enter"\n>\n  <PageContent />\n</Motion>',
+   swift:'MotionAnimator(targetView: page).start(\n  entering: true,\n  effects: [.fade(from:0,to:1), .slide(direction:.right, distance:30)],\n  options: FadeOptions(intent: .enter)\n)',
+   kotlin:'MotionAnimator(page).start(\n  entering = true,\n  effects = listOf(\n    MotionEffect.Fade(0f, 1f),\n    MotionEffect.Slide(SlideDirection.RIGHT, 30f)\n  )\n)',
+   cautions:['slide distance 不要太大(20-40px)','进入和退出方向要一致','配合 fade 避免生硬边缘','路由切换注意新旧页面层叠顺序'],
+   tips:['direction 根据导航方向动态切换','distance 30px 是最佳平衡点','Tab 切换用 slide，返回用反向 slide']},
+],
+feedback: [
+  {id:'press', name:'按压反馈', icon:'👇', desc:'按钮、卡片的按下效果', tags:['scale','快速'],
+   effect:'press', duration:100, easing:'productive',
+   scenario:'用户按下按钮时缩小到 0.95，松手后弹性恢复。',
+   react:'// CSS 最简单\n// .btn:active { transform: scale(0.95) }\n\n// 或库方案\n<Motion in={pressed}\n  effect={[{type:"scale",from:1,to:0.95}]}\n  intent="feedback"\n>\n  <Button />\n</Motion>',
+   vue:'<Motion :in="pressed" :effect="[{type:\'scale\',from:1,to:0.95}]" intent="feedback">\n  <Button />\n</Motion>',
+   swift:'UIView.animate(withDuration: 0.1) {\n  button.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)\n}',
+   kotlin:'view.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100).start()',
+   cautions:['缩放 0.92-0.97，太大显得廉价','用 transform 不要改尺寸','松手恢复用 spring/ease-out','触摸设备 :active 可能有延迟'],
+   tips:['最简单: CSS transition + :active','配合 Haptic Feedback 更好','松手用 spring snappy 预设']},
+  {id:'shake', name:'错误抖动', icon:'❌', desc:'表单验证失败、密码错误', tags:['shake','反馈'],
+   effect:'shake', duration:400, easing:'ease',
+   scenario:'密码输入错误时输入框左右抖动 2-3 次，配合边框变红和触觉反馈。',
+   react:'<div className={error ? "shake" : ""}>\n  <Input status="error" />\n</div>\n\n// CSS: @keyframes shake {\n//   0%,100% { transform: translateX(0) }\n//   25% { transform: translateX(-6px) }\n//   75% { transform: translateX(6px) }\n// }',
+   vue:'<div :class="{shake: error}"><Input /></div>',
+   swift:'let shake = CAKeyframeAnimation(keyPath: "transform.translation.x")\nshake.values = [0, -8, 8, -6, 6, -3, 3, 0]\nshake.duration = 0.4\ninput.layer.add(shake, forKey: nil)\nUINotificationFeedbackGenerator().notificationOccurred(.error)',
+   kotlin:'ObjectAnimator.ofFloat(editText, "translationX",\n  0f, -8f, 8f, -6f, 6f, -3f, 3f, 0f\n).apply { duration = 400 }.start()\nview.performHapticFeedback(HapticFeedbackConstants.REJECT)',
+   cautions:['幅度 6-8px，不要太大','2-3 次即可','配合触觉反馈','只抖出错元素不要抖整页','无障碍: aria-invalid + 屏幕阅读器播报'],
+   tips:['shake + 红色边框 + 错误文案 三者配合','CSS animationend 后移除 class','Android: TextInputLayout.setError() 自带动画']},
+  {id:'success', name:'成功打勾', icon:'✅', desc:'支付成功、提交完成、验证通过', tags:['scale','spring'],
+   effect:'zoom-in', duration:400, easing:'spring bouncy',
+   scenario:'支付成功后绿色圆圈+打勾图标弹性放大出现，配合成功触觉反馈。',
+   react:'<Motion in={success}\n  effect={[{type:"scale",from:0,to:1},{type:"fade"}]}\n  intent="delight"\n>\n  <CheckIcon />\n</Motion>',
+   vue:'<Motion :in="success" :effect="[{type:\'scale\',from:0,to:1},{type:\'fade\'}]" intent="delight">\n  <CheckIcon />\n</Motion>',
+   swift:'check.transform = CGAffineTransform(scaleX: 0, y: 0)\nUIView.animate(withDuration: 0.4, delay: 0,\n  usingSpringWithDamping: 0.5, initialSpringVelocity: 0) {\n  check.transform = .identity\n}\nUINotificationFeedbackGenerator().notificationOccurred(.success)',
+   kotlin:'checkView.scaleX = 0f; checkView.scaleY = 0f\ncheckView.animate().scaleX(1f).scaleY(1f)\n  .setDuration(300)\n  .setInterpolator(OvershootInterpolator(1.5f))\n  .start()',
+   cautions:['只播放一次不循环','配合 success haptic','完成后 1-2 秒自动跳转','播放时不允许用户操作'],
+   tips:['scale(0->1) + spring bouncy 最有成就感','配合绿色圆形背景','iOS: UINotificationFeedbackGenerator(.success)']},
+  {id:'pulse', name:'脉冲提醒', icon:'🔴', desc:'未读消息、新功能标记、录音状态', tags:['pulse','循环'],
+   effect:'CSS box-shadow 循环', duration:800, easing:'ease',
+   scenario:'消息图标右上角红点持续脉冲。无限循环推荐 CSS / 平台原生 API，库不做这类长时循环。',
+   react:'// 推荐 CSS keyframes，配合主题色\n// .badge-pulse .badge {\n//   animation: pulse 800ms ease-in-out infinite;\n// }\n// @keyframes pulse {\n//   0%,100% { box-shadow: 0 0 0 0 rgba(24,108,229,0.4); }\n//   50%     { box-shadow: 0 0 0 6px rgba(24,108,229,0); }\n// }\n\n<div className="badge-pulse">\n  <span className="badge">{count}</span>\n</div>',
+   vue:'<div class="badge-pulse">\n  <span class="badge">{{ count }}</span>\n</div>',
+   swift:'// iOS CABasicAnimation 做循环\nlet pulse = CABasicAnimation(keyPath: "transform.scale")\npulse.fromValue = 1.0\npulse.toValue = 1.15\npulse.duration = 0.75\npulse.autoreverses = true\npulse.repeatCount = .infinity\nbadge.layer.add(pulse, forKey: "pulse")\n\n// 停止：badge.layer.removeAnimation(forKey: "pulse")',
+   kotlin:'// Android ObjectAnimator 做循环\nval anim = ObjectAnimator.ofPropertyValuesHolder(badge,\n  PropertyValuesHolder.ofFloat("scaleX", 1f, 1.15f),\n  PropertyValuesHolder.ofFloat("scaleY", 1f, 1.15f)\n).apply {\n  duration = 750L\n  repeatCount = ValueAnimator.INFINITE\n  repeatMode = ValueAnimator.REVERSE\n}\nanim.start()\n\n// 停止：anim.cancel()',
+   cautions:['有新消息时才脉冲，已读后停止','同页面最多 1-2 个脉冲','幅度微妙(scale 1.1-1.15)','reduced-motion 下停止，只显示静态红点'],
+   tips:['box-shadow 扩散比 scale 更优雅','用 CSS animation 而非 JS','数字超过 99 显示 99+']},
+  {id:'ripple', name:'涟漪扩散', icon:'💧', desc:'Material 按钮点击、触摸反馈', tags:['ripple','Material'],
+   effect:'CSS 扩散 / 系统原生 Ripple', duration:400, easing:'ease-out',
+   scenario:'按钮点击时从触摸点扩散出圆形涟漪。库不提供 Ripple 组件，Web 用 CSS 自建，Android 优先用系统 RippleDrawable。',
+   react:'// Web 自建：点击后在触点位置插入扩散 span\nfunction RippleButton({ children, onClick }) {\n  const handleClick = (e) => {\n    const btn = e.currentTarget;\n    const rect = btn.getBoundingClientRect();\n    const span = document.createElement("span");\n    span.className = "ripple";\n    span.style.left = (e.clientX - rect.left) + "px";\n    span.style.top = (e.clientY - rect.top) + "px";\n    btn.appendChild(span);\n    setTimeout(() => span.remove(), 400);\n    onClick?.(e);\n  };\n  return <button className="ripple-btn" onClick={handleClick}>{children}</button>;\n}\n// CSS: .ripple { animation: ripple 400ms ease-out; ... }',
+   vue:'<!-- 同 React：点击后插入扩散 span，CSS 做扩散 keyframes -->',
+   swift:'// iOS 自建：在触点位置插入圆形 view + UIView.animate 扩散\n@objc func handleTap(_ g: UITapGestureRecognizer) {\n  let point = g.location(in: button)\n  let ripple = UIView(frame: CGRect(x: point.x - 1, y: point.y - 1, width: 2, height: 2))\n  ripple.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.2)\n  ripple.layer.cornerRadius = 1\n  button.addSubview(ripple)\n  UIView.animate(withDuration: 0.4, delay: 0, options: .curveEaseOut) {\n    ripple.transform = CGAffineTransform(scaleX: 40, y: 40)\n    ripple.alpha = 0\n  } completion: { _ in ripple.removeFromSuperview() }\n}',
+   kotlin:'<!-- Android 优先用系统原生 RippleDrawable -->\n<Button\n  android:id="@+id/my_button"\n  android:background="?attr/selectableItemBackground" />\n\n// 或自定义 color：\n<ripple xmlns:android="http://schemas.android.com/apk/res/android"\n  android:color="#33186CE5">\n  <item android:drawable="@color/white" />\n</ripple>',
+   cautions:['涟漪起点是触摸位置不是中心','Android 优先用系统 RippleDrawable','颜色要有足够对比度','不要每个元素都加'],
+   tips:['Android: ?attr/selectableItemBackground 最简单','Web: CSS :active + transform 模拟','涟漪颜色用主色的 20% 透明度']},
+  ],
+loading: [
+  {id:'spinner', name:'旋转加载', icon:'🔄', desc:'页面加载、按钮提交等待', tags:['spin','循环'],
+   effect:'CSS rotate (CSS 层实现)', duration:800, easing:'linear',
+   scenario:'数据请求中显示旋转加载指示器。循环动画建议用 CSS 原生 animation 实现，性能优于 JS 驱动。',
+   react:'// 推荐：CSS 原生 @keyframes 实现循环旋转\n// .spinner {\n//   animation: spin 800ms linear infinite;\n//   border-top-color: var(--primary);\n// }\n// @keyframes spin { to { transform: rotate(360deg); } }\n\n<div className="spinner" aria-label="loading" />\n\n// 按钮内 loading：配合 Motion 控制出现/消失\nimport { Motion } from "@fade-animation/react";\n<Motion in={loading} effect="fade-in" intent="enter">\n  <div className="spinner" />\n</Motion>',
+   vue:'<!-- 同 React：循环动画用 CSS，出现/消失包 Motion -->\n<Motion :in="loading" effect="fade-in" intent="enter">\n  <div class="spinner" />\n</Motion>',
+   swift:'// 循环加载推荐用系统 UIActivityIndicatorView\nlet indicator = UIActivityIndicatorView(style: .medium)\nindicator.startAnimating()\n\n// 按钮内 loading：用 motion() 控制出现\nimport FadeAnimation\nindicator.motion(entering: true,\n  effects: EffectPresets.fadeIn,\n  options: FadeOptions(intent: .enter))',
+   kotlin:'// 循环加载推荐用系统 ProgressBar\n// <ProgressBar android:indeterminate="true" />\n\n// 按钮内 loading：用 MotionAnimator 控制出现\nimport com.fadeanimation.*\n\nMotionAnimator(progressBar).start(\n  entering = true,\n  effects = EffectPresets.FADE_IN,\n  options = FadeOptions(intent = MotionIntent.ENTER)\n)',
+   cautions:['超过 1 秒才显示，避免闪烁','提供取消/超时机制','按钮内 spinner 替换文字'],
+   tips:['延迟 200ms 再显示','iOS/Android 优先用系统原生']},
+  {id:'progress', name:'进度条', icon:'📊', desc:'上传下载、表单填写进度', tags:['transition','数据驱动'],
+   effect:'CSS width transition', duration:300, easing:'ease',
+   scenario:'文件上传时进度条从 0% 平滑过渡到当前进度。数据驱动的值变化推荐用 CSS transition，不需要 JS 动画库。',
+   react:'// 推荐：CSS transition 即可，库不提供专用组件\n<div className="progress-track">\n  <div\n    className="progress-fill"\n    style={{\n      width: percent + "%",\n      transition: "width 300ms ease"\n    }}\n  />\n</div>',
+   vue:'<div class="progress-track">\n  <div\n    class="progress-fill"\n    :style="{\n      width: percent + \'%\',\n      transition: \'width 300ms ease\'\n    }"\n  />\n</div>',
+   swift:'// 推荐：系统 UIProgressView 自带动画\nprogressView.setProgress(Float(percent) / 100, animated: true)\n\n// 自定义进度条：UIView.animate\nUIView.animate(withDuration: 0.3) {\n  self.fillWidthConstraint.constant = totalWidth * CGFloat(percent) / 100\n  self.progressTrack.layoutIfNeeded()\n}',
+   kotlin:'// 推荐：系统 ProgressBar\nObjectAnimator.ofInt(progressBar, "progress", newProgress)\n  .setDuration(300)\n  .start()\n\n// 自定义进度条：ObjectAnimator 改宽度\nval targetWidth = (totalWidth * percent / 100).toInt()\nValueAnimator.ofInt(progressFill.width, targetWidth).apply {\n  duration = 300L\n  addUpdateListener {\n    progressFill.layoutParams.width = it.animatedValue as Int\n    progressFill.requestLayout()\n  }\n}.start()',
+   cautions:['更新频率节流到 100ms','进度回退不要动画','不确定进度用 indeterminate'],
+   tips:['CSS transition 最简单','完成时加 scale+color 庆祝效果']},
+  {id:'typing', name:'打字点点', icon:'💬', desc:'聊天输入中、AI 回复等待', tags:['typing','循环'],
+   effect:'TypingDots (库内置)', duration:500, easing:'expressive',
+   scenario:'对方正在输入时显示三个点交替跳动。库内置 TypingDots 组件直接使用。',
+   react:'import { TypingDots } from "@fade-animation/react";\n\n// 默认 3 个点，500ms 周期，150ms 交错\n<TypingDots />\n\n// 自定义：4 个点、6px 直径、600ms 周期\n<TypingDots\n  count={4}\n  dotSize={6}\n  gap={8}\n  cycleDuration={600}\n  staggerInterval={150}\n/>',
+   vue:'<!-- 当前 Vue 包未提供 TypingDots 组件，暂用 CSS keyframes 自建 -->\n<div class="typing-dots">\n  <span v-for="i in 3" :key="i" :style="{ animationDelay: (i-1)*150 + \'ms\' }" />\n</div>\n<style scoped>\n.typing-dots span {\n  width: 8px; height: 8px; border-radius: 50%;\n  background: #828386;\n  animation: pulse 500ms cubic-bezier(0.4, 0.14, 0.3, 1) infinite;\n}\n@keyframes pulse {\n  0%, 100% { opacity: 0.4; transform: scale(1); }\n  50% { opacity: 1; transform: scale(1.15); }\n}\n</style>',
+   swift:'import FadeAnimation\n\n// 库内置 TypingDotsView\nlet dots = TypingDotsView()\nview.addSubview(dots)\ndots.startAnimating()\n\n// 停止\ndots.stopAnimating()',
+   kotlin:'import com.fadeanimation.TypingDotsView\n\n// 库内置 TypingDotsView\nval dots = TypingDotsView(context)\ncontainer.addView(dots)\ndots.start()\n\n// 停止\ndots.stop()',
+   cautions:['对方停止输入 2-3 秒后消失','三个点间隔 100-200ms','reduced-motion 用静态省略号'],
+   tips:['库内置 TypingDots 组件(React)','点大小 6-8px，间距 4-6px']},
+  {id:'wave', name:'波浪条', icon:'🎵', desc:'音频播放、语音输入、均衡器', tags:['wave','循环'],
+   effect:'CSS scaleY + stagger 延迟', duration:300, easing:'ease-in-out',
+   scenario:'语音消息播放时显示波浪条动画。循环动画用 CSS keyframes，交错延迟可用库的 stagger() 计算。',
+   react:'import { stagger } from "@fade-animation/core";\n\n// 用 stagger() 生成延迟数组，CSS keyframes 做循环\nconst delays = stagger(4, { interval: 100 });\n\n// CSS:\n// .wave-bar {\n//   animation: wave 600ms ease-in-out infinite alternate;\n//   transform-origin: bottom;\n// }\n// @keyframes wave {\n//   0% { transform: scaleY(1); }\n//   100% { transform: scaleY(1.6); }\n// }\n\n<div className="wave-bars">\n  {delays.map((d, i) => (\n    <div key={i} className="wave-bar" style={{ animationDelay: d + "ms" }} />\n  ))}\n</div>',
+   vue:'<script setup>\nimport { stagger } from "@fade-animation/core";\nconst delays = stagger(4, { interval: 100 });\n<\/script>\n<template>\n  <div class="wave-bars">\n    <div v-for="(d, i) in delays" :key="i"\n      class="wave-bar"\n      :style="{ animationDelay: d + \'ms\' }" />\n  </div>\n</template>',
+   swift:'// 循环动画 iOS 用 CABasicAnimation 最稳定，库的 MotionAnimator 不做循环\n// stagger 工具仅在 Web/core 侧提供，iOS 侧手动用下标乘以间隔\nlet staggerInterval: TimeInterval = 0.1\nbars.enumerated().forEach { i, bar in\n  let anim = CABasicAnimation(keyPath: "transform.scale.y")\n  anim.fromValue = 1\n  anim.toValue = 1.6\n  anim.duration = 0.3\n  anim.beginTime = CACurrentMediaTime() + Double(i) * staggerInterval\n  anim.autoreverses = true\n  anim.repeatCount = .infinity\n  anim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)\n  bar.layer.add(anim, forKey: "wave")\n}',
+   kotlin:'// stagger 工具仅在 Web/core 侧提供，Android 侧手动用下标乘以间隔\nval staggerInterval = 100L\nbars.forEachIndexed { i, bar ->\n  ObjectAnimator.ofFloat(bar, "scaleY", 1f, 1.6f).apply {\n    duration = 300L\n    startDelay = i * staggerInterval\n    repeatCount = ValueAnimator.INFINITE\n    repeatMode = ValueAnimator.REVERSE\n    interpolator = AccelerateDecelerateInterpolator()\n  }.start()\n}',
+   cautions:['3-7 根条','每根延迟有规律','真实音频应响应数据','reduced-motion 用静态图标'],
+   tips:['scaleY 比改 height 性能好','真实可视化需 Web Audio API']},
+  {id:'count-up', name:'数字滚动', desc:'数字从 0 滚动到目标值，常用于数据统计展示', tags:['counter','数据'],
+   effect:'count-up', duration:1500, easing:'easeOutCubic',
+   scenario:'仪表盘数据加载完成后，关键指标数字从 0 滚动到实际值。',
+   react:'// 数字滚动动画\nfunction CountUp({ target, duration = 1500 }) {\n  const [val, setVal] = useState(0);\n  useEffect(() => {\n    let t0 = 0;\n    function tick(now) {\n      if(!t0) t0 = now;\n      const t = Math.min((now-t0)/duration, 1);\n      const e = 1 - Math.pow(1-t, 3); // easeOutCubic\n      setVal(Math.round(target * e));\n      if(t < 1) requestAnimationFrame(tick);\n    }\n    requestAnimationFrame(tick);\n  }, [target]);\n  return <span>{val.toLocaleString()}</span>;\n}',
+   vue:'// 同 React，用 requestAnimationFrame 驱动',
+   swift:'// CADisplayLink 驱动\nvar current = 0.0\nfunc tick() {\n  let t = min(elapsed / 1.5, 1)\n  let e = 1 - pow(1-t, 3)\n  label.text = String(Int(Double(target) * e))\n}',
+   kotlin:'ValueAnimator.ofInt(0, target).apply {\n  duration = 1500\n  interpolator = DecelerateInterpolator(2f)\n  addUpdateListener { textView.text = (it.animatedValue as Int).toString() }\n}.start()',
+   cautions:['大数字用 toLocaleString 加千分位','duration 1-2 秒为佳','小数点精度要固定','reduced-motion 直接显示最终值'],
+   tips:['easeOutCubic 让前快后慢更有冲击力','配合 fade-in 一起出现','金额类加货币符号前缀']},
+],
+list: [
+  {id:'stagger', name:'交错进入', icon:'📋', desc:'列表项依次出现', tags:['stagger','编排'],
+   effect:'FadeGroup + stagger', duration:300, easing:'enter',
+   scenario:'Feed 流加载完成后卡片从上到下依次淡入。库内置 FadeGroup 组件自动编排（当前只做 fade；需要 scale/slide 组合请手动用 Motion + stagger）。',
+   react:'import { FadeGroup, Motion } from "@fade-animation/react";\nimport { stagger } from "@fade-animation/core";\n\n// 方式 A：只做 fade — 直接用 FadeGroup\n<FadeGroup\n  in={loaded}\n  intent="enter"\n  stagger={{ interval: 60 }}\n>\n  {items.map(item => (\n    <Card key={item.id}>{item.content}</Card>\n  ))}\n</FadeGroup>\n\n// 方式 B：scale+fade 组合 — 手动用 stagger + Motion\nconst delays = stagger(items.length, { interval: 60 });\n\n{items.map((item, i) => (\n  <Motion\n    key={item.id}\n    in={loaded}\n    effect="scale-fade-in"\n    intent="enter"\n    delay={delays[i]}\n  >\n    <Card>{item.content}</Card>\n  </Motion>\n))}',
+   vue:'<!-- 方式 A：FadeGroup 只做 fade —— Vue 用扁平化 prop -->\n<FadeGroup\n  :in="loaded"\n  intent="enter"\n  :stagger-interval="60"\n>\n  <Card v-for="item in items" :key="item.id">{{ item.content }}</Card>\n</FadeGroup>\n\n<!-- 方式 B：scale+fade 组合 -->\n<script setup>\nimport { stagger } from "@fade-animation/core";\nconst delays = stagger(items.length, { interval: 60 });\n<\/script>\n<template>\n  <Motion\n    v-for="(item, i) in items"\n    :key="item.id"\n    :in="loaded"\n    effect="scale-fade-in"\n    intent="enter"\n    :delay="delays[i]"\n  >\n    <Card>{{ item.content }}</Card>\n  </Motion>\n</template>',
+   swift:'import FadeAnimation\n\n// stagger 工具仅在 core 层提供，iOS 侧用下标乘以间隔\nlet staggerInterval = 60  // 毫秒\n\nitems.enumerated().forEach { i, item in\n  MotionAnimator(\n    targetView: item.view,\n    options: FadeOptions(\n      duration: 300,\n      delay: i * staggerInterval,\n      intent: .enter\n    )\n  ).start(entering: true, effects: EffectPresets.scaleFadeIn)\n}',
+   kotlin:'import com.fadeanimation.*\n\n// stagger 工具仅在 core 层提供，Android 侧用下标乘以间隔\nval staggerInterval = 60L  // 毫秒\n\nitems.forEachIndexed { i, item ->\n  MotionAnimator(\n    item.view,\n    FadeOptions(\n      duration = 300L,\n      delay = i * staggerInterval,\n      intent = MotionIntent.ENTER\n    )\n  ).start(entering = true, effects = EffectPresets.SCALE_FADE_IN)\n}',
+   cautions:['元素>20个时缩短间隔','首屏可见才 stagger','避免 infinite scroll 中使用','控制在 10-15 个以内'],
+   tips:['interval 50-80ms 最佳','center 方向适合从中间扩散','FadeGroup 已封装好']},
+  {id:'reorder', name:'拖拽排序', icon:'↕️', desc:'列表拖拽重新排序', tags:['drag','spring'],
+   effect:'useSpring + 外部拖拽库', duration:400, easing:'spring snappy',
+   scenario:'长按列表项拖拽到新位置，其他项平滑让位。拖拽本身推荐接入 @dnd-kit / ItemTouchHelper 等成熟方案，松手回弹用库的 useSpring。',
+   react:'import { DndContext } from "@dnd-kit/core";\nimport { SortableContext } from "@dnd-kit/sortable";\nimport { useSpring } from "@fade-animation/react";\n\n// 用 useSpring 做松手后的缩放回弹反馈\nfunction SortableCard({ isDragging }) {\n  // 拖拽时 active=true，松手时 active=false\n  const progress = useSpring(!isDragging, { config: "snappy" });\n  // progress 从 0 回弹到 1（可能轻微超过 1 表示过冲）\n  const scale = 1.05 - 0.05 * progress; // 拖拽 1.05 → 松手 1\n  return <Card style={{ transform: `scale(${scale})` }} />;\n}\n\n<DndContext onDragEnd={handleDragEnd}>\n  <SortableContext items={items}>\n    {items.map(i => <SortableCard key={i.id} id={i.id} />)}\n  </SortableContext>\n</DndContext>',
+   vue:'<script setup>\nimport { computed, ref } from "vue";\nimport { useSpring } from "@fade-animation/vue";\n\nconst isDragging = ref(false);\n// useSpring 接受 Ref<boolean>，active=true 时弹簧从 0 跑到 1\nconst settling = ref(false);\nconst progress = useSpring(settling, { config: "snappy" });\n// 推荐结合 vuedraggable 做拖拽，useSpring 做松手回弹\n<\/script>',
+   swift:'import FadeAnimation\n\n// iOS 拖拽用 UITableView 原生 reorder，松手时用 MotionAnimator 做缩放反馈\ntableView.dragDelegate = self\ntableView.dropDelegate = self\ntableView.dragInteractionEnabled = true\n\nfunc tableView(_ tv: UITableView, moveRowAt from: IndexPath, to: IndexPath) {\n  dataSource.move(from: from.row, to: to.row)\n  guard let cell = tv.cellForRow(at: to) else { return }\n  // 松手反馈：快速放大一下\n  MotionAnimator(targetView: cell, options: FadeOptions(preset: .fast)).start(\n    entering: true,\n    effects: [.scale(from: 1.05, to: 1.0)]\n  )\n}',
+   kotlin:'import com.fadeanimation.*\n\n// Android 用 ItemTouchHelper 原生拖拽，松手时用 MotionAnimator 做反馈\nval callback = object : ItemTouchHelper.SimpleCallback(\n  ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0\n) {\n  override fun onMove(rv: RecyclerView, vh: RecyclerView.ViewHolder,\n                      target: RecyclerView.ViewHolder): Boolean {\n    adapter.swap(vh.adapterPosition, target.adapterPosition)\n    return true\n  }\n\n  override fun clearView(rv: RecyclerView, vh: RecyclerView.ViewHolder) {\n    super.clearView(rv, vh)\n    // 松手反馈\n    MotionAnimator(vh.itemView, FadeOptions(preset = PresetSpeed.FAST)).start(\n      entering = true,\n      effects = listOf(MotionEffect.Scale(from = 1.05f, to = 1.0f))\n    )\n  }\n\n  override fun onSwiped(vh: RecyclerView.ViewHolder, dir: Int) {}\n}\nItemTouchHelper(callback).attachToRecyclerView(recyclerView)',
+   cautions:['拖拽中元素要有视觉区分(阴影/scale)','其他元素平滑让位','松手用 spring 归位','长列表支持自动滚动'],
+   tips:['Web: @dnd-kit 最佳','iOS: UITableView 原生支持','Android: ItemTouchHelper']},
+  {id:'swipe-delete', name:'滑动删除', icon:'🗑', desc:'邮件/消息左滑删除', tags:['swipe','手势'],
+   effect:'slide + collapse', duration:300, easing:'exit',
+   scenario:'点击删除后，用 Motion 播放"左滑出 + 折叠"组合动画，动画结束才移除数据。手势识别本身用外部库或平台原生。',
+   react:'import { Motion } from "@fade-animation/react";\n\n// 删除组合动画：左滑出 + 折叠高度\n<Motion\n  in={!deleted}\n  effect={[\n    { type: "slide", direction: "left", distance: 120 },\n    { type: "collapse", collapsedHeight: 0 }\n  ]}\n  duration={300}\n  intent="exit"\n  onAnimationEnd={() => {\n    if (deleted) removeFromList(id);\n  }}\n>\n  <ListItem />\n</Motion>',
+   vue:'<Motion\n  :in="!deleted"\n  :effect="[\n    { type: \'slide\', direction: \'left\', distance: 120 },\n    { type: \'collapse\', collapsedHeight: 0 }\n  ]"\n  :duration="300"\n  intent="exit"\n  @animation-end="onExitEnd"\n>\n  <ListItem />\n</Motion>',
+   swift:'import FadeAnimation\n\nfunc deleteRow(at indexPath: IndexPath) {\n  guard let cell = tableView.cellForRow(at: indexPath) else { return }\n\n  // 左滑 + 折叠组合\n  MotionAnimator(\n    targetView: cell,\n    options: FadeOptions(duration: 300, intent: .exit)\n  ).start(\n    entering: false,\n    effects: [\n      .slide(direction: .left, distance: 120),\n      .collapse(collapsedHeight: .fixed(0))\n    ],\n    onEnd: { [weak self] in\n      self?.dataSource.remove(at: indexPath.row)\n      self?.tableView.deleteRows(at: [indexPath], with: .none)\n    }\n  )\n}',
+   kotlin:'import com.fadeanimation.*\n\nfun deleteItem(position: Int) {\n  val vh = recyclerView.findViewHolderForAdapterPosition(position) ?: return\n\n  MotionAnimator(\n    vh.itemView,\n    FadeOptions(duration = 300L, intent = MotionIntent.EXIT)\n  ).start(\n    entering = false,\n    effects = listOf(\n      MotionEffect.Slide(SlideDirection.LEFT, 120f),\n      MotionEffect.Collapse(CollapseHeight.Fixed(0f))\n    ),\n    onEnd = {\n      dataSource.removeAt(position)\n      adapter.notifyItemRemoved(position)\n    }\n  )\n}',
+   cautions:['滑动超过 40% 才触发','显示红色背景+删除图标','删除后有收起动画','提供撤销机制'],
+   tips:['iOS: trailingSwipeActions 标准方案','Android: ItemTouchHelper+onChildDraw','删除后 Snackbar 提供撤销']},
+  {id:'insert', name:'插入项', icon:'➕', desc:'新消息/新项插入列表', tags:['scale-fade','enter'],
+   effect:'scale-fade-in', duration:250, easing:'enter',
+   scenario:'发送消息后新消息项缩放淡入插入到列表底部。',
+   react:'import { Motion } from "@fade-animation/react";\n\n<Motion\n  in={isNew}\n  effect="scale-fade-in"\n  intent="enter"\n  duration={250}\n>\n  <MessageItem />\n</Motion>',
+   vue:'<Motion\n  :in="isNew"\n  effect="scale-fade-in"\n  intent="enter"\n  :duration="250"\n>\n  <MessageItem />\n</Motion>',
+   swift:'import FadeAnimation\n\n// 先插入数据，再在 cellForRow 返回的 cell 上触发动画\ntableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .none)\nDispatchQueue.main.async {\n  let ip = IndexPath(row: 0, section: 0)\n  guard let cell = self.tableView.cellForRow(at: ip) else { return }\n  cell.scaleFadeIn(options: FadeOptions(duration: 250, intent: .enter))\n}',
+   kotlin:'import com.fadeanimation.*\n\nadapter.notifyItemInserted(0)\nrecyclerView.scrollToPosition(0)\nrecyclerView.post {\n  val vh = recyclerView.findViewHolderForAdapterPosition(0) ?: return@post\n  MotionAnimator(\n    vh.itemView,\n    FadeOptions(duration = 250L, intent = MotionIntent.ENTER)\n  ).start(entering = true, effects = EffectPresets.SCALE_FADE_IN)\n}',
+   cautions:['插入位置正确','不影响其他项位置','列表平滑让位','大量同时插入用 batch'],
+   tips:['iOS: insertRows(.automatic) 自动选最佳动画','Android: notifyItemInserted']},
+  {id:'sequence', name:'序列动画', desc:'多步骤按顺序执行，每步完成后触发下一步', tags:['sequence','编排'],
+   effect:'planSequence', duration:2360, easing:'expressive',
+   scenario:'奖励弹窗中，遮罩淡入 -> 卡片弹出 -> 礼盒弹入 -> 金币弹入，每步完成后触发下一步。',
+   react:'import { planSequence } from "@fade-animation/core";\n\nconst plan = planSequence([\n  { effects: [{type:"fade"}], duration: 350 },\n  { effects: [{type:"scale",from:0.3,to:1},{type:"fade"}], duration: 700, delay: 50 },\n  { effects: [{type:"scale",from:0,to:1}], duration: 500, delay: 70 },\n  { effects: [{type:"scale",from:0,to:1}], duration: 500, delay: 70 },\n]);\n// plan.stepDelays = [0, 400, 1220, 1790]\n// plan.totalDuration = 2360',
+   vue:'// 同 React，用 planSequence 计算延迟\nconst plan = planSequence([...]);\n// 用 :delay 绑定每步延迟',
+   swift:'// DispatchQueue 编排\nfunc playSequence() {\n  MotionAnimator(maskView).start(entering: true,\n    effects: [.fade(from:0,to:1)],\n    options: FadeOptions(duration: 0.35))\n  DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {\n    MotionAnimator(cardView).start(entering: true,\n      effects: EffectPresets.scaleFadeIn,\n      options: FadeOptions(duration: 0.7))\n  }\n  DispatchQueue.main.asyncAfter(deadline: .now() + 1.17) {\n    MotionAnimator(trophyView).start(entering: true,\n      effects: [.scale(from:0,to:1)],\n      options: FadeOptions(duration: 0.5))\n  }\n}',
+   kotlin:'// Handler 编排\nfun playSequence() {\n  MotionAnimator(maskView).start(entering = true,\n    effects = listOf(MotionEffect.Fade(0f, 1f)),\n    options = FadeOptions(duration = 350))\n  handler.postDelayed({\n    MotionAnimator(cardView).start(entering = true,\n      effects = EffectPresets.SCALE_FADE_IN,\n      options = FadeOptions(duration = 700))\n  }, 50)\n  handler.postDelayed({\n    MotionAnimator(trophyView).start(entering = true,\n      effects = listOf(MotionEffect.Scale(0f, 1f)),\n      options = FadeOptions(duration = 500))\n  }, 120)\n}',
+   cautions:['序列要有明确结束状态','每步延迟 50-150ms 为佳','序列中断时取消所有待执行步骤','不要在序列执行中允许重复触发','总时长不超过 2 秒'],
+   tips:['用 planSequence() 自动计算累计延迟','iOS 用 DispatchQueue.main.asyncAfter','Android 用 Handler.postDelayed','适合奖励弹窗、引导流程等场景']},
+  {id:'marquee', name:'跑马灯', icon:'📜', desc:'公告滚动、标签云、Logo 墙', tags:['marquee','循环'],
+   effect:'CSS translateX 循环', duration:20000, easing:'linear',
+   scenario:'公告栏文字从右向左持续滚动。匀速无限循环推荐用 CSS keyframes，库不做此类长时循环动画。',
+   react:'// 库不提供 Marquee 组件；推荐用 CSS keyframes\n// .marquee-track { overflow: hidden; }\n// .marquee-content {\n//   display: inline-flex;\n//   animation: marquee 20s linear infinite;\n// }\n// @keyframes marquee {\n//   from { transform: translateX(0); }\n//   to   { transform: translateX(-50%); }\n// }\n\n<div className="marquee-track">\n  <div className="marquee-content">\n    {[...items, ...items].map((item, i) => (\n      <span key={i}>{item.text}</span>\n    ))}\n  </div>\n</div>',
+   vue:'<div class="marquee-track">\n  <div class="marquee-content">\n    <span v-for="(item, i) in [...items, ...items]" :key="i">\n      {{ item.text }}\n    </span>\n  </div>\n</div>',
+   swift:'// iOS 用 CABasicAnimation 做 position.x 循环\nlet anim = CABasicAnimation(keyPath: "position.x")\nanim.fromValue = contentLayer.position.x\nanim.toValue = contentLayer.position.x - contentLayer.bounds.width / 2\nanim.duration = 20\nanim.repeatCount = .infinity\nanim.timingFunction = CAMediaTimingFunction(name: .linear)\ncontentLayer.add(anim, forKey: "marquee")\n\n// 停止：contentLayer.removeAnimation(forKey: "marquee")',
+   kotlin:'// Android 用 ObjectAnimator 循环平移\nval anim = ObjectAnimator.ofFloat(contentView, "translationX", 0f, -contentView.width / 2f).apply {\n  duration = 20_000L\n  repeatCount = ValueAnimator.INFINITE\n  interpolator = LinearInterpolator()\n}\nanim.start()\n\n// 停止：anim.cancel()',
+   cautions:['内容复制一份实现无缝循环','速度适中','hover/touch 暂停','不要放可交互元素','reduced-motion 暂停'],
+   tips:['CSS: translateX(-50%) + 复制内容','暂停: animation-play-state: paused','速度: duration = contentWidth / speed']},
+],
+emphasis: [
+  {id:'float', name:'悬浮', icon:'🎈', desc:'FAB 按钮、客服入口', tags:['float','循环'],
+   effect:'CSS translateY 反复', duration:1500, easing:'ease-in-out',
+   scenario:'客服悬浮按钮上下轻微浮动。循环反复动画库不提供，用 CSS keyframes 或平台原生 API。',
+   react:'// CSS keyframes + animation alternate infinite\n// .float-btn {\n//   animation: float 1.5s ease-in-out infinite alternate;\n// }\n// @keyframes float {\n//   from { transform: translateY(0); }\n//   to   { transform: translateY(-6px); }\n// }\n\n<button className="float-btn" aria-label="客服">\n  <ChatIcon />\n</button>',
+   vue:'<button class="float-btn" aria-label="客服">\n  <ChatIcon />\n</button>',
+   swift:'// iOS 循环 + autoreverse 用 UIView.animate 带 options\nUIView.animate(\n  withDuration: 0.75,\n  delay: 0,\n  options: [.repeat, .autoreverse, .curveEaseInOut],\n  animations: {\n    fab.transform = CGAffineTransform(translationX: 0, y: -6)\n  }\n)\n\n// 停止：fab.layer.removeAllAnimations()；并把 transform 置回 .identity',
+   kotlin:'// Android ObjectAnimator 带 REVERSE + INFINITE\nval anim = ObjectAnimator.ofFloat(fab, "translationY", 0f, -6f).apply {\n  duration = 750L\n  repeatCount = ValueAnimator.INFINITE\n  repeatMode = ValueAnimator.REVERSE\n  interpolator = AccelerateDecelerateInterpolator()\n}\nanim.start()\n\n// 停止：anim.cancel()',
+   cautions:['幅度小(4-8px)','不要遮挡内容','滚动时可隐藏','reduced-motion 停止'],
+   tips:['悬浮+阴影变化组合更好','空闲 3 秒后才开始']},
+  {id:'vip-shimmer', name:'VIP 流光扫过', desc:'VIP 卡片斜向光带循环扫过，营造高级感', tags:['shimmer','VIP','循环'],
+   effect:'CSS translateX + rotate（项目级自建）', duration:3000, easing:'ease-in-out',
+   scenario:'VIP 订阅卡片选中态，金色光带斜向扫过。库不提供 shimmer 组件，该效果由项目级自建（参考 continue-watching-widget/src/VipCardShimmer.tsx）。',
+   react:'// 项目级自建组件示例（非库导出）\n// CSS keyframes + 渐变带：\n// .shimmer-sweep {\n//   position: absolute; inset: 0;\n//   background: linear-gradient(100deg,\n//     transparent 30%,\n//     rgba(255,255,255,0.2) 50%,\n//     transparent 70%);\n//   animation: sweep 3s ease-in-out infinite;\n// }\n// @keyframes sweep {\n//   0%   { transform: translateX(-100%) rotate(-25deg); }\n//   100% { transform: translateX(300%) rotate(-25deg); }\n// }\n\n<div className="vip-card">\n  <VipCardContent />\n  <div className="shimmer-sweep" aria-hidden="true" />\n</div>',
+   vue:'<div class="vip-card">\n  <VipCardContent />\n  <div class="shimmer-sweep" aria-hidden="true" />\n</div>',
+   swift:'// iOS 自建：CAGradientLayer + CABasicAnimation（不在库内，按需自建）\nlet shimmer = CAGradientLayer()\nshimmer.colors = [\n  UIColor.clear.cgColor,\n  UIColor.white.withAlphaComponent(0.3).cgColor,\n  UIColor.clear.cgColor\n]\nshimmer.startPoint = CGPoint(x: 0, y: 0.5)\nshimmer.endPoint = CGPoint(x: 1, y: 0.5)\nlet anim = CABasicAnimation(keyPath: "locations")\nanim.fromValue = [-1, -0.5, 0]\nanim.toValue = [1, 1.5, 2]\nanim.duration = 3\nanim.repeatCount = .infinity\nshimmer.add(anim, forKey: "shimmer")\ncardView.layer.addSublayer(shimmer)',
+   kotlin:'// Android 自建：ValueAnimator 驱动自绘 Canvas（不在库内）\nclass ShimmerView @JvmOverloads constructor(\n  context: Context,\n  attrs: AttributeSet? = null\n) : View(context, attrs) {\n  private val anim = ValueAnimator.ofFloat(-1f, 2f).apply {\n    duration = 3000L\n    repeatCount = ValueAnimator.INFINITE\n    interpolator = AccelerateDecelerateInterpolator()\n    addUpdateListener { invalidate() }\n  }\n  fun start() = anim.start()\n  fun stop() = anim.cancel()\n}',
+   cautions:['光带宽度不超过卡片宽度 20%','循环动画必须有停止机制','光带透明度不超过 0.4','reduced-motion 下停止动画'],
+   tips:['duration 3s 是最佳循环时长','光带颜色用品牌色浅色版本','iOS 用 CAGradientLayer 性能最好']},
+  {id:'spotlight', name:'聚光灯引导', icon:'🔦', desc:'新手引导、功能介绍', tags:['spotlight','引导'],
+   effect:'自建 overlay + box-shadow', duration:300, easing:'enter',
+   scenario:'新用户首次进入，聚光灯高亮"发布"按钮。库不提供引导组件，推荐用遮罩 + 库的 Fade 做淡入。',
+   react:'import { Fade, Presence } from "@fade-animation/react";\n\n// 用 box-shadow 画"挖空"遮罩；用 Fade 控制整体淡入淡出\n<Presence>\n  {showGuide && (\n    <Fade key="spotlight" in intent="enter">\n      <div className="spotlight-overlay" onClick={onDismiss}>\n        <div\n          className="spotlight-hole"\n          style={{\n            left: rect.left - 8,\n            top: rect.top - 8,\n            width: rect.width + 16,\n            height: rect.height + 16,\n            // 关键：box-shadow 撑满屏幕形成遮罩\n            boxShadow: "0 0 0 9999px rgba(0,0,0,0.5)",\n            borderRadius: 8,\n          }}\n        />\n        <div className="spotlight-tip">点击这里发布</div>\n      </div>\n    </Fade>\n  )}\n</Presence>',
+   vue:'<Presence>\n  <Fade v-if="showGuide" key="spotlight" in intent="enter">\n    <div class="spotlight-overlay" @click="onDismiss">\n      <div class="spotlight-hole" :style="holeStyle" />\n      <div class="spotlight-tip">点击这里发布</div>\n    </div>\n  </Fade>\n</Presence>',
+   swift:'// iOS 推荐用第三方 Instructions 库或自建 overlay\n// 库侧可用 motion() 做遮罩淡入\nimport FadeAnimation\n\nlet overlay = SpotlightOverlayView(targetRect: publishBtn.frame)\nwindow.addSubview(overlay)\noverlay.alpha = 0\noverlay.motion(entering: true,\n  effects: EffectPresets.fadeIn,\n  options: FadeOptions(intent: .enter))',
+   kotlin:'// Android 推荐用第三方 TapTargetView 或自建 overlay\n// 库侧可用 MotionAnimator 做遮罩淡入\nimport com.fadeanimation.*\n\nval overlay = SpotlightOverlayView(context, publishBtn)\nrootView.addView(overlay)\noverlay.alpha = 0f\nMotionAnimator(overlay, FadeOptions(intent = MotionIntent.ENTER))\n  .start(entering = true, effects = EffectPresets.FADE_IN)',
+   cautions:['高亮区域不能阻止目标点击','比目标稍大(padding 8-12px)','多步引导有步骤指示','可随时跳过','完成后记录不再显示'],
+   tips:['遮罩: box-shadow: 0 0 0 9999px rgba(0,0,0,.5)','iOS: Instructions 库','Android: TapTargetView']},
+  {id:'zoom-in', name:'缩放进入', desc:'元素从小到大缩放出现，常用于图片预览和卡片展开', tags:['scale','fade','常用'],
+   effect:'scale-fade-in', duration:300, easing:'expressive',
+   scenario:'点击缩略图放大预览，卡片从列表位置缩放展开为详情页。',
+   react:'<Motion in={show}\n  effect={[{type:"scale",from:0.8,to:1},{type:"fade"}]}\n  intent="enter"\n>\n  <ImagePreview />\n</Motion>',
+   vue:'<Motion :in="show"\n  :effect="[{type:\'scale\',from:0.8,to:1},{type:\'fade\'}]"\n  intent="enter"\n>\n  <ImagePreview />\n</Motion>',
+   swift:'MotionAnimator(targetView: preview).start(\n  entering: true,\n  effects: [.scale(from: 0.8, to: 1), .fade(from: 0, to: 1)]\n)',
+   kotlin:'MotionAnimator(preview).start(\n  entering = true,\n  effects = listOf(\n    MotionEffect.Scale(0.8f, 1f),\n    MotionEffect.Fade(0f, 1f)\n  )\n)',
+   cautions:['scale 起始值 0.8-0.95 之间','配合 fade 避免突兀','transform-origin 设为元素来源位置','退出用反向 scale-down'],
+   tips:['图片预览: transform-origin 设为缩略图中心','卡片展开: 用 shared element transition','scale(0.8)+fade 比 scale(0) 更自然']},
+],
+gesture: [
+  {id:'drag-spring', name:'拖拽回弹', icon:'🎯', desc:'拖拽松手后的弹性回弹', tags:['spring','物理'],
+   effect:'useSpring (snappy preset)', duration:400, easing:'spring',
+   scenario:'图片拖拽查看，松手后弹性回到原位。使用库的 useSpring hook，配合手势识别（自己写或用外部库）。弹簧无固定时长，此处 duration 仅为估算参考。',
+   react:'import { useState, useRef } from "react";\nimport { useSpring } from "@fade-animation/react";\n\nfunction DragCard() {\n  const [dragging, setDragging] = useState(false);\n  const [offset, setOffset] = useState(0);\n  const startXRef = useRef(0);\n\n  // 松手时 dragging=false → useSpring 进度从 0 回弹到 1\n  // progress 用于把当前 offset 插值到 0\n  const progress = useSpring(!dragging, { config: "snappy" });\n  const visibleOffset = dragging ? offset : offset * (1 - progress);\n\n  return (\n    <div\n      style={{ transform: `translateX(${visibleOffset}px)` }}\n      onPointerDown={e => { setDragging(true); startXRef.current = e.clientX - offset; }}\n      onPointerMove={e => { if (dragging) setOffset(e.clientX - startXRef.current); }}\n      onPointerUp={() => setDragging(false)}\n    />\n  );\n}',
+   vue:'<script setup>\nimport { ref } from "vue";\nimport { useSpring } from "@fade-animation/vue";\n\nconst dragging = ref(false);\nconst offset = ref(0);\n// progress 是 Ref<number>，从 0 弹到 1\nconst progress = useSpring(ref(false), { config: "snappy" });\n<\/script>',
+   swift:'import UIKit\n// iOS UIKit 原生弹簧已足够好，不需要库的 spring\n@objc func handlePan(_ g: UIPanGestureRecognizer) {\n  let t = g.translation(in: view)\n  switch g.state {\n  case .changed:\n    cardView.transform = CGAffineTransform(translationX: t.x, y: 0)\n  case .ended, .cancelled:\n    let v = g.velocity(in: view).x\n    UIView.animate(\n      withDuration: 0.6,\n      delay: 0,\n      usingSpringWithDamping: 0.6,\n      initialSpringVelocity: abs(v) / 1000\n    ) {\n      self.cardView.transform = .identity\n    }\n  default: break\n  }\n}',
+   kotlin:'// Android 推荐用 AndroidX SpringAnimation（库的 core spring 是跨端模型）\nimport androidx.dynamicanimation.animation.SpringAnimation\nimport androidx.dynamicanimation.animation.DynamicAnimation\n\nview.setOnTouchListener { v, e ->\n  when (e.actionMasked) {\n    MotionEvent.ACTION_MOVE -> {\n      v.translationX = e.rawX - startX\n      true\n    }\n    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {\n      SpringAnimation(v, DynamicAnimation.TRANSLATION_X, 0f).apply {\n        spring.dampingRatio = 0.6f\n        spring.stiffness = 300f\n        setStartVelocity(velocityTracker.xVelocity)\n      }.start()\n      true\n    }\n    else -> false\n  }\n}',
+   cautions:['初始速度来自手势释放速度','拖拽过程跟手，松手才 spring','spring 无固定时长','低端设备可降级为 transition'],
+   tips:['useSpring snappy 预设适合快速回弹','iOS: UISpringTimingParameters','Android: SpringAnimation']},
+  {id:'swipe-card', name:'卡片滑动', icon:'🃏', desc:'Tinder 风格左右滑', tags:['swipe','spring'],
+   effect:'useSpring + 原生手势', duration:400, easing:'spring snappy',
+   scenario:'左滑拒绝右滑喜欢，卡片跟手旋转，松手后飞出或回弹。手势部分自己写或用 @use-gesture/react。',
+   react:'import { useState } from "react";\nimport { useSpring } from "@fade-animation/react";\n\nfunction SwipeCard({ onYes, onNo, onDismiss }) {\n  const [offset, setOffset] = useState(0);\n  const [settling, setSettling] = useState(false);\n  const [target, setTarget] = useState(0);\n\n  // 回弹/飞出时用 useSpring 驱动 offset → target\n  const progress = useSpring(settling, { config: "snappy", onRest: () => {\n    setSettling(false);\n    if (Math.abs(target) > 0) onDismiss();\n  } });\n  const visible = settling ? offset + (target - offset) * progress : offset;\n\n  function onPointerUp() {\n    if (Math.abs(offset) > 120) {\n      setTarget(offset > 0 ? window.innerWidth : -window.innerWidth);\n      offset > 0 ? onYes() : onNo();\n    } else {\n      setTarget(0);\n    }\n    setSettling(true);\n  }\n\n  return (\n    <div style={{\n      transform: `translateX(${visible}px) rotate(${visible * 0.05}deg)`\n    }} onPointerUp={onPointerUp} />\n  );\n}',
+   vue:'// 思路同 React：useSpring 驱动松手后的 offset 收敛',
+   swift:'// iOS 原生 spring 已足够\n@objc func handlePan(_ g: UIPanGestureRecognizer) {\n  let t = g.translation(in: view)\n  switch g.state {\n  case .changed:\n    card.transform = CGAffineTransform(translationX: t.x, y: 0)\n      .rotated(by: t.x / view.bounds.width * 0.3)\n  case .ended, .cancelled:\n    let v = g.velocity(in: view).x\n    if abs(t.x) > 100 {\n      // 飞出\n      let dir: CGFloat = t.x > 0 ? 1 : -1\n      UIView.animate(\n        withDuration: 0.4,\n        delay: 0,\n        usingSpringWithDamping: 0.8,\n        initialSpringVelocity: abs(v) / 1000,\n        animations: {\n          self.card.transform = CGAffineTransform(translationX: dir * self.view.bounds.width * 1.5, y: 0)\n            .rotated(by: dir * 0.5)\n        },\n        completion: { _ in\n          dir > 0 ? self.onYes() : self.onNo()\n        }\n      )\n    } else {\n      // 回弹\n      UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: abs(v) / 1000) {\n        self.card.transform = .identity\n      }\n    }\n  default: break\n  }\n}',
+   kotlin:'// Android 用 SpringAnimation\nimport androidx.dynamicanimation.animation.*\n\nview.setOnTouchListener { v, e ->\n  when (e.actionMasked) {\n    MotionEvent.ACTION_MOVE -> {\n      val dx = e.rawX - startX\n      v.translationX = dx\n      v.rotation = dx / v.width * 15\n      true\n    }\n    MotionEvent.ACTION_UP -> {\n      val dx = v.translationX\n      if (Math.abs(dx) > 100) {\n        // 飞出\n        val target = if (dx > 0) v.width * 1.5f else -v.width * 1.5f\n        SpringAnimation(v, DynamicAnimation.TRANSLATION_X, target).apply {\n          spring.dampingRatio = 0.8f\n          spring.stiffness = 300f\n        }.start()\n      } else {\n        // 回弹\n        SpringAnimation(v, DynamicAnimation.TRANSLATION_X, 0f).start()\n        SpringAnimation(v, DynamicAnimation.ROTATION, 0f).start()\n      }\n      true\n    }\n    else -> false\n  }\n}',
+   cautions:['拖拽时卡片跟手旋转','释放速度和位移都要判断','飞出沿释放方向','下一张卡片预备好'],
+   tips:['旋转: translateX/screenWidth * 15deg','飞出后 spring 弹入下一张','左滑红色叠加，右滑绿色']},
+  {id:'pinch-zoom', name:'捏合缩放', icon:'🔎', desc:'图片双指缩放、地图缩放', tags:['gesture','实时'],
+   effect:'原生手势 + useSpring 夹住回弹', duration:300, easing:'spring gentle',
+   scenario:'图片详情页双指捏合缩放查看细节。手势推荐用原生/@use-gesture，超出范围时用 useSpring 回弹。',
+   react:'import { useState } from "react";\nimport { useSpring } from "@fade-animation/react";\n// 手势推荐用 @use-gesture/react\nimport { usePinch } from "@use-gesture/react";\n\nfunction ZoomImage() {\n  const [scale, setScale] = useState(1);\n  const [clamping, setClamping] = useState(false);\n  const [target, setTarget] = useState(1);\n\n  // 超出 [0.5, 3] 时回弹到边界\n  const progress = useSpring(clamping, { config: "gentle", onRest: () => setClamping(false) });\n  const visible = clamping ? scale + (target - scale) * progress : scale;\n\n  const bind = usePinch(({ offset: [s], last }) => {\n    setScale(s);\n    if (last && (s < 0.5 || s > 3)) {\n      setTarget(Math.max(0.5, Math.min(3, s)));\n      setClamping(true);\n    }\n  });\n\n  return <img {...bind()} style={{ transform: `scale(${visible})` }} />;\n}',
+   vue:'// 思路同 React：@vueuse/gesture 做手势，useSpring 做超限回弹',
+   swift:'// iOS 原生 UIPinchGestureRecognizer + UIKit spring 已足够\n@objc func handlePinch(_ g: UIPinchGestureRecognizer) {\n  switch g.state {\n  case .changed:\n    imageView.transform = imageView.transform.scaledBy(x: g.scale, y: g.scale)\n    g.scale = 1\n  case .ended, .cancelled:\n    let s = imageView.transform.a\n    let clamped = max(0.5, min(3, s))\n    if clamped != s {\n      UIView.animate(withDuration: 0.4, delay: 0,\n                     usingSpringWithDamping: 0.7,\n                     initialSpringVelocity: 0.5) {\n        self.imageView.transform = CGAffineTransform(scaleX: clamped, y: clamped)\n      }\n    }\n  default: break\n  }\n}',
+   kotlin:'// Android ScaleGestureDetector + AndroidX SpringAnimation\nimport androidx.dynamicanimation.animation.*\n\nval detector = ScaleGestureDetector(context, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {\n  override fun onScale(d: ScaleGestureDetector): Boolean {\n    currentScale *= d.scaleFactor\n    imageView.scaleX = currentScale\n    imageView.scaleY = currentScale\n    return true\n  }\n\n  override fun onScaleEnd(d: ScaleGestureDetector) {\n    val clamped = currentScale.coerceIn(0.5f, 3f)\n    if (clamped != currentScale) {\n      SpringAnimation(imageView, DynamicAnimation.SCALE_X, clamped).apply {\n        spring.dampingRatio = 0.7f\n      }.start()\n      SpringAnimation(imageView, DynamicAnimation.SCALE_Y, clamped).apply {\n        spring.dampingRatio = 0.7f\n      }.start()\n      currentScale = clamped\n    }\n  }\n})',
+   cautions:['跟手实时响应无延迟','设最小/最大缩放限制(0.5x-3x)','超限用 spring 回弹','缩放中心是双指中心','Web 要 preventDefault'],
+   tips:['Web: @use-gesture/react','iOS: UIPinchGestureRecognizer','Android: ScaleGestureDetector']},
+  {id:'long-press', name:'长按操作', icon:'✋', desc:'长按预览、上下文菜单、拖拽', tags:['gesture','500ms'],
+   effect:'scale + fade', duration:200, easing:'feedback',
+   scenario:'长按消息时卡片轻微放大作为反馈，弹出操作菜单。长按识别需自己写，反馈动画用库的 Motion。',
+   react:'import { useRef, useState } from "react";\nimport { Motion } from "@fade-animation/react";\n\nfunction LongPressable({ children, onLongPress }) {\n  const timerRef = useRef(null);\n  const [pressed, setPressed] = useState(false);\n\n  function onPointerDown() {\n    timerRef.current = setTimeout(() => {\n      setPressed(true);\n      if ("vibrate" in navigator) navigator.vibrate(10);\n      onLongPress?.();\n    }, 500);\n  }\n  function onPointerUp() {\n    clearTimeout(timerRef.current);\n    setPressed(false);\n  }\n\n  return (\n    <Motion\n      in={pressed}\n      effect={[{ type: "scale", from: 1, to: 1.05 }]}\n      duration={200}\n      intent="feedback"\n    >\n      <div {...{ onPointerDown, onPointerUp }}>{children}</div>\n    </Motion>\n  );\n}',
+   vue:'<!-- 思路同 React，setTimeout + Motion 放大反馈 -->',
+   swift:'import FadeAnimation\n\n// 原生手势 + 库的 motion() 做缩放反馈 + 触觉\nlet lp = UILongPressGestureRecognizer(target: self, action: #selector(handleLP))\nlp.minimumPressDuration = 0.5\nmessageView.addGestureRecognizer(lp)\n\n@objc func handleLP(_ g: UILongPressGestureRecognizer) {\n  switch g.state {\n  case .began:\n    UIImpactFeedbackGenerator(style: .medium).impactOccurred()\n    messageView.motion(\n      entering: true,\n      effects: [.scale(from: 1.0, to: 1.05)],\n      options: FadeOptions(duration: 200, intent: .feedback)\n    )\n    showContextMenu()\n  case .ended, .cancelled:\n    messageView.motion(\n      entering: false,\n      effects: [.scale(from: 1.0, to: 1.05)],\n      options: FadeOptions(duration: 200, intent: .feedback)\n    )\n  default: break\n  }\n}',
+   kotlin:'import com.fadeanimation.*\n\n// 原生 onLongClick + MotionAnimator 缩放反馈 + 触觉\nmessageView.setOnLongClickListener { v ->\n  v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)\n  MotionAnimator(\n    v,\n    FadeOptions(duration = 200L, intent = MotionIntent.FEEDBACK)\n  ).start(\n    entering = true,\n    effects = listOf(MotionEffect.Scale(from = 1.0f, to = 1.05f))\n  )\n  showContextMenu()\n  true\n}',
+   cautions:['触发时间 500ms 标准','必须有触觉反馈','手指移动超阈值取消','无障碍要有替代操作'],
+   tips:['配合 scale(1.05)+阴影加深','iOS: UIContextMenuInteraction','Web: 500ms setTimeout+pointer events']},
+],
+};
+
+// ============================================================
+// RENDERING
+// ============================================================
+var currentPage = 'intro';
+
+function buildSidebar() {
+  var sb = document.getElementById('sidebar');
+  var h = '<div class="side-inner">';
+  // "介绍" + "组件总览" + "更新内容"
+  var ovOn = (currentPage === 'overview') ? ' on' : '';
+  var cautOn = (currentPage === 'cautions') ? ' on' : '';
+  h += '<div class="side-group" style="border-top:none">';
+  h += '<div class="si si-top'+ovOn+'" onclick="showPage(\'overview\')">组件总览</div>';
+  h += '<div class="si'+cautOn+'" style="display:flex;justify-content:space-between;align-items:center;padding:12px 8px 12px 24px" onclick="showPage(\'cautions\')">更新内容<span style="font-family:Rubik;font-size:12px;font-weight:600;color:rgba(154,239,94,.8);background:rgba(154,239,94,.05);padding:4px 8px;border-radius:8px">NEW</span></div>';
+  h += '</div>';
+  // Detail page: extract current caseId
+  var activeCaseId = '';
+  if(currentPage.indexOf('detail:') === 0) activeCaseId = currentPage.split(':')[2];
+  // List each category with its components
+  Object.keys(CASES).forEach(function(catId){
+    var nav = NAV.find(function(n){return n.id===catId;});
+    if(!nav) return;
+    h += '<div class="side-group">';
+    h += '<div class="sg">'+nav.label+'</div>';
+    CASES[catId].forEach(function(c){
+      var isOn = (c.id === activeCaseId) ? ' on' : '';
+      h += '<div class="si'+isOn+'" data-case="'+c.id+'" data-cat="'+catId+'" onclick="showPage(\'detail:'+catId+':'+c.id+'\')">'+c.name+'</div>';
+    });
+    h += '</div>';
+  });
+  h += '<div class="side-ver">V1.1.0</div>';
+  h += '</div>';
+  sb.innerHTML = h;
+}
+
+function scrollToCase(catId, caseId) {
+  // First make sure we're on the overview page
+  if(currentPage !== 'overview') showPage('overview');
+  setTimeout(function(){
+    var card = document.querySelector('.case[data-case="'+caseId+'"]');
+    if(card) {
+      var offset = 64 + 50 + 12;
+      var top = card.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({top: top, behavior:'smooth'});
+    }
+  }, currentPage !== 'overview' ? 100 : 0);
+}
+
+function scrollToCat(catId) {
+  var el = document.getElementById('cat-'+catId);
+  if(el) {
+    var offset = document.querySelector('.cat-tabs') ? document.querySelector('.cat-tabs').offsetHeight + 64 + 8 : 80;
+    var top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({top: top, behavior:'smooth'});
+  }
+}
+
+// Sidebar does not scroll-spy — only changes on click
+
+function showPage(pageId) {
+  currentPage = pageId;
+  buildSidebar();
+  var ct = document.getElementById('content');
+  
+  // Re-trigger fade animation
+  ct.style.animation='none';
+  ct.offsetHeight; // force reflow
+  ct.style.animation='';
+
+  if(pageId === 'cautions') { ct.innerHTML = renderCautions(); }
+  else if(pageId === 'intro') { ct.innerHTML = renderIntro(); }
+  else if(pageId === 'overview') { ct.innerHTML = renderAllCases(); }
+  else if(pageId.indexOf('detail:') === 0) {
+    var parts = pageId.split(':');
+    ct.innerHTML = renderDetail(parts[1], parts[2]);
+  }
+  else if(CASES[pageId]) { ct.innerHTML = renderCaseList(pageId); }
+  else { ct.innerHTML = renderAllCases(); }
+  
+  window.scrollTo(0,0);
+}
+
+function renderIntro() {
+  return '<h1 class="pg-t">KINETIC UI</h1>'+
+  '<p class="pg-d">跨框架、跨平台的动效设计系统。支持 React、Vue、Android Kotlin、iOS Swift 四端统一 API，让每一帧交互都精准可控。</p>'+
+  '<div class="sec"><h2>核心能力</h2><ul style="font-size:14px;color:var(--t2);line-height:2.4;list-style:none;padding:0">'+
+  '<li>🎯 <b style="color:var(--t1)">7 种基础动效</b> — fade / scale / slide / rotate / blur / flip / collapse</li>'+
+  '<li>🎨 <b style="color:var(--t1)">Design Tokens</b> — 时长、缓动、距离、意图四维参数体系</li>'+
+  '<li>📦 <b style="color:var(--t1)">四端统一</b> — React + Vue + iOS Swift + Android Kotlin</li>'+
+  '<li>🌊 <b style="color:var(--t1)">弹簧物理</b> — 阻尼谐振子引擎，snappy / bouncy / gentle 等 5 种预设</li>'+
+  '<li>🎭 <b style="color:var(--t1)">编排工具</b> — stagger 交错入场、sequence 序列动画、planSequence 自动计算延迟</li>'+
+  '<li>♿ <b style="color:var(--t1)">无障碍</b> — 自动检测 prefers-reduced-motion，支持全局 motionLevel 覆盖</li>'+
+  '<li>🧬 <b style="color:var(--t1)">生命周期管理</b> — Presence 自动处理进入/退出，配合 Modal/Drawer/Toast 等弹窗组件</li>'+
+  '<li>🎬 <b style="color:var(--t1)">18 种预设</b> — scale-fade-in / slide-up-in / blur-fade-in 等开箱即用</li>'+
+  '</ul></div>'+
+  '<div class="sec"><h2>安装</h2>'+
+  '<div class="ct"><div class="ct-body"># React\nnpm install @fade-animation/react\n\n# Vue\nnpm install @fade-animation/vue\n\n# Core (框架无关)\nnpm install @fade-animation/core</div></div></div>'+
+  '<div class="sec"><h2>快速开始</h2>'+
+  '<div class="ct"><div class="ct-tabs"><div class="ct-tab on" onclick="switchTab(this,\'intro-code\',0)">React</div><div class="ct-tab" onclick="switchTab(this,\'intro-code\',1)">Vue</div><div class="ct-tab" onclick="switchTab(this,\'intro-code\',2)">iOS</div><div class="ct-tab" onclick="switchTab(this,\'intro-code\',3)">Android</div></div>'+
+  '<div class="ct-body" id="intro-code">import { Fade, Motion } from \'@fade-animation/react\';\n\n// 淡入\n<Fade in={show} intent="enter">\n  <Content />\n</Fade>\n\n// 缩放淡入\n<Motion in={show} effect="scale-fade-in" intent="enter">\n  <Modal />\n</Motion></div></div></div>'+
+  '<div class="sec"><h2>相关链接</h2><p><a href="https://github.com/546060179/jiuzhou" target="_blank">GitHub 源码仓库</a></p></div>';
+}
+
+var INTRO_CODES = [
+  'import { Fade, Motion } from \'@fade-animation/react\';\n\n// 淡入\n<Fade in={show} intent="enter">\n  <Content />\n</Fade>\n\n// 缩放淡入\n<Motion in={show} effect="scale-fade-in" intent="enter">\n  <Modal />\n</Motion>',
+  '<template>\n  <Fade :in="show" intent="enter"><Content /></Fade>\n  <Motion :in="show" effect="scale-fade-in"><Modal /></Motion>\n</template>\n<script setup>\nimport { Fade, Motion } from \'@fade-animation/vue\';\n<\/script>',
+  'import FadeAnimation\n\nview.fadeIn(options: FadeOptions(intent: .enter))\n\nlet animator = MotionAnimator(targetView: modal)\nanimator.start(entering: true, effects: EffectPresets.scaleFadeIn)',
+  'import com.fadeanimation.*\n\nview.fadeIn(options = FadeOptions(intent = MotionIntent.ENTER))\n\nval animator = MotionAnimator(modal)\nanimator.start(entering = true, effects = EffectPresets.SCALE_FADE_IN)',
+];
+
+function switchTab(tab, bodyId, idx) {
+  tab.parentElement.querySelectorAll('.ct-tab').forEach(function(t){t.classList.remove('on');});
+  tab.classList.add('on');
+  var body = document.getElementById(bodyId);
+  if(body && idx !== undefined) {
+    body.textContent = INTRO_CODES[idx] || '';
+  }
+}
+
+function renderCautions() {
+  return '<h1 class="pg-t">更新内容</h1><p class="pg-d">KINETIC UI 动效组件库版本更新记录。</p>'+
+  '<div class="dt-section"><h2>V1.1.0 <span style="font-size:12px;color:var(--t3);font-weight:400;margin-left:8px">2026-05-08</span></h2>'+
+  '<div class="tip" style="margin-bottom:16px"><b>🧬 生命周期管理能力</b></div>'+
+  '<p style="font-size:14px;color:var(--t2);line-height:2;margin-bottom:16px">'+
+  '• 新增 <code>&lt;Presence&gt;</code> 组件 — 自动管理子元素进入 / 退出生命周期，动画完成后才从 DOM 移除<br>'+
+  '• 修复弹窗类组件手动管理 onAnimationEnd 的心智负担，Modal / Drawer / Toast 等可直接包裹 Presence<br>'+
+  '• 支持 <code>onExitComplete</code> 回调和 <code>initial</code> 配置<br>'+
+  '• React / Vue 两端 API 对齐'+
+  '</p></div>'+
+  '<div class="dt-section"><h2>V1.0.0 <span style="font-size:12px;color:var(--t3);font-weight:400;margin-left:8px">2025-04-20</span></h2>'+
+  '<div class="tip" style="margin-bottom:16px"><b>🎉 首个正式版本发布</b></div>'+
+  '<p style="font-size:14px;color:var(--t2);line-height:2;margin-bottom:16px">'+
+  '• 新增 7 大动效分类：弹窗/浮层、页面转场、操作反馈、加载状态、列表/编排、强调/引导、手势交互<br>'+
+  '• 新增 37 个动效预设，覆盖常见交互场景<br>'+
+  '• 支持 React、Vue、iOS Swift、Android Kotlin 四端统一 API<br>'+
+  '• 内置 Design Tokens 体系：时长、缓动、距离、意图四维参数<br>'+
+  '• 弹簧物理引擎：snappy / bouncy / gentle 等 5 种预设<br>'+
+  '• 编排工具：stagger 交错入场、sequence 序列动画、planSequence 自动延迟计算<br>'+
+  '• 无障碍支持：自动检测 prefers-reduced-motion，支持 motionLevel 全局覆盖<br>'+
+  '• 18 种开箱即用的效果预设：scale-fade-in / slide-up-in / blur-fade-in 等'+
+  '</p></div>'+
+  '<div class="dt-section"><h2>注意事项</h2>'+
+  '<div class="warn"><b>属性优先级</b><br>duration > timing > preset > intent > 默认值 (300ms)<br>easing > intent > 默认值 (\'ease\')</div>'+
+  '<div class="warn"><b>翻转和旋转不能同时使用</b><br>两者都操作旋转变换，同时存在时旋转会被忽略。</div>'+
+  '<div class="warn"><b>折叠特殊行为</b><br>• 首次渲染不播放动画<br>• 展开完成后最大高度设为自适应<br>• 内容有异步资源时高度可能变化</div>'+
+  '<div class="warn"><b>模糊平台差异</b><br>• 网页端: CSS filter:blur()<br>• 安卓: API 31+ RenderEffect，低版本自动降级<br>• iOS: UIVisualEffectView 性能最好</div>'+
+  '<div class="warn"><b>无障碍</b><br>• 自动检测系统动效偏好设置<br>• 弱化模式: 时长限制到 100ms<br>• 关闭模式: 跳过动画<br>• setMotionLevel() 全局覆盖</div>'+
+  '<div class="warn"><b>性能</b><br>• 同时动画不超过 10-15 个，用交错入场分散<br>• 循环动画用 CSS 不用 JS<br>• 避免滚动事件中频繁触发，用 IntersectionObserver<br>• 弹簧计算在低端设备可能掉帧</div>'+
+  '<div class="warn"><b>服务端渲染</b><br>• 服务端不执行动画<br>• 首次渲染输出目标状态静态 HTML<br>• 水合后才响应属性变化</div></div>';
+}
+
+function renderAllCases() {
+  var h = '<h1 class="pg-t">组件总览</h1>';
+  h += '<p class="pg-d"><code>Kinetic UI</code> 为跨端应用提供了丰富的动效组件，覆盖弹窗、转场、反馈、加载、编排、引导、手势七大场景。支持 React、Vue、iOS Swift、Android Kotlin 四端统一 API，开箱即用。</p>';
+  // Render each category
+  var catKeys = Object.keys(CASES);
+  catKeys.forEach(function(catId){
+    var nav = NAV.find(function(n){return n.id===catId;});
+    if(!nav) return;
+    var cases = CASES[catId];
+    h += '<div class="cat-sec" id="cat-'+catId+'">';
+    h += '<h3>'+nav.label+' <span>'+cases.length+'</span></h3>';
+    h += '<div class="cases">';
+    cases.forEach(function(c){
+      var engId = c.id.replace(/-/g,' ').replace(/\b\w/g,function(l){return l.toUpperCase();}).replace(/ /g,'');
+      h += '<div class="case" data-case="'+c.id+'" data-name="'+c.name+'" data-desc="'+(c.desc||'')+'" onclick="showPage(\'detail:'+catId+':'+c.id+'\')" onmouseenter="playCardAnim(this,\''+c.id+'\')" onmouseleave="stopCardAnim(this)">';
+      h += '<div class="case-preview">' + getCasePreviewHTML(c.id) + '</div>';
+      h += '<div class="case-info">';
+      h += '<div class="case-name">'+c.name+'</div>';
+      h += '<div class="case-eng">'+engId+'</div>';
+      h += '</div>';
+      h += '</div>';
+    });
+    h += '</div></div>';
+  });
+  return h;
+}
+
+// Filter cards by search text (like Ant Design inline search)
+function filterCards(q) {
+  q = q.trim().toLowerCase();
+  document.querySelectorAll('.case').forEach(function(card){
+    var name = (card.dataset.name||'').toLowerCase();
+    var desc = (card.dataset.desc||'').toLowerCase();
+    card.style.display = (!q || name.indexOf(q)>=0 || desc.indexOf(q)>=0) ? '' : 'none';
+  });
+  // Hide empty category sections
+  document.querySelectorAll('.cat-sec').forEach(function(sec){
+    var visible = sec.querySelectorAll('.case:not([style*="display: none"])').length;
+    sec.style.display = visible > 0 ? '' : 'none';
+  });
+}
+
+function renderCaseList(catId) {
+  // Single category view — same card style
+  var nav = NAV.find(function(n){return n.id===catId;});
+  var cases = CASES[catId] || [];
+  var h = '<h1 class="pg-t">'+nav.label+'</h1>';
+  h += '<p class="pg-d">'+cases.length+' 种动效预设，悬浮预览动效，点击查看详细用法和四端代码。</p>';
+  h += '<div class="cases">';
+  cases.forEach(function(c){
+    h += '<div class="case" data-case="'+c.id+'" onclick="showPage(\'detail:'+catId+':'+c.id+'\')" onmouseenter="playCardAnim(this,\''+c.id+'\')" onmouseleave="stopCardAnim(this)">';
+    h += '<div class="case-preview">' + getCasePreviewHTML(c.id) + '</div>';
+    h += '<div class="case-info">';
+    h += '<div class="case-name">'+c.name+'</div>';
+    h += '<div class="case-desc">'+c.desc+'</div>';
+    h += '</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+function renderDetail(catId, caseId) {
+  var cases = CASES[catId] || [];
+  var cs = cases.find(function(x){return x.id===caseId;});
+  if(!cs) return '<p>动效不存在</p>';
+  var nav = NAV.find(function(n){return n.id===catId;});
+  var h = '';
+
+  // Title
+  h += '<h1 class="dt-title">'+cs.name+'</h1>';
+  h += '<p class="dt-desc">'+cs.desc+'</p>';
+
+  // Import snippet
+  h += '<div class="dt-import">import { Motion } from \'@fade-animation/react\';</div>';
+
+  // "何时使用" section
+  if(cs.scenario) {
+    h += '<div class="dt-section" id="dt-when"><h2>何时使用</h2>';
+    h += '<p class="dt-when">'+cs.scenario+'</p></div>';
+  }
+
+  // "代码演示" section — demo box like Ant Design
+  h += '<div class="dt-section" id="dt-demo"><h2>代码演示</h2>';
+  // Demo box
+  h += '<div class="dt-demo-box">';
+  h += '<div class="dt-demo-preview" id="detail-demo" onclick="replayDetailDemo(\''+caseId+'\')">';
+  h += getCasePreviewHTML(caseId);
+  h += '<span class="demo-replay">▶ 播放</span>';
+  h += '</div>';
+  h += '<div class="dt-demo-meta"><span class="dt-demo-title">基础用法</span>';
+  h += '<div class="dt-demo-actions"><button onclick="event.stopPropagation();toggleDetailCode()" title="查看代码">{ }</button></div></div>';
+  h += '<div class="dt-demo-desc">'+cs.desc+'。'+(cs.scenario?cs.scenario.substring(0,60)+'...':'')+'</div>';
+  h += '</div></div>';
+
+  // Visual Editor — live tune duration/easing/intent
+  h += '<div class="dt-section" id="dt-editor-sec"><h2>可视化编辑器 <span style="font-size:12px;color:var(--t3);font-weight:400;margin-left:8px">实时调整参数预览动效</span></h2>';
+  h += renderVisualEditor(cs);
+  h += '</div>';
+
+  // Four platform code blocks — each shown separately with title
+  var platforms = [
+    {key:'react', label:'React', code:cs.react},
+    {key:'vue', label:'Vue', code:cs.vue},
+    {key:'swift', label:'iOS Swift', code:cs.swift},
+    {key:'kotlin', label:'Android Kotlin', code:cs.kotlin}
+  ];
+  platforms.forEach(function(p){
+    if(!p.code) return;
+    h += '<div class="dt-code-block">';
+    h += '<div class="dt-code-label">'+p.label+'</div>';
+    h += '<div class="ct" style="margin:0 0 16px"><div class="ct-body">'+escH(p.code)+'</div></div>';
+    h += '</div>';
+  });
+
+  // API section
+  if(cs.effect || cs.duration || cs.easing) {
+    h += '<div class="dt-section" id="dt-api"><h2>API</h2>';
+    h += '<table class="tbl"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>默认值</th></tr></thead><tbody>';
+    if(cs.effect) h += '<tr><td>effect</td><td>动效类型</td><td><code>string | MotionEffect[]</code></td><td><code>'+cs.effect+'</code></td></tr>';
+    if(cs.duration) h += '<tr><td>duration</td><td>动画时长 (ms)</td><td><code>number</code></td><td><code>'+cs.duration+'</code></td></tr>';
+    if(cs.easing) h += '<tr><td>easing</td><td>缓动函数</td><td><code>string</code></td><td><code>'+cs.easing+'</code></td></tr>';
+    h += '<tr><td>in</td><td>控制进入/退出</td><td><code>boolean</code></td><td><code>false</code></td></tr>';
+    h += '<tr><td>intent</td><td>动画意图</td><td><code>enter | exit | feedback</code></td><td><code>enter</code></td></tr>';
+    h += '</tbody></table></div>';
+  }
+
+  // Cautions
+  if(cs.cautions && cs.cautions.length) {
+    h += '<div class="dt-section" id="dt-cautions"><h2>注意事项</h2>';
+    h += '<div class="warn"><ul style="margin:0;padding-left:16px">';
+    cs.cautions.forEach(function(x){h+='<li>'+x+'</li>';});
+    h += '</ul></div></div>';
+  }
+
+  // Tips
+  if(cs.tips && cs.tips.length) {
+    h += '<div class="dt-section" id="dt-tips"><h2>最佳实践</h2>';
+    h += '<div class="tip"><ul style="margin:0;padding-left:16px">';
+    cs.tips.forEach(function(x){h+='<li>'+x+'</li>';});
+    h += '</ul></div></div>';
+  }
+
+  // AI Prompt call-to-action — one-click prompt for Cursor / Copilot / v0
+  h += '<div class="dt-ai-prompt">';
+  h += '<div class="dt-ai-prompt-text">';
+  h += '<div class="dt-ai-prompt-title">🤖 在 AI 编辑器中使用</div>';
+  h += '<div class="dt-ai-prompt-desc">选择目标端，一键复制完整 Prompt，粘贴到 Cursor / Copilot / v0 即可让 AI 生成对应端的业务代码</div>';
+  h += '</div>';
+  h += '<div class="dt-ai-prompt-controls">';
+  h += '<select class="dt-ai-prompt-select" id="ai-platform-select">';
+  h += '<option value="react">React</option>';
+  h += '<option value="vue">Vue</option>';
+  h += '<option value="swift">iOS Swift</option>';
+  h += '<option value="kotlin">Android Kotlin</option>';
+  h += '</select>';
+  h += '<button class="dt-ai-prompt-btn" onclick="copyAIPrompt(\''+catId+'\',\''+caseId+'\',this)">';
+  h += '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  h += '<span>复制 AI Prompt</span>';
+  h += '</button>';
+  h += '</div>';
+  h += '</div>';
+
+  // Prev/Next navigation
+  var allCases = [];
+  Object.keys(CASES).forEach(function(cid){ CASES[cid].forEach(function(c){ allCases.push({catId:cid,id:c.id,name:c.name}); }); });
+  var idx = allCases.findIndex(function(c){return c.id===caseId;});
+  h += '<div class="dt-prev-next">';
+  if(idx > 0) h += '<a onclick="showPage(\'detail:'+allCases[idx-1].catId+':'+allCases[idx-1].id+'\')">← '+allCases[idx-1].name+'</a>';
+  else h += '<span></span>';
+  if(idx < allCases.length-1) h += '<a onclick="showPage(\'detail:'+allCases[idx+1].catId+':'+allCases[idx+1].id+'\')">'+allCases[idx+1].name+' →</a>';
+  else h += '<span></span>';
+  h += '</div>';
+
+  // Right-side anchor nav
+  h += '<div class="dt-nav" id="dtNav">';
+  if(cs.scenario) h += '<a data-sec="dt-when" onclick="navTo(this,\'dt-when\')">何时使用</a>';
+  h += '<a data-sec="dt-demo" onclick="navTo(this,\'dt-demo\')">代码演示</a>';
+  h += '<a data-sec="dt-editor-sec" onclick="navTo(this,\'dt-editor-sec\')">可视化编辑器</a>';
+  if(cs.effect) h += '<a data-sec="dt-api" onclick="navTo(this,\'dt-api\')">API</a>';
+  if(cs.cautions && cs.cautions.length) h += '<a data-sec="dt-cautions" onclick="navTo(this,\'dt-cautions\')">注意事项</a>';
+  if(cs.tips && cs.tips.length) h += '<a data-sec="dt-tips" onclick="navTo(this,\'dt-tips\')">最佳实践</a>';
+  h += '</div>';
+
+  // Auto-play demo
+  setTimeout(function(){
+    replayDetailDemo(caseId);
+  }, 100);
+
+  return h;
+}
+
+function navTo(el, secId) {
+  // Immediately highlight clicked item
+  var nav = document.getElementById('dtNav');
+  if(nav) nav.querySelectorAll('a').forEach(function(a){ a.classList.remove('on'); });
+  el.classList.add('on');
+  // Scroll to section
+  var sec = document.getElementById(secId);
+  if(sec) sec.scrollIntoView({behavior:'smooth'});
+}
+
+// ============================================================
+// VISUAL EDITOR — live tune duration/easing/intent
+// ============================================================
+
+// EASING_CURVES from core tokens (mirrored for runtime preview)
+var EDITOR_EASING_CURVES = {
+  productive: 'cubic-bezier(0.2, 0, 0.38, 0.9)',
+  expressive: 'cubic-bezier(0.4, 0.14, 0.3, 1)',
+  enter:      'cubic-bezier(0, 0, 0.3, 1)',
+  exit:       'cubic-bezier(0.4, 0, 1, 1)',
+  linear:     'linear'
+};
+var EDITOR_INTENT_DEFAULTS = {
+  enter:    { duration: 300, easing: 'enter' },
+  exit:     { duration: 150, easing: 'exit' },
+  focus:    { duration: 150, easing: 'expressive' },
+  feedback: { duration: 100, easing: 'productive' },
+  delight:  { duration: 500, easing: 'expressive' }
+};
+
+// EDITABLE_KIND 标记每个动效是否支持 Visual Editor 实时调参
+// - 'motion': 标准 Motion 组件，可调 duration/easing/intent
+// - 'loop': 循环动画（CSS/原生），参数不可调
+// - 'custom': 项目级自建组件（如 BubbleExpand），动效内嵌在组件里
+// - 'gesture': 手势类，动效由手势速度决定
+// - 'native': 完全用平台原生 API，与库 tokens 解耦
+var EDITABLE_KIND = {
+  // motion — 可调
+  modal: 'motion', toast: 'motion', drawer: 'motion', actionsheet: 'motion', notification: 'motion',
+  'fade-in': 'motion', 'blur-in': 'motion', 'flip-in': 'motion', collapse: 'motion', 'slide-in': 'motion',
+  press: 'motion', success: 'motion', insert: 'motion', 'zoom-in': 'motion',
+  // loop — CSS / 平台原生循环
+  spinner: 'loop', pulse: 'loop', typing: 'loop', wave: 'loop', float: 'loop',
+  marquee: 'loop', 'vip-shimmer': 'loop', spotlight: 'loop',
+  // native — 平台/外部原生
+  shake: 'native', ripple: 'native', progress: 'native', 'count-up': 'native',
+  // gesture — 手势决定
+  'drag-spring': 'gesture', 'swipe-card': 'gesture', 'pinch-zoom': 'gesture', 'long-press': 'gesture',
+  'swipe-delete': 'gesture', reorder: 'gesture',
+  // custom — 项目级组件
+  'continue-watching': 'custom', 'bubble-expand': 'custom', 'vip-flip': 'custom', sequence: 'custom', stagger: 'custom'
+};
+
+// PREVIEW_KIND 控制 replayEditorPreview 用哪个动画模板
+// 对 motion 类组件按 effect 字符串选模板
+var PREVIEW_TEMPLATE = {
+  'fade-in':       function(el,d,e){ tween(el, d, e, { opacity:[0,1] }); },
+  'scale-fade-in': function(el,d,e){ tween(el, d, e, { opacity:[0,1], transform:['scale(0.85)','scale(1)'] }); },
+  'slide-up-in':   function(el,d,e){ tween(el, d, e, { opacity:[0,1], transform:['translateY(16px)','translateY(0)'] }); },
+  'slide-down':    function(el,d,e){ tween(el, d, e, { opacity:[0,1], transform:['translateY(-16px)','translateY(0)'] }); },
+  'slide-right':   function(el,d,e){ tween(el, d, e, { opacity:[0,1], transform:['translateX(-24px)','translateX(0)'] }); },
+  'slide-fade-in': function(el,d,e){ tween(el, d, e, { opacity:[0,1], transform:['translateX(30px)','translateX(0)'] }); },
+  'blur-fade-in':  function(el,d,e){ tween(el, d, e, { opacity:[0,1], filter:['blur(8px)','blur(0)'] }); },
+  'flip-y-in':     function(el,d,e){ tween(el, d, e, { opacity:[0,1], transform:['perspective(200px) rotateY(90deg)','perspective(200px) rotateY(0)'] }); },
+  'collapse-in':   function(el,d,e){ tween(el, d, e, { opacity:[0,1], transform:['scaleY(0)','scaleY(1)'] }); },
+  'press':         function(el,d,e){ tween(el, d, e, { transform:['scale(1)','scale(0.85)'] }); setTimeout(function(){ tween(el, d*1.5, e, { transform:['scale(0.85)','scale(1)'] }); }, d + 50); },
+  'zoom-in':       function(el,d,e){ tween(el, d, e, { opacity:[0,1], transform:['scale(0.5)','scale(1)'] }); }
+};
+
+// Current editor state (single active editor per page)
+var _editorState = { duration: 300, easing: 'enter', intent: '', caseId: '', tab: 'react' };
+
+function getEditorKind(cs) {
+  return EDITABLE_KIND[cs.id] || 'custom';
+}
+
+function renderVisualEditor(cs) {
+  var kind = getEditorKind(cs);
+  var editable = kind === 'motion';
+
+  // Seed initial state from the case's declared defaults
+  var defaultDuration = cs.duration || 300;
+  var validEasings = ['enter','exit','productive','expressive','linear'];
+  var defaultEasing = validEasings.indexOf(cs.easing) >= 0 ? cs.easing : 'enter';
+
+  _editorState.caseId = cs.id;
+  _editorState.duration = defaultDuration;
+  _editorState.easing = defaultEasing;
+  _editorState.intent = '';
+  _editorState.tab = 'react';
+
+  var h = '<div class="dt-editor">';
+
+  // Left panel — controls
+  h += '<div class="dt-editor-panel">';
+  var dis = editable ? '' : ' disabled';
+  h += '<div class="dt-editor-row"><label>duration <span class="v" id="ed-duration-v">'+defaultDuration+'ms</span></label>';
+  h += '<input type="range" min="50" max="1500" step="10" value="'+defaultDuration+'" oninput="updateEditor(\'duration\', this.value)"'+dis+'></div>';
+
+  h += '<div class="dt-editor-row"><label>easing</label>';
+  h += '<select onchange="updateEditor(\'easing\', this.value)"'+dis+'>';
+  validEasings.forEach(function(e){
+    var sel = e === defaultEasing ? ' selected' : '';
+    h += '<option value="'+e+'"'+sel+'>'+e+'</option>';
+  });
+  h += '</select></div>';
+
+  h += '<div class="dt-editor-row"><label>intent <span class="v" style="color:var(--t3);font-size:10px">(覆盖 easing+duration)</span></label>';
+  h += '<select onchange="updateEditor(\'intent\', this.value)"'+dis+'>';
+  h += '<option value="">（不设置）</option>';
+  ['enter','exit','focus','feedback','delight'].forEach(function(i){
+    h += '<option value="'+i+'">'+i+'</option>';
+  });
+  h += '</select></div>';
+
+  h += '<div style="margin-top:auto;padding-top:8px"><button class="dt-editor-reset" onclick="replayEditorPreview()" style="position:static;display:block;width:100%">▶ 重新播放</button></div>';
+  h += '</div>';
+
+  // Right panel — live preview
+  h += '<div class="dt-editor-preview" id="ed-preview" onclick="replayEditorPreview()">';
+  h += getCasePreviewHTML(cs.id);
+  h += '</div>';
+
+  // Hint for non-motion kinds
+  if(!editable) {
+    var hintMap = {
+      loop:    '💡 这是循环动画（CSS @keyframes / CABasicAnimation / ObjectAnimator 驱动），不通过 <code>&lt;Motion&gt;</code> 的 duration/easing props 调节。下方代码为推荐实现。',
+      native:  '💡 这是平台原生动画（CAKeyframeAnimation、UIProgressView、UIView.animate 等），参数写死在平台代码中。下方代码为推荐实现。',
+      gesture: '💡 手势类动效的时长/速度由用户操作决定（释放速度驱动 spring），不通过 Motion props 调节。下方代码为参考实现。',
+      custom:  '💡 这是项目级自建组件或多步编排，参数内嵌在组件内部。下方代码展示如何接入该组件。'
+    };
+    h += '<div class="dt-editor-hint">' + hintMap[kind] + '</div>';
+  }
+
+  // Code block with platform tabs
+  h += '<div class="dt-editor-code-wrap">';
+  h += '<div class="dt-editor-tabs">';
+  ['react','vue','swift','kotlin'].forEach(function(p, i){
+    var on = p === 'react' ? ' on' : '';
+    var label = p === 'react' ? 'React' : p === 'vue' ? 'Vue' : p === 'swift' ? 'iOS Swift' : 'Android Kotlin';
+    h += '<button class="dt-editor-tab'+on+'" onclick="switchEditorTab(\''+p+'\')">'+label+'</button>';
+  });
+  h += '</div>';
+  h += '<pre class="dt-editor-code" id="ed-code">'+escH(generateEditorCode(cs, 'react'))+'</pre>';
+  h += '</div>';
+
+  h += '</div>';
+  return h;
+}
+
+function switchEditorTab(platform) {
+  _editorState.tab = platform;
+  document.querySelectorAll('.dt-editor-tab').forEach(function(t){
+    t.classList.toggle('on', t.textContent.toLowerCase().indexOf(
+      platform === 'react' ? 'react' : platform === 'vue' ? 'vue' : platform === 'swift' ? 'ios' : 'android'
+    ) >= 0);
+  });
+  var cs = findCase(_editorState.caseId);
+  var codeEl = document.getElementById('ed-code');
+  if(cs && codeEl) codeEl.textContent = generateEditorCode(cs, platform);
+}
+
+function updateEditor(key, value) {
+  if(key === 'duration') {
+    _editorState.duration = parseInt(value, 10);
+    var label = document.getElementById('ed-duration-v');
+    if(label) label.textContent = _editorState.duration + 'ms';
+  } else {
+    _editorState[key] = value;
+  }
+
+  var cs = findCase(_editorState.caseId);
+  if(cs) {
+    var codeEl = document.getElementById('ed-code');
+    if(codeEl) codeEl.textContent = generateEditorCode(cs, _editorState.tab);
+  }
+
+  replayEditorPreview();
+}
+
+function findCase(caseId) {
+  var found = null;
+  Object.keys(CASES).forEach(function(k){
+    CASES[k].forEach(function(c){ if(c.id === caseId) found = c; });
+  });
+  return found;
+}
+
+/**
+ * 生成四端代码。
+ * - motion 类组件：按当前 state 的 duration/easing/intent 生成模板代码
+ * - 其他类型：直接返回 CASES 里预写好的真实代码（循环/手势/自建组件的原始实现）
+ */
+function generateEditorCode(cs, platform) {
+  var kind = getEditorKind(cs);
+
+  // 非 motion 类：直接用 CASES 里的原始代码
+  if(kind !== 'motion') {
+    return cs[platform] || '// 该端暂无示例';
+  }
+
+  // motion 类：按当前参数生成模板
+  var effect = cs.effect && cs.effect.indexOf(' ') < 0 && cs.effect.indexOf('+') < 0
+    ? cs.effect : 'fade-in';
+
+  var useIntent = !!_editorState.intent;
+
+  if(platform === 'react') {
+    var l = ['import { Motion } from "@fade-animation/react";', '', '<Motion'];
+    l.push('  in={show}');
+    l.push('  effect="' + effect + '"');
+    if(useIntent) {
+      l.push('  intent="' + _editorState.intent + '"');
+    } else {
+      l.push('  duration={' + _editorState.duration + '}');
+      l.push('  easing="' + _editorState.easing + '"');
+    }
+    l.push('>');
+    l.push('  <YourContent />');
+    l.push('</Motion>');
+    return l.join('\n');
+  }
+
+  if(platform === 'vue') {
+    var l = ['<script setup>', 'import { Motion } from "@fade-animation/vue";', '<\/script>', '', '<template>', '  <Motion'];
+    l.push('    :in="show"');
+    l.push('    effect="' + effect + '"');
+    if(useIntent) {
+      l.push('    intent="' + _editorState.intent + '"');
+    } else {
+      l.push('    :duration="' + _editorState.duration + '"');
+      l.push('    easing="' + _editorState.easing + '"');
+    }
+    l.push('  >');
+    l.push('    <YourContent />');
+    l.push('  </Motion>');
+    l.push('</template>');
+    return l.join('\n');
+  }
+
+  if(platform === 'swift') {
+    var presetMap = { 'fade-in':'fadeIn', 'scale-fade-in':'scaleFadeIn', 'slide-up-in':'slideUpIn', 'slide-down-out':'slideDownOut', 'slide-left-in':'slideLeftIn', 'slide-right-in':'slideRightIn', 'flip-x-in':'flipXIn', 'flip-y-in':'flipYIn', 'collapse-in':'collapseIn' };
+    var iosPreset = presetMap[effect] || 'fadeIn';
+    var opts = [];
+    if(useIntent) {
+      opts.push('intent: .' + _editorState.intent);
+    } else {
+      opts.push('duration: ' + _editorState.duration);
+      var curveMap = { enter:'.easeOut', exit:'.easeIn', productive:'.easeOut', expressive:'.easeInOut', linear:'.linear' };
+      opts.push('curve: ' + (curveMap[_editorState.easing] || '.easeInOut'));
+    }
+    var l = ['import FadeAnimation', '', '// 在 UIView 上触发'];
+    l.push('view.motion(');
+    l.push('  entering: true,');
+    l.push('  effects: EffectPresets.' + iosPreset + ',');
+    l.push('  options: FadeOptions(' + opts.join(', ') + ')');
+    l.push(')');
+    return l.join('\n');
+  }
+
+  if(platform === 'kotlin') {
+    var presetMap = { 'fade-in':'FADE_IN', 'scale-fade-in':'SCALE_FADE_IN', 'slide-up-in':'SLIDE_UP_IN', 'slide-down-out':'SLIDE_DOWN_OUT', 'slide-left-in':'SLIDE_LEFT_IN', 'slide-right-in':'SLIDE_RIGHT_IN', 'flip-x-in':'FLIP_X_IN', 'flip-y-in':'FLIP_Y_IN', 'collapse-in':'COLLAPSE_IN' };
+    var preset = presetMap[effect] || 'FADE_IN';
+    var l = ['import com.fadeanimation.*', ''];
+    var opts = [];
+    if(useIntent) {
+      opts.push('intent = MotionIntent.' + _editorState.intent.toUpperCase());
+    } else {
+      opts.push('duration = ' + _editorState.duration + 'L');
+      var interpMap = { enter:'DecelerateInterpolator()', exit:'AccelerateInterpolator()', productive:'DecelerateInterpolator()', expressive:'AccelerateDecelerateInterpolator()', linear:'LinearInterpolator()' };
+      opts.push('interpolator = ' + (interpMap[_editorState.easing] || 'AccelerateDecelerateInterpolator()'));
+    }
+    l.push('MotionAnimator(');
+    l.push('  view,');
+    l.push('  FadeOptions(' + opts.join(', ') + ')');
+    l.push(').start(entering = true, effects = EffectPresets.' + preset + ')');
+    return l.join('\n');
+  }
+
+  return '';
+}
+
+/** 用 CSS transition 驱动单次 tween 预览 */
+function tween(el, dur, easing, props) {
+  var from = {};
+  var to = {};
+  Object.keys(props).forEach(function(k){
+    from[k] = props[k][0];
+    to[k] = props[k][1];
+  });
+
+  el.style.transition = 'none';
+  Object.keys(from).forEach(function(k){ el.style[k] = from[k]; });
+  void el.offsetWidth;
+
+  var transitionProps = Object.keys(from).map(function(k){
+    var cssProp = k === 'transform' ? 'transform' : k === 'filter' ? 'filter' : k;
+    return cssProp + ' ' + dur + 'ms ' + easing;
+  }).join(', ');
+  el.style.transition = transitionProps;
+  Object.keys(to).forEach(function(k){ el.style[k] = to[k]; });
+}
+
+function replayEditorPreview() {
+  var preview = document.getElementById('ed-preview');
+  if(!preview) return;
+  var cs = findCase(_editorState.caseId);
+  if(!cs) return;
+
+  // Reset HTML
+  preview.innerHTML = getCasePreviewHTML(_editorState.caseId);
+
+  var kind = getEditorKind(cs);
+
+  // 非 motion 类：沿用原有卡片级动画（hover 动画里那一套）
+  if(kind !== 'motion') {
+    setTimeout(function(){
+      // 模拟 preview 为 case card，调用 playCardAnim
+      var fake = { querySelector: function(sel){ return preview.querySelector(sel); } };
+      if(typeof playCardAnim === 'function') playCardAnim(fake, _editorState.caseId);
+    }, 30);
+    return;
+  }
+
+  // motion 类：按当前 duration/easing/intent 驱动
+  var dur, easingName;
+  if(_editorState.intent && EDITOR_INTENT_DEFAULTS[_editorState.intent]) {
+    dur = EDITOR_INTENT_DEFAULTS[_editorState.intent].duration;
+    easingName = EDITOR_INTENT_DEFAULTS[_editorState.intent].easing;
+  } else {
+    dur = _editorState.duration;
+    easingName = _editorState.easing;
+  }
+  var easingCurve = EDITOR_EASING_CURVES[easingName] || 'ease';
+
+  var el = preview.querySelector('.cp-el');
+  if(!el) return;
+
+  // 根据 effect 选动画模板，没匹配就回退到 scale-fade-in
+  var effect = cs.effect || 'fade-in';
+  var template = PREVIEW_TEMPLATE[effect] || PREVIEW_TEMPLATE['scale-fade-in'];
+  template(el, dur, easingCurve);
+}
+
+// ============================================================
+// AI PROMPT COPY — one-click prompt for Cursor/Copilot/v0
+// ============================================================
+
+// Per-platform metadata for prompt generation
+var AI_PLATFORM_META = {
+  react: {
+    label: 'React + TypeScript',
+    pkg: '@fade-animation/react',
+    codeFence: 'tsx',
+    requirements: [
+      '直接输出可运行的完整 React 组件代码',
+      '使用 TypeScript + 函数组件 + hooks',
+      '包含必要的 state 管理（useState 等）',
+      '若涉及弹窗/退出动画，用 <Presence> 管理进入/退出生命周期',
+      '保留上述推荐参数作为默认值，但允许通过 props 覆盖'
+    ]
+  },
+  vue: {
+    label: 'Vue 3 + TypeScript',
+    pkg: '@fade-animation/vue',
+    codeFence: 'vue',
+    requirements: [
+      '直接输出可运行的完整 Vue 3 单文件组件（.vue）',
+      '使用 <script setup lang="ts"> 语法 + Composition API',
+      '用 ref / computed 管理必要的响应式状态',
+      '若涉及弹窗/退出动画，用 <Presence> 管理进入/退出生命周期',
+      '保留上述推荐参数作为默认值，但允许通过 props 覆盖'
+    ]
+  },
+  swift: {
+    label: 'iOS Swift (UIKit)',
+    pkg: 'FadeAnimation (Swift Package)',
+    codeFence: 'swift',
+    requirements: [
+      '直接输出可运行的完整 Swift 代码',
+      '使用 UIKit + UIView 或 UIViewController',
+      '调用 MotionAnimator 或 UIView motion() / fadeIn() 等扩展',
+      '使用 EffectPresets 里的预设；自定义组合时用 MotionEffect 数组',
+      'FadeOptions 的 duration 单位是毫秒（Int）'
+    ]
+  },
+  kotlin: {
+    label: 'Android Kotlin (View 系统)',
+    pkg: 'com.fadeanimation (Gradle artifact)',
+    codeFence: 'kotlin',
+    requirements: [
+      '直接输出可运行的完整 Kotlin 代码',
+      '使用 Android View 系统（兼容 API 21+）',
+      '调用 MotionAnimator 或 View motion() / fadeIn() 等扩展',
+      '使用 EffectPresets.* 里的预设；自定义组合时用 MotionEffect 数组',
+      'FadeOptions 的 duration 类型是 Long（毫秒）'
+    ]
+  }
+};
+
+function buildAIPrompt(catId, caseId, platform) {
+  platform = platform || 'react';
+  var cs = findCase(caseId);
+  if(!cs) return '';
+  var nav = NAV.find(function(n){ return n.id === catId; });
+  var catLabel = nav ? nav.label : catId;
+  var meta = AI_PLATFORM_META[platform] || AI_PLATFORM_META.react;
+  var refCode = cs[platform] || cs.react || '// no reference available';
+
+  var lines = [];
+  lines.push('你是一名资深的' + meta.label + '工程师。请使用 Kinetic UI 动效组件库（' + meta.pkg + '，已安装）实现一个"' + cs.name + '"场景。');
+  lines.push('');
+  lines.push('## 分类');
+  lines.push(catLabel);
+  lines.push('');
+  lines.push('## 动效描述');
+  lines.push(cs.desc || '');
+  if(cs.scenario) {
+    lines.push('');
+    lines.push('## 使用场景');
+    lines.push(cs.scenario);
+  }
+  lines.push('');
+  lines.push('## 推荐参数');
+  if(cs.effect)   lines.push('- effect: ' + cs.effect);
+  if(cs.duration) lines.push('- duration: ' + cs.duration + 'ms');
+  if(cs.easing)   lines.push('- easing: ' + cs.easing);
+  lines.push('');
+  lines.push('## 参考实现（' + meta.label + '）');
+  lines.push('```' + meta.codeFence);
+  lines.push(refCode);
+  lines.push('```');
+  if(cs.cautions && cs.cautions.length) {
+    lines.push('');
+    lines.push('## 注意事项');
+    cs.cautions.forEach(function(c){ lines.push('- ' + c); });
+  }
+  if(cs.tips && cs.tips.length) {
+    lines.push('');
+    lines.push('## 最佳实践');
+    cs.tips.forEach(function(t){ lines.push('- ' + t); });
+  }
+  lines.push('');
+  lines.push('## 要求');
+  meta.requirements.forEach(function(r, i){ lines.push((i+1) + '. ' + r); });
+  return lines.join('\n');
+}
+
+function copyAIPrompt(catId, caseId, btn) {
+  var select = document.getElementById('ai-platform-select');
+  var platform = (select && select.value) || 'react';
+  var prompt = buildAIPrompt(catId, caseId, platform);
+  var onSuccess = function(){
+    var span = btn.querySelector('span');
+    btn.classList.add('copied');
+    if(span) span.textContent = '已复制 ✓';
+    setTimeout(function(){
+      btn.classList.remove('copied');
+      if(span) span.textContent = '复制 AI Prompt';
+    }, 1800);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(prompt).then(onSuccess).catch(function(){ fallbackCopy(prompt); onSuccess(); });
+  } else {
+    fallbackCopy(prompt);
+    onSuccess();
+  }
+}
+
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+}
+
+function replayDetailDemo(caseId) {
+  var demo = document.getElementById('detail-demo');
+  if(!demo) return;
+  demo.innerHTML = getCasePreviewHTML(caseId) + '<span class="demo-replay">▶ 播放</span>';
+  var fakeCard = {querySelector: function(sel){ return demo.querySelector(sel); }};
+  setTimeout(function(){ playCardAnim(fakeCard, caseId); }, 30);
+}
+
+function toggleDetailCode() {
+  var wrap = document.getElementById('detail-code-wrap');
+  if(!wrap) return;
+  wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+}
+
+// Detail page right-nav scroll spy
+var _dtNavTimer;
+window.addEventListener('scroll', function(){
+  var dtNav = document.getElementById('dtNav');
+  if(!dtNav) return;
+  clearTimeout(_dtNavTimer);
+  _dtNavTimer = setTimeout(function(){
+    var secs = ['dt-when','dt-demo','dt-editor-sec','dt-api','dt-cautions','dt-tips'];
+    var active = '';
+    secs.forEach(function(id){
+      var el = document.getElementById(id);
+      if(el && el.getBoundingClientRect().top < 120) active = id;
+    });
+    dtNav.querySelectorAll('a').forEach(function(a){
+      a.classList.toggle('on', a.dataset.sec === active);
+    });
+  }, 60);
+}, {passive:true});
+
+function switchCaseTab(tab, bodyId, lang) {
+  tab.parentElement.querySelectorAll('.ct-tab').forEach(function(t){t.classList.remove('on');});
+  tab.classList.add('on');
+  var ct = tab.closest('.ct');
+  var body = document.getElementById(bodyId);
+  if(ct && ct._codes && body) {
+    body.textContent = ct._codes[lang] || '';
+  }
+}
+
+function escH(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ============================================================
+// CARD HOVER ANIMATIONS
+// ============================================================
+
+function getCasePreviewHTML(id) {
+  var shapes = {
+    // Popup
+    'modal': '<div class="cp-el" style="width:64px;height:44px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);box-shadow:0 4px 16px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center"><div style="width:32px;height:5px;border-radius:3px;background:var(--c)"></div></div>',
+    'toast': '<div class="cp-el" style="padding:6px 14px;border-radius:6px;background:rgba(255,255,255,.1);color:var(--t1);font-size:10px;white-space:nowrap;border:1px solid rgba(255,255,255,.08)">操作成功</div>',
+    'drawer': '<div class="cp-el" style="display:flex;width:64px;height:44px;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.1)"><div style="width:22px;background:var(--c);border-radius:5px 0 0 5px"></div><div style="flex:1;background:rgba(255,255,255,.04)"></div></div>',
+    'actionsheet': '<div class="cp-el" style="width:56px;display:flex;flex-direction:column;gap:3px"><div style="height:8px;border-radius:4px 4px 0 0;background:var(--c)"></div><div style="height:8px;background:var(--c);opacity:.6"></div><div style="height:8px;border-radius:0 0 4px 4px;background:var(--c);opacity:.3"></div></div>',
+    'notification': '<div class="cp-el" style="width:64px;padding:6px 8px;border-radius:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);box-shadow:0 2px 8px rgba(0,0,0,.2)"><div style="width:100%;height:5px;border-radius:3px;background:var(--c);margin-bottom:4px"></div><div style="width:60%;height:4px;border-radius:2px;background:rgba(255,255,255,.1)"></div></div>',
+    'continue-watching': '<div class="cp-el" style="width:72px;height:22px;border-radius:10px;background:rgba(255,255,255,.06);display:flex;align-items:center;gap:3px;padding:3px 4px 3px 3px;box-shadow:0 2px 8px rgba(0,0,0,.3)"><div style="width:15px;height:16px;border-radius:3px;background:var(--c);flex-shrink:0"></div><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px"><div style="width:22px;height:2.5px;border-radius:1px;background:#fff"></div><div style="width:14px;height:2px;border-radius:1px;background:rgba(255,255,255,.35);font-size:0">EP.1</div></div><div style="width:10px;height:10px;border-radius:50%;background:var(--c);display:flex;align-items:center;justify-content:center;flex-shrink:0"><div style="width:0;height:0;border-top:3px solid transparent;border-bottom:3px solid transparent;border-left:4.5px solid #fff;margin-left:1px"></div></div><div style="width:7px;height:7px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:rgba(255,255,255,.4);font-size:6px;line-height:1">✕</div></div>',
+    'press': '<div class="cp-el" style="padding:8px 20px;border-radius:8px;background:var(--c);color:#fff;font-size:11px;font-weight:600">按钮</div>',
+    'shake': '<div class="cp-el" style="width:56px;height:28px;border-radius:6px;border:1.5px solid var(--c);display:flex;align-items:center;padding:0 8px"><div style="width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,.1)"></div></div>',
+    'success': '<div class="cp-el" style="width:42px;height:42px;border-radius:50%;background:rgba(24,108,229,.1);border:2px solid var(--c);display:flex;align-items:center;justify-content:center;color:var(--c);font-size:20px;font-weight:700">✓</div>',
+    'pulse': '<div class="cp-el" style="position:relative"><div style="width:16px;height:16px;border-radius:50%;background:var(--c);box-shadow:0 0 8px rgba(24,108,229,.4)"></div></div>',
+    'ripple': '<div class="cp-el" style="width:40px;height:28px;border-radius:6px;background:var(--c);display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;position:relative">点击</div>',
+    // Transition
+    'fade-in': '<div class="cp-el" style="width:48px;height:32px;border-radius:6px;background:var(--c);display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px">内容</div>',
+    'blur-in': '<div class="cp-el" style="width:44px;height:30px;border-radius:4px;background:var(--c);display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>',
+    'flip-in': '<div class="cp-el" style="width:40px;height:28px;border-radius:4px;background:var(--c);display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;perspective:200px">正面</div>',
+    'collapse': '<div class="cp-el" style="width:48px;display:flex;flex-direction:column;gap:2px"><div style="height:6px;border-radius:3px;background:var(--c)"></div><div style="height:10px;border-radius:3px;background:var(--c);opacity:.4"></div><div style="height:6px;border-radius:3px;background:var(--c)"></div></div>',
+    // Loading
+    'spinner': '<div class="cp-el" style="width:28px;height:28px;border:3px solid rgba(255,255,255,.15);border-top-color:var(--c);border-radius:50%"></div>',
+    'progress': '<div class="cp-el" style="width:52px;height:6px;border-radius:3px;background:rgba(255,255,255,.15);overflow:hidden"><div style="width:0;height:100%;border-radius:3px;background:var(--c)"></div></div>',
+    'typing': '<div class="cp-el" style="display:flex;gap:4px;align-items:center"><div style="width:8px;height:8px;border-radius:50%;background:var(--c)"></div><div style="width:8px;height:8px;border-radius:50%;background:var(--c);opacity:.6"></div><div style="width:8px;height:8px;border-radius:50%;background:var(--c);opacity:.3"></div></div>',
+    'wave': '<div class="cp-el" style="display:flex;gap:2px;align-items:end;height:28px"><div style="width:3px;height:10px;border-radius:1.5px;background:var(--c)"></div><div style="width:3px;height:22px;border-radius:1.5px;background:var(--c)"></div><div style="width:3px;height:7px;border-radius:1.5px;background:var(--c)"></div><div style="width:3px;height:18px;border-radius:1.5px;background:var(--c)"></div><div style="width:3px;height:12px;border-radius:1.5px;background:var(--c)"></div></div>',
+    // List
+    'stagger': '<div class="cp-el" style="display:flex;flex-direction:column;gap:3px"><div style="width:44px;height:6px;border-radius:3px;background:var(--c)"></div><div style="width:36px;height:6px;border-radius:3px;background:var(--c);opacity:.6"></div><div style="width:28px;height:6px;border-radius:3px;background:var(--c);opacity:.3"></div></div>',
+    'reorder': '<div class="cp-el" style="display:flex;flex-direction:column;gap:3px"><div style="width:44px;height:7px;border-radius:3px;background:var(--c)"></div><div style="width:44px;height:7px;border-radius:3px;background:var(--ch)"></div><div style="width:44px;height:7px;border-radius:3px;background:var(--c);opacity:.5"></div></div>',
+    'swipe-delete': '<div class="cp-el" style="display:flex;width:56px;height:24px;overflow:hidden;border-radius:4px"><div style="flex-shrink:0;width:56px;height:24px;background:var(--c);border-radius:4px"></div><div style="flex-shrink:0;width:20px;height:24px;background:#ff4d4f;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px">✕</div></div>',
+    'insert': '<div class="cp-el" style="display:flex;flex-direction:column;gap:2px;align-items:center"><div style="width:44px;height:6px;border-radius:3px;background:var(--c)"></div><div style="width:44px;height:8px;border-radius:3px;border:1.5px dashed var(--c);opacity:.4"></div><div style="width:44px;height:6px;border-radius:3px;background:var(--c)"></div></div>',
+    'marquee': '<div class="cp-el" style="display:flex;gap:4px;overflow:hidden;width:52px"><div style="display:flex;gap:4px;flex-shrink:0"><div style="width:16px;height:16px;border-radius:3px;background:var(--c)"></div><div style="width:16px;height:16px;border-radius:3px;background:var(--c);opacity:.6"></div><div style="width:16px;height:16px;border-radius:3px;background:var(--c)"></div></div></div>',
+    // Emphasis
+    'float': '<div class="cp-el" style="width:36px;height:36px;border-radius:50%;background:var(--c);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(22,119,255,.3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>',
+    'spotlight': '<div class="cp-el" style="width:36px;height:36px;border-radius:50%;background:radial-gradient(circle,rgba(22,119,255,.2) 30%,transparent 70%);display:flex;align-items:center;justify-content:center"><div style="padding:4px 8px;border-radius:4px;background:var(--c);color:#fff;font-size:8px">发布</div></div>',
+    // Gesture
+    'drag-spring': '<div class="cp-el" style="width:36px;height:36px;border-radius:8px;background:var(--c);cursor:grab;box-shadow:0 2px 8px rgba(0,0,0,.15)"></div>',
+    'swipe-card': '<div class="cp-el" style="position:relative;width:36px;height:44px"><div style="position:absolute;left:0;top:4px;width:32px;height:40px;border-radius:6px;background:rgba(255,255,255,.12)"></div><div style="position:absolute;left:4px;top:0;width:32px;height:40px;border-radius:6px;background:var(--c)"></div></div>',
+    'pinch-zoom': '<svg class="cp-el" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>',
+    'long-press': '<div class="cp-el" style="position:relative"><div style="width:36px;height:36px;border-radius:8px;background:var(--c)"></div><div style="position:absolute;inset:-5px;border-radius:12px;border:2px solid var(--c);opacity:.3"></div></div>',
+    'bubble-expand': '<div class="cp-el" style="display:flex;align-items:center;justify-content:flex-end;width:64px"><div style="height:22px;border-radius:8px;background:var(--c);overflow:hidden;width:20px;margin-left:auto;display:flex;align-items:center;justify-content:center;white-space:nowrap"><span style="font-size:7px;color:#fff;font-weight:700;opacity:0;padding:0 6px">限时免费</span></div></div>',
+    'vip-shimmer': '<div class="cp-el" style="width:80px;height:36px;border-radius:6px;background:linear-gradient(135deg,#0a1628 0%,#132d5e 50%,#0a1628 100%);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid rgba(24,108,229,.3)"><span style="font-size:10px;color:var(--ch);font-weight:700;position:relative;z-index:1;letter-spacing:2px">VIP</span><div style="position:absolute;top:-50%;left:-50%;width:40px;height:200%;background:linear-gradient(90deg,transparent 0%,rgba(106,173,255,.15) 40%,rgba(106,173,255,.25) 50%,rgba(106,173,255,.15) 60%,transparent 100%);transform:rotate(-25deg)"></div></div>',
+    'sequence': '<div class="cp-el" style="display:flex;flex-direction:column;gap:3px"><div style="width:44px;height:6px;border-radius:3px;background:rgba(255,255,255,.1)"></div><div style="width:44px;height:14px;border-radius:4px;background:var(--c);opacity:0;transform:scale(0.3)"></div><div style="width:20px;height:6px;border-radius:3px;background:var(--c);opacity:0"></div></div>',
+    'vip-flip': '<div class="cp-el" style="width:52px;height:38px;border-radius:6px;background:var(--c);display:flex;align-items:center;justify-content:center;perspective:200px"><div style="font-size:9px;color:#fff;font-weight:700">VIP</div></div>',
+    'slide-in': '<div class="cp-el" style="width:48px;height:32px;border-radius:6px;background:var(--c);display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;opacity:.8">页面</div>',
+    'count-up': '<div class="cp-el" style="font-size:20px;font-weight:700;color:var(--ch);font-family:var(--mono)">0</div>',
+    'zoom-in': '<div class="cp-el" style="width:40px;height:40px;border-radius:6px;background:var(--c);display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>',
+  };
+  var html = shapes[id] || '';
+  return html ? '<div class="cp-wrap">' + html + '</div>' : '';
+}
+
+function playCardAnim(card, caseId) {
+  var el = card.querySelector('.cp-el');
+  if(!el) return;
+
+  // Only use transform/opacity/filter/animation — never change background/width/height
+  var A = {
+    'modal': function(){el.style.transition='none';el.style.transform='scale(0.4)';el.style.opacity='0';raf(function(){el.style.transition='all 0.7s cubic-bezier(.4,.14,.3,1)';el.style.transform='scale(1)';el.style.opacity='1';});},
+    'toast': function(){el.style.transition='none';el.style.transform='translateY(20px)';el.style.opacity='0';raf(function(){el.style.transition='all 0.6s cubic-bezier(0,0,.3,1)';el.style.transform='translateY(0)';el.style.opacity='1';});},
+    'drawer': function(){el.style.transition='none';el.style.transform='translateX(-24px)';el.style.opacity='0';raf(function(){el.style.transition='all 0.6s cubic-bezier(0,0,.3,1)';el.style.transform='translateX(0)';el.style.opacity='1';});},
+    'actionsheet': function(){el.style.transition='none';el.style.transform='translateY(24px)';el.style.opacity='0';raf(function(){el.style.transition='all 0.6s cubic-bezier(0,0,.3,1)';el.style.transform='translateY(0)';el.style.opacity='1';});},
+    'notification': function(){el.style.transition='none';el.style.transform='translateY(-20px)';el.style.opacity='0';raf(function(){el.style.transition='all 0.5s cubic-bezier(0,0,.3,1)';el.style.transform='translateY(0)';el.style.opacity='1';});},
+    'continue-watching': function(){
+      // Simplified for card preview: slide-up → hold → shrink width
+      var easeOutCubic=function(t){return 1-Math.pow(1-t,3);};
+      var easeInOutCubic=function(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;};
+      var lerp=function(a,b,t){return a+(b-a)*t;};
+      var origW=el.offsetWidth;
+      var phase='slide-up',start=0;
+      el.style.transform='translateY(30px)';el.style.opacity='0';
+      function tick(now){
+        if(!el.isConnected)return;
+        if(!start)start=now;
+        var elapsed=now-start;
+        if(phase==='slide-up'){
+          var t=Math.min(elapsed/450,1),e=easeOutCubic(t);
+          el.style.transform='translateY('+((1-e)*30)+'px)';
+          el.style.opacity=String(Math.min(t*3,1));
+          if(t>=1){el.style.transform='none';el.style.opacity='1';phase='hold';start=now;}
+        }else if(phase==='hold'){
+          if(elapsed>=1000){phase='fade';start=now;}
+        }else if(phase==='fade'){
+          var t=Math.min(elapsed/300,1),e=easeOutCubic(t);
+          for(var i=1;i<el.children.length;i++)el.children[i].style.opacity=String(1-e);
+          if(t>=1){phase='shrink';start=now;}
+        }else if(phase==='shrink'){
+          var t=Math.min(elapsed/500,1),e=easeInOutCubic(t);
+          var coverW=el.children[0]?el.children[0].offsetWidth+8:24;
+          el.style.width=lerp(origW,coverW,e)+'px';
+          el.style.borderRadius=lerp(10,6,e)+'px';
+          var bgA=lerp(1,0,Math.max(0,(t-0.3)/0.7));
+          el.style.background='rgba(38,40,46,'+bgA+')';
+          if(t>=1){
+            el.style.overflow='visible';el.style.background='none';
+            el.style.boxShadow='2px 2px 12px rgba(0,0,0,0.3)';
+            el.style.border='1px solid rgba(255,255,255,0.1)';
+            return;
+          }
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    },
+
+    'press': function(){el.style.transition='none';el.style.transform='scale(1)';raf(function(){el.style.transition='transform 0.2s ease';el.style.transform='scale(0.8)';setTimeout(function(){el.style.transition='transform 0.5s cubic-bezier(.4,.14,.3,1)';el.style.transform='scale(1)';},200);});},
+    'shake': function(){el.style.animation='none';raf(function(){el.style.animation='cShake 0.6s ease 3';});},
+    'success': function(){el.style.transition='none';el.style.transform='scale(0)';el.style.opacity='0';raf(function(){el.style.transition='all 0.7s cubic-bezier(.4,.14,.3,1)';el.style.transform='scale(1)';el.style.opacity='1';});},
+    'pulse': function(){
+      var dot=el.querySelector('div');
+      if(!dot)return;
+      dot.animate([
+        {boxShadow:'0 0 0 0 rgba(24,108,229,.6)',transform:'scale(1)'},
+        {boxShadow:'0 0 0 8px rgba(24,108,229,0)',transform:'scale(1.15)'},
+        {boxShadow:'0 0 0 0 rgba(24,108,229,0)',transform:'scale(1)'}
+      ],{duration:1200,iterations:Infinity,easing:'ease-in-out'});
+    },
+    'ripple': function(){el.style.animation='none';raf(function(){el.style.animation='cRipple 1.2s ease infinite';});},
+    'fade-in': function(){el.style.transition='none';el.style.opacity='0';raf(function(){el.style.transition='opacity 0.8s ease';el.style.opacity='1';});},
+    'blur-in': function(){el.style.transition='none';el.style.filter='blur(10px)';el.style.opacity='0';raf(function(){el.style.transition='all 1s ease';el.style.filter='blur(0)';el.style.opacity='1';});},
+    'flip-in': function(){el.style.transition='none';el.style.transform='perspective(200px) rotateY(90deg)';el.style.opacity='0';raf(function(){el.style.transition='all 0.9s ease';el.style.transform='perspective(200px) rotateY(0)';el.style.opacity='1';});},
+    'collapse': function(){el.style.transition='none';el.style.transform='scaleY(0)';el.style.opacity='0';raf(function(){el.style.transition='all 0.7s ease';el.style.transform='scaleY(1)';el.style.opacity='1';});},
+    'spinner': function(){el.style.animation='none';raf(function(){el.style.animation='cSpin 1.2s linear infinite';});},
+    'progress': function(){var bar=el.querySelector('div');if(bar){bar.style.transition='none';bar.style.width='0';raf(function(){bar.style.transition='width 2s ease';bar.style.width='100%';});}},
+    'typing': function(){var dots=el.querySelectorAll('div');dots.forEach(function(d,i){d.style.animation='none';});raf(function(){dots.forEach(function(d,i){d.style.animation='cPulse 1s ease-in-out '+(i*0.2)+'s infinite';});});},
+    'wave': function(){
+      var bars=el.querySelectorAll('div');
+      var heights=[0.4,1,0.3,0.85,0.55];
+      bars.forEach(function(b,i){
+        var h1=heights[i]||0.5, h2=heights[(i+2)%5]||0.6;
+        b.style.transformOrigin='bottom';
+        b.style.animation='none';
+        var d=300+i*40, del=i*80;
+        b.animate([
+          {transform:'scaleY('+h1+')'},
+          {transform:'scaleY(1)'},
+          {transform:'scaleY('+h2+')'},
+          {transform:'scaleY(0.9)'},
+          {transform:'scaleY('+h1+')'}
+        ],{duration:d+400,delay:del,iterations:Infinity,easing:'ease-in-out'});
+      });
+    },
+    'stagger': function(){var bars=el.querySelectorAll('div');bars.forEach(function(b,i){b.style.transition='none';b.style.transform='translateY(12px)';b.style.opacity='0';setTimeout(function(){b.style.transition='all 0.5s cubic-bezier(0,0,.3,1)';b.style.transform='translateY(0)';b.style.opacity='1';},i*100);});},
+    'reorder': function(){el.style.animation='none';raf(function(){el.style.animation='cBounce 0.8s ease 2';});},
+    'swipe-delete': function(){var card=el.querySelector('div');if(card){card.style.transition='none';card.style.transform='translateX(0)';raf(function(){card.style.transition='transform 0.7s ease';card.style.transform='translateX(-20px)';});}},
+    'insert': function(){el.style.transition='none';el.style.transform='scale(0.5)';el.style.opacity='0';raf(function(){el.style.transition='all 0.6s cubic-bezier(.4,.14,.3,1)';el.style.transform='scale(1)';el.style.opacity='1';});},
+    'marquee': function(){var inner=el.querySelector('div');if(inner){inner.style.animation='none';raf(function(){inner.style.animation='cMarquee 2.5s linear infinite';});}},
+    'float': function(){el.style.animation='none';raf(function(){el.style.animation='cFloat 2s ease-in-out infinite';});},
+    'spotlight': function(){el.style.animation='none';raf(function(){el.style.animation='cPulse 2s ease-in-out infinite';});},
+    'drag-spring': function(){var p=-1,v=0;(function _t(){var sf=-120*p,df=-10*v;v+=(sf+df)/60;p+=v/60;if(Math.abs(v)<0.01&&Math.abs(p)<0.005)p=0;el.style.transform='translateX('+(p*18)+'px)';if(Math.abs(p)>0.004||Math.abs(v)>0.01)requestAnimationFrame(_t);else el.style.transform='translateX(0)';})();},
+    'swipe-card': function(){el.style.transition='none';el.style.transform='translateX(0) rotate(0)';el.style.opacity='1';raf(function(){el.style.transition='all 0.8s ease';el.style.transform='translateX(20px) rotate(8deg)';el.style.opacity='0.2';setTimeout(function(){if(!el.isConnected)return;el.style.transition='all 0.5s cubic-bezier(.4,.14,.3,1)';el.style.transform='translateX(0) rotate(0)';el.style.opacity='1';},900);});},
+    'pinch-zoom': function(){el.style.transition='none';el.style.transform='scale(0.4)';raf(function(){el.style.transition='transform 0.7s cubic-bezier(.4,.14,.3,1)';el.style.transform='scale(1)';});},
+    'bubble-expand': function(){
+      // JS-driven springBounce matching preview-bubble-expand.html exactly
+      // Spring: damped harmonic oscillator zeta=0.5, omega=9.0
+      // Expands from RIGHT to LEFT (bubble stays right-aligned, width grows leftward)
+      var body=el.querySelector('div');
+      var txt=el.querySelector('span');
+      if(!body) return;
+      var startW=20, endW=64, dur=650, t0=0;
+      function springBounce(t){
+        if(t<=0)return 0;if(t>=1)return 1;
+        var z=0.5,w=9.0;
+        var wd=w*Math.sqrt(1-z*z);
+        var env=Math.exp(-z*w*t);
+        return 1-env*(Math.cos(wd*t)+(z/Math.sqrt(1-z*z))*Math.sin(wd*t));
+      }
+      body.style.width=startW+'px';
+      body.style.marginLeft='auto';
+      if(txt)txt.style.opacity='0';
+      function tick(now){
+        if(!el.isConnected) return;
+        if(!t0)t0=now;
+        var p=Math.min((now-t0)/dur,1);
+        var s=springBounce(p);
+        body.style.width=Math.max(startW,startW+(endW-startW)*s)+'px';
+        if(p>0.7&&txt){txt.style.opacity=String(Math.min((p-0.7)/0.3,1));}
+        if(p<1)requestAnimationFrame(tick);
+        else{body.style.width=endW+'px';if(txt)txt.style.opacity='1';}
+      }
+      requestAnimationFrame(tick);
+    },
+    'vip-shimmer': function(){var l=el.querySelector('div');if(l){l.style.animation='cShimmerSweep 3s ease-in-out infinite';l.style.willChange='transform';}},
+    'sequence': function(){var d=el.querySelectorAll('div');if(d[0]){d[0].style.transition='none';d[0].style.opacity='0';raf(function(){d[0].style.transition='opacity 0.3s ease';d[0].style.opacity='1';});}if(d[1]){d[1].style.animation='none';raf(function(){d[1].style.animation='cSeqPop 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.3s forwards';});}if(d[2]){d[2].style.transition='opacity 0.6s ease 1.2s';d[2].style.opacity='1';}},
+    'long-press': function(){el.style.transition='none';el.style.transform='scale(1)';raf(function(){el.style.transition='all 0.8s ease';el.style.transform='scale(1.15)';});},
+    'vip-flip': function(){el.style.transition='none';el.style.transform='perspective(200px) rotateX(90deg) scale(0.85)';el.style.opacity='0';raf(function(){el.style.transition='all 0.7s cubic-bezier(.4,.14,.3,1)';el.style.transform='perspective(200px) rotateX(0) scale(1)';el.style.opacity='1';});},
+    'slide-in': function(){el.style.transition='none';el.style.transform='translateX(20px)';el.style.opacity='0';raf(function(){el.style.transition='all 0.5s cubic-bezier(0,0,.3,1)';el.style.transform='translateX(0)';el.style.opacity='1';});},
+    'count-up': function(){var target=8642,dur=1500,t0=0;el.textContent='0';function tick(now){if(!el.isConnected)return;if(!t0)t0=now;var t=Math.min((now-t0)/dur,1);var e=1-Math.pow(1-t,3);el.textContent=Math.round(target*e).toLocaleString();if(t<1)requestAnimationFrame(tick);}requestAnimationFrame(tick);},
+    'zoom-in': function(){el.style.transition='none';el.style.transform='scale(0.5)';el.style.opacity='0';raf(function(){el.style.transition='all 0.6s cubic-bezier(.4,.14,.3,1)';el.style.transform='scale(1)';el.style.opacity='1';});},
+  };
+
+  var fn = A[caseId];
+  if(fn) fn();
+}
+
+function stopCardAnim(card) {
+  var preview = card.querySelector('.case-preview');
+  if(!preview) return;
+  var attr = card.getAttribute('onmouseenter') || '';
+  var m = attr.match(/'([^']+)'/);
+  if(m) preview.innerHTML = getCasePreviewHTML(m[1]);
+}
+
+function raf(fn) { requestAnimationFrame(fn); }
+
+// ============================================================
+// SEARCH — optimized with highlight, keyboard nav, instant expand
+// ============================================================
+(function(){
+  var input = document.querySelector('.hd-search');
+  var drop = document.getElementById('searchDrop');
+  if(!input || !drop) return;
+
+  // Build flat index
+  var idx = [];
+  Object.keys(CASES).forEach(function(catId){
+    var nav = NAV.find(function(n){return n.id===catId;});
+    CASES[catId].forEach(function(c){
+      idx.push({catId:catId, catLabel:nav?nav.label:'', id:c.id, name:c.name, desc:c.desc, tags:(c.tags||[]).join(' ')});
+    });
+  });
+
+  var srIdx = -1;
+
+  function highlightMatch(text, query) {
+    if(!query) return escH(text);
+    var safe = escH(text);
+    var escaped = '';
+    for(var i=0;i<query.length;i++){
+      var c=query[i];
+      if('.*+?^${}()|[]\\'.indexOf(c)>=0) escaped+='\\';
+      escaped+=c;
+    }
+    var re = new RegExp('('+escaped+')','gi');
+    return safe.replace(re, '<mark>$1</mark>');
+  }
+
+  function renderResults(q) {
+    if(!q){ drop.classList.remove('show'); return; }
+    var hits = idx.filter(function(item){
+      return item.name.toLowerCase().indexOf(q)>=0 || item.desc.toLowerCase().indexOf(q)>=0 || item.tags.toLowerCase().indexOf(q)>=0 || item.catLabel.toLowerCase().indexOf(q)>=0;
+    });
+    srIdx = -1;
+    if(!hits.length){
+      drop.innerHTML='<div class="sr-empty">没有找到 "'+escH(q)+'" 相关动效</div>';
+    } else {
+      var h = '';
+      hits.forEach(function(item, i){
+        h += '<div class="sr-item" data-cat="'+item.catId+'" data-id="'+item.id+'" data-idx="'+i+'">';
+        h += '<span>'+highlightMatch(item.name, q)+'</span>';
+        h += '<span class="sr-desc">'+highlightMatch(item.desc, q)+'</span>';
+        h += '<span class="sr-cat">'+item.catLabel+'</span>';
+        h += '</div>';
+      });
+      h += '<div class="sr-hint"><span><kbd>↑</kbd><kbd>↓</kbd> 导航</span><span><kbd>Enter</kbd> 打开</span><span><kbd>Esc</kbd> 关闭</span></div>';
+      drop.innerHTML = h;
+    }
+    drop.classList.add('show');
+  }
+
+  function updateActive() {
+    drop.querySelectorAll('.sr-item').forEach(function(it, i){
+      it.classList.toggle('sr-active', i === srIdx);
+    });
+    // Scroll active item into view within dropdown
+    var active = drop.querySelector('.sr-active');
+    if(active) active.scrollIntoView({block:'nearest'});
+  }
+
+  function selectItem(item) {
+    var catId = item.dataset.cat, caseId = item.dataset.id;
+    drop.classList.remove('show');
+    input.value = '';
+    input.blur();
+    showPage('detail:'+catId+':'+caseId);
+  }
+
+  input.addEventListener('input', function(){
+    renderResults(this.value.trim().toLowerCase());
+  });
+
+  input.addEventListener('focus', function(){
+    if(this.value.trim()) renderResults(this.value.trim().toLowerCase());
+  });
+
+  drop.addEventListener('click', function(e){
+    var item = e.target.closest('.sr-item');
+    if(item) selectItem(item);
+  });
+
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('.hd-search-wrap')) drop.classList.remove('show');
+  });
+
+  document.addEventListener('keydown', function(e){
+    // Cmd/Ctrl+K to focus search
+    if((e.metaKey||e.ctrlKey) && e.key==='k'){ e.preventDefault(); input.focus(); input.select(); return; }
+    if(e.key==='Escape'){ drop.classList.remove('show'); input.blur(); srIdx=-1; return; }
+    if(!drop.classList.contains('show')) return;
+    var items = drop.querySelectorAll('.sr-item');
+    if(!items.length) return;
+    if(e.key==='ArrowDown'){ e.preventDefault(); srIdx = Math.min(srIdx+1, items.length-1); updateActive(); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); srIdx = Math.max(srIdx-1, 0); updateActive(); }
+    else if(e.key==='Enter' && srIdx>=0 && items[srIdx]){ e.preventDefault(); selectItem(items[srIdx]); srIdx=-1; }
+  });
+})();
+
+// ============================================================
+// MOBILE NAV
+// ============================================================
+function buildMobNav(){
+  var mn = document.getElementById('mobNav');
+  if(!mn) return;
+  mn.innerHTML = NAV.filter(function(n){ return n.id !== 'cautions'; }).map(function(n){
+    return '<a class="'+(currentPage===n.id?'on':'')+'" onclick="showPage(\''+n.id+'\')">'+n.label+'</a>';
+  }).join('');
+}
+
+// ============================================================
+// COPY CODE BUTTON
+// ============================================================
+document.addEventListener('click', function(e){
+  var btn = e.target.closest('.ct-copy');
+  if(!btn) return;
+  var body = btn.closest('.ct').querySelector('.ct-body');
+  if(!body) return;
+  var text = body.textContent;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){
+      btn.textContent='已复制';
+      setTimeout(function(){ btn.textContent='复制'; }, 1500);
+    });
+  } else {
+    // Fallback
+    var ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent='已复制';
+    setTimeout(function(){ btn.textContent='复制'; }, 1500);
+  }
+});
+
+// Override showPage to also build mobile nav
+var _origShowPage = showPage;
+showPage = function(pageId) {
+  _origShowPage(pageId);
+  buildMobNav();
+  // Add copy buttons to code blocks
+  document.querySelectorAll('.ct').forEach(function(ct){
+    if(!ct.querySelector('.ct-copy')){
+      var btn = document.createElement('button');
+      btn.className = 'ct-copy';
+      btn.textContent = '复制';
+      ct.appendChild(btn);
+    }
+  });
+};
+
+// ============================================================
+// BACK TO TOP
+// ============================================================
+(function(){
+  var btn = document.getElementById('backTop');
+  if(!btn) return;
+  window.addEventListener('scroll', function(){
+    btn.classList.toggle('show', window.scrollY > 400);
+  }, {passive:true});
+})();
+
+// ============================================================
+// TAG FILTER (removed — search replaces this)
+// ============================================================
+
+// Sidebar scrollbar: show only while scrolling
+(function(){
+  var _scrollTimer;
+  function bindSideScroll(){
+    var inner = document.querySelector('.side-inner');
+    if(!inner) return;
+    inner.addEventListener('scroll', function(){
+      inner.classList.add('scrolling');
+      clearTimeout(_scrollTimer);
+      _scrollTimer = setTimeout(function(){ inner.classList.remove('scrolling'); }, 800);
+    }, {passive:true});
+  }
+  bindSideScroll();
+  // Re-bind after sidebar rebuild
+  var _origBuild = window.buildSidebar;
+  window.buildSidebar = function(){ _origBuild(); bindSideScroll(); };
+})();
+
+// Sidebar resize drag
+(function(){
+  var handle = document.getElementById('sideResize');
+  var side = document.getElementById('sidebar');
+  var main = document.querySelector('.main');
+  if(!handle || !side) return;
+  var dragging = false;
+  handle.addEventListener('mousedown', function(e){
+    e.preventDefault();
+    dragging = true;
+    handle.classList.add('dragging');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  });
+  document.addEventListener('mousemove', function(e){
+    if(!dragging) return;
+    var w = Math.max(190, Math.min(500, e.clientX));
+    side.style.width = w + 'px';
+    if(main) main.style.marginLeft = w + 'px';
+  });
+  document.addEventListener('mouseup', function(){
+    if(!dragging) return;
+    dragging = false;
+    handle.classList.remove('dragging');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+  });
+})();
+
+// Init
+buildSidebar();
+showPage('overview');
+buildMobNav();
+</script>
+
+</body>
+</html>
