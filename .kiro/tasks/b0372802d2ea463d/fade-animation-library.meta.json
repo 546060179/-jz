@@ -1,0 +1,172 @@
+{
+  "tasks": {
+    "5. 检查点 - 确保 React 包测试通过": {
+      "createdAt": 1773977999704,
+      "updatedAt": 1773978123620,
+      "taskId": "5. 检查点 - 确保 React 包测试通过",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-library/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "6c0a118c-24be-44d5-9851-876ed3bafbf7",
+          "executionId": "ed21eb1b-164a-4b01-b481-9a842a9e4dac",
+          "timestamp": 1773977999704
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "1. 搭建 monorepo 项目结构和核心类型定义": {
+      "createdAt": 1773976041913,
+      "updatedAt": 1773977203160,
+      "taskId": "1. 搭建 monorepo 项目结构和核心类型定义",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-library/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "cf41a6fa-8ad2-4187-968f-89cffa4bdb71",
+          "executionId": "b7fc94a7-312f-4640-af92-2cf3a47ed780",
+          "timestamp": 1773976041913
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "6.2 实现 Vue FadeIn/FadeOut 便捷别名并导出": {
+      "createdAt": 1773978546163,
+      "updatedAt": 1773978724915,
+      "taskId": "6.2 实现 Vue FadeIn/FadeOut 便捷别名并导出",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-library/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "6c0a118c-24be-44d5-9851-876ed3bafbf7",
+          "executionId": "ed21eb1b-164a-4b01-b481-9a842a9e4dac",
+          "timestamp": 1773978546163
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "4.2 实现 React FadeIn/FadeOut 便捷别名并导出": {
+      "createdAt": 1773977857328,
+      "updatedAt": 1773977998694,
+      "taskId": "4.2 实现 React FadeIn/FadeOut 便捷别名并导出",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-library/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "6c0a118c-24be-44d5-9851-876ed3bafbf7",
+          "executionId": "ed21eb1b-164a-4b01-b481-9a842a9e4dac",
+          "timestamp": 1773977857328
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "7. 最终检查点 - 确保所有包测试通过": {
+      "createdAt": 1773978725843,
+      "updatedAt": 1773978845159,
+      "taskId": "7. 最终检查点 - 确保所有包测试通过",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-library/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "6c0a118c-24be-44d5-9851-876ed3bafbf7",
+          "executionId": "ed21eb1b-164a-4b01-b481-9a842a9e4dac",
+          "timestamp": 1773978725843
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "3. 检查点 - 确保 core 包测试通过": {
+      "createdAt": 1773977577827,
+      "updatedAt": 1773977652021,
+      "taskId": "3. 检查点 - 确保 core 包测试通过",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-library/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "6c0a118c-24be-44d5-9851-876ed3bafbf7",
+          "executionId": "ed21eb1b-164a-4b01-b481-9a842a9e4dac",
+          "timestamp": 1773977577827
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "4.1 实现 React Fade 组件": {
+      "createdAt": 1773977652597,
+      "updatedAt": 1773977856370,
+      "taskId": "4.1 实现 React Fade 组件",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-library/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "6c0a118c-24be-44d5-9851-876ed3bafbf7",
+          "executionId": "ed21eb1b-164a-4b01-b481-9a842a9e4dac",
+          "timestamp": 1773977652597
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "6.1 实现 Vue Fade 组件": {
+      "createdAt": 1773978124193,
+      "updatedAt": 1773978545355,
+      "taskId": "6.1 实现 Vue Fade 组件",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-library/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "6c0a118c-24be-44d5-9851-876ed3bafbf7",
+          "executionId": "ed21eb1b-164a-4b01-b481-9a842a9e4dac",
+          "timestamp": 1773978124193
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "2.2 实现 `getReducedMotionPreference` 函数": {
+      "createdAt": 1773977404672,
+      "updatedAt": 1773977576619,
+      "taskId": "2.2 实现 `getReducedMotionPreference` 函数",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-library/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "6c0a118c-24be-44d5-9851-876ed3bafbf7",
+          "executionId": "ed21eb1b-164a-4b01-b481-9a842a9e4dac",
+          "timestamp": 1773977404672
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "2.1 实现 `resolveConfig` 函数": {
+      "createdAt": 1773977248555,
+      "updatedAt": 1773977404156,
+      "taskId": "2.1 实现 `resolveConfig` 函数",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-library/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "6c0a118c-24be-44d5-9851-876ed3bafbf7",
+          "executionId": "ed21eb1b-164a-4b01-b481-9a842a9e4dac",
+          "timestamp": 1773977248555
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "1.1 初始化 pnpm workspace 和三个包目录（packages/core、packages/react、packages/vue）": {
+      "createdAt": 1773976049650,
+      "updatedAt": 1773977131388,
+      "taskId": "1.1 初始化 pnpm workspace 和三个包目录（packages/core、packages/react、packages/vue）",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-library/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "cf41a6fa-8ad2-4187-968f-89cffa4bdb71",
+          "executionId": "b7fc94a7-312f-4640-af92-2cf3a47ed780",
+          "timestamp": 1773976049650
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "1.2 定义核心 TypeScript 类型和常量": {
+      "createdAt": 1773977132020,
+      "updatedAt": 1773977195262,
+      "taskId": "1.2 定义核心 TypeScript 类型和常量",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-library/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "cf41a6fa-8ad2-4187-968f-89cffa4bdb71",
+          "executionId": "b7fc94a7-312f-4640-af92-2cf3a47ed780",
+          "timestamp": 1773977132020
+        }
+      ],
+      "executionStatus": "succeed"
+    }
+  }
+}

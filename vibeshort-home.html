@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>VibeShort - Popular</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Lexend Deca',sans-serif;
+  background:#050713;
+  color:#fff;
+  width:375px;
+  margin:0 auto;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  position:relative;
+  min-height:100vh;
+}
+
+/* ===== Status Bar ===== */
+.status-bar{
+  height:44px;position:relative;
+}
+.status-bar .time{
+  position:absolute;left:21px;top:14px;
+  font-family:'SF Pro Text',-apple-system,sans-serif;
+  font-weight:600;font-size:15px;letter-spacing:-0.02em;
+}
+
+/* ===== Header ===== */
+.header{
+  position:absolute;top:0;left:0;width:375px;z-index:10;
+  background:linear-gradient(180deg,#0D0E10 18%,rgba(13,14,16,0.75) 59%,rgba(13,14,16,0) 100%);
+}
+.nav-bar{
+  display:flex;align-items:center;padding:0 16px;height:48px;gap:12px;
+}
+.logo{display:flex;align-items:center;gap:2px;}
+.logo img{width:40px;height:40px;}
+.logo-text{font-size:24px;font-weight:400;padding:4px;}
+.nav-bar .spacer{flex:1;}
+.search-btn{
+  width:48px;height:48px;display:flex;align-items:center;justify-content:center;
+}
+.search-btn img{width:16px;height:16px;opacity:0.8;}
+
+/* ===== Banner ===== */
+.banner-wrap{
+  position:relative;width:375px;height:500px;overflow:hidden;
+}
+.banner-layer1{
+  position:absolute;left:42px;top:16px;width:296px;height:484px;
+  background:#121524;border-radius:20px;
+}
+.banner-layer2{
+  position:absolute;left:21px;top:8px;width:338px;height:484px;
+  background:#23273A;border-radius:20px;
+}
+.banner-img{
+  position:absolute;top:0;left:0;width:375px;height:500px;
+  border-radius:20px;overflow:hidden;
+}
+.banner-img img{width:100%;height:100%;object-fit:cover;}
+.banner-gradient{
+  position:absolute;left:0;bottom:0;width:375px;height:182px;
+  background:linear-gradient(180deg,rgba(5,7,19,0) 0%,rgba(5,7,19,0.75) 52%,#050713 100%);
+}
+.banner-info{
+  position:absolute;left:0;bottom:20px;width:375px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  padding:0 16px;
+}
+.vibe-only{
+  display:inline-flex;align-items:center;gap:2px;
+  padding:3px 4px;background:#050713;border-radius:100px;height:14px;
+}
+.vibe-only img{width:12px;height:12px;}
+.vibe-only span{
+  font-size:8px;font-weight:400;
+  background:linear-gradient(90deg,#4051FF 0%,#CECECE 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.banner-title{
+  font-weight:600;font-size:24px;line-height:1.33;
+  text-transform:capitalize;text-align:center;
+}
+.dots-row{
+  display:flex;gap:4px;align-items:center;padding:4px 0;
+}
+.dot{height:3px;border-radius:2px;display:block;}
+.dot.active{width:16px;background:#fff;}
+.dot.inactive{width:12px;background:rgba(255,255,255,0.2);}
+
+/* ===== Sections ===== */
+.sections{
+  display:flex;flex-direction:column;gap:40px;padding:40px 0;
+}
+.section-label{
+  padding:0 8px;
+}
+.section-title{
+  font-weight:300;font-size:28px;line-height:1.43;
+  text-transform:capitalize;
+}
+
+/* ===== New Coming ===== */
+.new-coming{padding:0 8px;display:flex;flex-direction:column;gap:12px;position:relative;}
+.new-coming-bg{
+  position:absolute;top:0;left:0;width:375px;height:225px;z-index:0;
+}
+.new-coming-bg img{width:100%;height:100%;}
+.hscroll{
+  display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;
+  -ms-overflow-style:none;position:relative;z-index:1;
+}
+.hscroll::-webkit-scrollbar{display:none;}
+
+/* Large Card */
+.lg-card{
+  flex-shrink:0;width:225px;height:400px;border-radius:12px;
+  overflow:hidden;position:relative;background:#141621;
+}
+.lg-card-img{
+  width:225px;height:300px;overflow:hidden;border-radius:2.6px;
+}
+.lg-card-img img{width:100%;height:100%;object-fit:cover;}
+.lg-card-bottom{
+  position:absolute;bottom:0;left:0;width:225px;
+}
+.lg-card-fade{
+  height:40px;padding:4px;
+  background:linear-gradient(180deg,rgba(20,22,33,0) 0%,#141621 100%);
+}
+.lg-card-body{
+  background:#141621;padding:0 4px 4px;
+  display:flex;flex-direction:column;gap:8px;
+}
+.tags{display:flex;gap:4px;flex-wrap:wrap;}
+.tag{
+  display:inline-flex;align-items:center;padding:0 6px;height:20px;
+  background:#050713;border-radius:8px;
+  font-size:9px;font-weight:400;color:#5A68FF;
+}
+.lg-card-title{
+  font-weight:400;font-size:20px;line-height:1.4;text-transform:capitalize;
+}
+.lg-card-desc{
+  font-weight:300;font-size:12px;line-height:1.33;color:#6C7398;
+  height:32px;overflow:hidden;text-transform:capitalize;
+}
+/* Card Badge */
+.badge{
+  position:absolute;top:8px;right:0;display:flex;z-index:2;
+}
+.badge-label{
+  display:flex;align-items:center;gap:2px;
+  padding:0 4px 0 8px;height:20px;
+  border-radius:8px 0 0 8px;
+  font-size:12px;font-weight:500;color:#141621;
+}
+.badge-label.new{background:linear-gradient(-90deg,#CECECE 0%,#6A74FF 100%);}
+.badge-label.hot{background:linear-gradient(-90deg,#CECECE 0%,#FA5E7B 100%);}
+.badge-label.excl{background:linear-gradient(-90deg,#CECECE 0%,#6A74FF 100%);}
+.badge-arrow{width:4px;}
+.badge-arrow svg{display:block;}
+
+/* ===== Exclusive Originals ===== */
+.exclusive-section{
+  padding:20px 8px;background:transparent;border-radius:20px;
+  display:flex;flex-direction:column;gap:12px;
+}
+
+/* Small Card (3-col) */
+.sm-grid{display:flex;gap:4px;flex-wrap:wrap;}
+.sm-card{
+  width:117px;flex-shrink:0;display:flex;flex-direction:column;gap:4px;
+}
+.sm-card-img{
+  width:117px;height:156px;border-radius:12px;overflow:hidden;
+  position:relative;
+}
+.sm-card-img img{width:100%;height:100%;object-fit:cover;}
+.sm-card-img .play-badge{
+  position:absolute;bottom:4px;right:4px;
+  display:flex;align-items:center;gap:4px;
+  padding:0 4px;height:20px;border-radius:8px;
+  background:rgba(20,22,33,0.12);
+  backdrop-filter:blur(40px);
+  font-size:10px;font-weight:500;color:#fff;
+}
+.sm-card-img .play-badge img{width:10px;height:10px;}
+.sm-card-img .sm-badge{
+  position:absolute;top:4px;right:0;display:flex;
+}
+.sm-badge-label{
+  display:flex;align-items:center;gap:2px;
+  padding:0 2px 0 8px;height:16px;
+  border-radius:6px 0 0 6px;
+  font-size:9px;font-weight:500;color:#141621;
+}
+.sm-badge-label.new{background:linear-gradient(-90deg,#CECECE 0%,#6A74FF 100%);}
+.sm-badge-label.hot{background:linear-gradient(-90deg,#CECECE 0%,#FA5E7B 100%);}
+.sm-badge-label.excl{background:linear-gradient(-90deg,#CECECE 0%,#6A74FF 100%);}
+.sm-card-title{
+  font-weight:300;font-size:12px;line-height:1.33;
+  text-transform:capitalize;color:#C4C7D6;
+  padding:0 4px;
+}
+.sm-card-tags{
+  display:flex;gap:4px;padding:0 4px;
+}
+.sm-tag{
+  display:inline-flex;align-items:center;padding:0 6px;height:20px;
+  background:#141621;border-radius:8px;
+  font-size:9px;font-weight:500;color:#5A68FF;
+}
+
+/* ===== Recommend ===== */
+.recommend-section{padding:0 8px;display:flex;flex-direction:column;gap:12px;}
+.rec-grid{display:flex;gap:8px;}
+.rec-col{display:flex;flex-direction:column;gap:24px;flex:1;}
+.rec-card{display:flex;flex-direction:column;gap:4px;}
+.rec-card-img{
+  width:100%;aspect-ratio:175.5/234;border-radius:12px;
+  overflow:hidden;position:relative;
+}
+.rec-card-img img{width:100%;height:100%;object-fit:cover;}
+.rec-card-img .play-badge{
+  position:absolute;bottom:4px;right:4px;
+  display:flex;align-items:center;gap:4px;
+  padding:0 4px;height:20px;border-radius:8px;
+  background:rgba(20,22,33,0.12);
+  backdrop-filter:blur(40px);
+  font-size:10px;font-weight:500;color:#fff;
+}
+.rec-card-img .play-badge img{width:10px;height:10px;}
+.rec-card-img .sm-badge{position:absolute;top:4px;right:0;display:flex;}
+.rec-card-title{
+  font-weight:300;font-size:16px;line-height:1.25;
+  text-transform:capitalize;color:#C4C7D6;
+  height:40px;overflow:hidden;
+}
+.rec-card-tags{display:flex;gap:4px;}
+
+/* ===== You Might Like ===== */
+.might-like{padding:0 16px;display:flex;flex-direction:column;gap:8px;}
+.might-like .section-title{
+  font-family:'Montserrat',sans-serif;font-weight:700;font-size:20px;
+  line-height:1.4;text-transform:capitalize;
+}
+.single-card{
+  display:flex;gap:12px;align-items:center;
+}
+.single-card-img{
+  width:108px;height:144px;border-radius:12px;overflow:hidden;
+  position:relative;flex-shrink:0;
+  border:0.9px solid #26282D;
+}
+.single-card-img img{width:100%;height:100%;object-fit:cover;}
+.single-card-img .views{
+  position:absolute;bottom:0;left:0;width:100%;
+  display:flex;align-items:center;justify-content:flex-end;
+  gap:4px;padding:2px 8px;
+  background:linear-gradient(180deg,rgba(25,26,30,0) 0%,rgba(25,26,30,0.5) 50%);
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;
+}
+.single-card-img .views img{width:12px;height:12px;}
+.single-card-img .card-label{
+  position:absolute;top:0;right:0;
+  display:flex;align-items:center;gap:2px;
+  padding:3px 8px;height:14px;
+  border-radius:0 0 0 8px;
+  font-family:'Montserrat',sans-serif;font-size:8px;font-weight:800;
+  color:#0D0E10;
+}
+.card-label.hot-label{
+  background:linear-gradient(270deg,#FF6164 0%,#FFB1B0 100%);
+}
+.card-label.excl-label{
+  background:linear-gradient(270deg,#F86DFF 0%,#FBCBFF 100%);
+}
+.card-label.new-label{
+  background:linear-gradient(270deg,#0FFFE7 0%,#C8FFD8 100%);
+}
+.single-card-body{
+  display:flex;flex-direction:column;gap:12px;flex:1;
+}
+.single-card-body .title-block{
+  display:flex;flex-direction:column;gap:4px;
+}
+.single-card-body .sc-title{
+  font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;
+  line-height:1.43;color:#CED0D6;
+}
+.single-card-body .sc-desc{
+  font-family:'Montserrat',sans-serif;font-weight:500;font-size:12px;
+  line-height:1.33;color:#8D9199;
+  height:32px;overflow:hidden;
+}
+.single-card-body .sc-bottom{
+  display:flex;align-items:center;gap:12px;
+}
+.sc-ep{
+  font-family:'Montserrat',sans-serif;font-weight:500;font-size:12px;
+  color:#9F9FA2;flex:1;
+}
+.play-btn{
+  display:flex;align-items:center;gap:4px;
+  padding:6px 20px;height:32px;
+  background:#191A1E;border-radius:12px;border:none;cursor:pointer;
+}
+.play-btn img{width:12px;height:12px;}
+.play-btn span{
+  font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;
+  color:#fff;
+}
+
+/* ===== Tab Bar ===== */
+.tab-bar{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:375px;padding:0 16px;z-index:20;
+}
+.tab-bar-inner{
+  display:flex;
+  background:rgba(20,22,33,0.76);
+  backdrop-filter:blur(40px);
+  border-radius:20px;
+}
+.tab-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-end;padding-bottom:8px;
+  gap:2px;position:relative;
+  height:56px;
+}
+.tab-item img{
+  width:100%;height:100%;position:absolute;top:0;left:0;
+  object-fit:contain;
+}
+.tab-item span{
+  font-size:9px;font-weight:400;color:#C4C7D6;
+  position:relative;z-index:1;
+}
+.tab-item.active span{font-weight:600;color:#fff;}
+.home-indicator{
+  display:flex;justify-content:center;padding:8px 0 4px;
+}
+.home-indicator-bar{
+  width:134px;height:5px;background:#6E727A;border-radius:3px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="status-bar"><span class="time">9:27</span></div>
+    <div class="nav-bar">
+      <div class="logo">
+        <img src="vibeshort-assets/logo-icon.svg" alt="Logo">
+        <span class="logo-text">VibeShort</span>
+      </div>
+      <div class="spacer"></div>
+      <div class="search-btn"><img src="vibeshort-assets/search-icon.svg" alt="Search"></div>
+    </div>
+  </div>
+
+  <!-- Banner -->
+  <div class="banner-wrap">
+    <div class="banner-layer1"></div>
+    <div class="banner-layer2"></div>
+    <div class="banner-img"><img src="vibeshort-assets/banner-main.png" alt="Banner"></div>
+    <div class="banner-gradient"></div>
+    <div class="banner-info">
+      <div class="vibe-only">
+        <img src="vibeshort-assets/exclusive-icon.svg" alt="">
+        <span>VibeShort Only</span>
+      </div>
+      <div class="banner-title">The Months Before our<br>wedding</div>
+      <img src="vibeshort-assets/banner-dots.svg" alt="" style="width:60px;height:60px;">
+    </div>
+    <div class="dots-row" style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);">
+      <span class="dot active"></span>
+      <span class="dot inactive"></span>
+      <span class="dot inactive"></span>
+    </div>
+  </div>
+
+  <!-- Sections -->
+  <div class="sections">
+
+    <!-- New Coming -->
+    <div class="new-coming">
+      <div class="new-coming-bg"><img src="vibeshort-assets/new-coming-bg.svg" alt=""></div>
+      <div class="section-title" style="position:relative;z-index:1;">New Coming</div>
+      <div class="hscroll">
+        <!-- Card 1 -->
+        <div class="lg-card">
+          <div class="lg-card-img"><img src="vibeshort-assets/card-unwanted.png" alt=""></div>
+          <div class="badge"><div class="badge-label new">New</div><img src="vibeshort-assets/new-tag-arrow.svg" class="badge-arrow" alt=""></div>
+          <div class="lg-card-bottom">
+            <div class="lg-card-fade"></div>
+            <div class="lg-card-body">
+              <div class="tags"><span class="tag">Secret Baby</span><span class="tag">Playboy</span><span class="tag">Playboy</span></div>
+              <div class="lg-card-title">The Unwanted</div>
+              <div class="lg-card-desc">Ethan hurt Amanda again and again for the person</div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="lg-card">
+          <div class="lg-card-img"><img src="vibeshort-assets/card-revenge.png" alt=""></div>
+          <div class="badge"><div class="badge-label new">New</div><img src="vibeshort-assets/new-tag-arrow.svg" class="badge-arrow" alt=""></div>
+          <div class="lg-card-bottom">
+            <div class="lg-card-fade"></div>
+            <div class="lg-card-body">
+              <div class="tags"><span class="tag">Secret Baby</span><span class="tag">Playboy</span><span class="tag">Playboy</span></div>
+              <div class="lg-card-title">After Revenge Duvorce</div>
+              <div class="lg-card-desc">Ethan hurt Amanda again and again for the person</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exclusive Originals -->
+    <div class="exclusive-section">
+      <div class="section-title">Exlusive Originals</div>
+      <!-- Row 1 -->
+      <div class="sm-grid">
+        <div class="sm-card">
+          <div class="sm-card-img">
+            <img src="vibeshort-assets/card-riding.png" alt="">
+            <div class="play-badge"><img src="vibeshort-assets/play-icon.svg" alt="">667.3M</div>
+            <div class="sm-badge"><div class="sm-badge-label new">New</div><img src="vibeshort-assets/new-tag-arrow.svg" style="width:4px;height:20px;" alt=""></div>
+          </div>
+          <div class="sm-card-title">Riding into Love</div>
+          <div class="sm-card-tags"><span class="sm-tag">Playboy</span><span class="sm-tag">CEO</span></div>
+        </div>
+        <div class="sm-card">
+          <div class="sm-card-img">
+            <img src="vibeshort-assets/card-revenge.png" alt="">
+            <div class="play-badge"><img src="vibeshort-assets/play-icon.svg" alt="">667.3M</div>
+            <div class="sm-badge"><div class="sm-badge-label new">New</div><img src="vibeshort-assets/new-tag-arrow.svg" style="width:4px;height:20px;" alt=""></div>
+          </div>
+          <div class="sm-card-title">Daddy CEO'S Escaped Wife</div>
+          <div class="sm-card-tags"><span class="sm-tag">Playboy</span><span class="sm-tag">CEO</span></div>
+        </div>
+        <div class="sm-card">
+          <div class="sm-card-img">
+            <img src="vibeshort-assets/card-daddy2.png" alt="">
+            <div class="play-badge"><img src="vibeshort-assets/play-icon.svg" alt="">667.3M</div>
+            <div class="sm-badge"><div class="sm-badge-label new">New</div><img src="vibeshort-assets/new-tag-arrow.svg" style="width:4px;height:20px;" alt=""></div>
+          </div>
+          <div class="sm-card-title">Daddy CEO'S Escaped Wife</div>
+          <div class="sm-card-tags"><span class="sm-tag">Playboy</span><span class="sm-tag">CEO</span></div>
+        </div>
+      </div>
+      <!-- Row 2 -->
+      <div class="sm-grid">
+        <div class="sm-card">
+          <div class="sm-card-img">
+            <img src="vibeshort-assets/card-unwanted-bride.png" alt="">
+            <div class="play-badge"><img src="vibeshort-assets/play-icon.svg" alt="">667.3M</div>
+            <div class="sm-badge"><div class="sm-badge-label hot">Hot</div><img src="vibeshort-assets/hot-tag-arrow.svg" style="width:4px;height:20px;" alt=""></div>
+          </div>
+          <div class="sm-card-title">The Unwanted Bride Of Atticus Fawn</div>
+          <div class="sm-card-tags"><span class="sm-tag">Playboy</span><span class="sm-tag">CEO</span></div>
+        </div>
+        <div class="sm-card">
+          <div class="sm-card-img">
+            <img src="vibeshort-assets/card-billionaire.png" alt="">
+            <div class="play-badge"><img src="vibeshort-assets/play-icon.svg" alt="">667.3M</div>
+            <div class="sm-badge"><div class="sm-badge-label excl"><img src="vibeshort-assets/exclusive-icon.svg" style="width:8px;height:10px;" alt="">Exclusive</div><img src="vibeshort-assets/new-tag-arrow.svg" style="width:4px;height:20px;" alt=""></div>
+          </div>
+          <div class="sm-card-title">Billionaire's Abused Lover</div>
+          <div class="sm-card-tags"><span class="sm-tag">Playboy</span><span class="sm-tag">CEO</span></div>
+        </div>
+        <div class="sm-card">
+          <div class="sm-card-img">
+            <img src="vibeshort-assets/card-escaped.png" alt="">
+            <div class="play-badge"><img src="vibeshort-assets/play-icon.svg" alt="">667.3M</div>
+            <div class="sm-badge"><div class="sm-badge-label new">New</div><img src="vibeshort-assets/new-tag-arrow.svg" style="width:4px;height:20px;" alt=""></div>
+          </div>
+          <div class="sm-card-title">Daddy CEO'S Escaped Wife</div>
+          <div class="sm-card-tags"><span class="sm-tag">Playboy</span><span class="sm-tag">CEO</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommend For You -->
+    <div class="recommend-section">
+      <div class="section-title" style="padding:0;">Recommend For you</div>
+      <div class="rec-grid">
+        <div class="rec-col">
+          <div class="rec-card">
+            <div class="rec-card-img">
+              <img src="vibeshort-assets/card-recommend1.png" alt="">
+              <div class="play-badge"><img src="vibeshort-assets/play-icon.svg" alt="">667.3M</div>
+              <div class="sm-badge"><div class="sm-badge-label new">New</div><img src="vibeshort-assets/new-tag-arrow.svg" style="width:4px;height:20px;" alt=""></div>
+            </div>
+            <div class="rec-card-title">Daddy CEO'S Escaped Wife</div>
+            <div class="rec-card-tags"><span class="sm-tag">Playboy</span><span class="sm-tag">Secret Baby</span></div>
+          </div>
+          <div class="rec-card">
+            <div class="rec-card-img">
+              <img src="vibeshort-assets/card-recommend4.png" alt="">
+              <div class="play-badge"><img src="vibeshort-assets/play-icon.svg" alt="">667.3M</div>
+              <div class="sm-badge"><div class="sm-badge-label new">New</div><img src="vibeshort-assets/new-tag-arrow.svg" style="width:4px;height:20px;" alt=""></div>
+            </div>
+            <div class="rec-card-title">My Mistaken Lover</div>
+            <div class="rec-card-tags"><span class="sm-tag">Playboy</span><span class="sm-tag">Secret Baby</span></div>
+          </div>
+        </div>
+        <div class="rec-col">
+          <div class="rec-card">
+            <div class="rec-card-img">
+              <img src="vibeshort-assets/card-recommend2.png" alt="">
+              <div class="play-badge"><img src="vibeshort-assets/play-icon.svg" alt="">667.3M</div>
+              <div class="sm-badge"><div class="sm-badge-label new">New</div><img src="vibeshort-assets/new-tag-arrow.svg" style="width:4px;height:20px;" alt=""></div>
+            </div>
+            <div class="rec-card-title">My Mistaken Lover</div>
+            <div class="rec-card-tags"><span class="sm-tag">Playboy</span><span class="sm-tag">Secret Baby</span></div>
+          </div>
+          <div class="rec-card">
+            <div class="rec-card-img">
+              <img src="vibeshort-assets/card-recommend5.png" alt="">
+              <div class="play-badge"><img src="vibeshort-assets/play-icon.svg" alt="">667.3M</div>
+              <div class="sm-badge"><div class="sm-badge-label new">New</div><img src="vibeshort-assets/new-tag-arrow.svg" style="width:4px;height:20px;" alt=""></div>
+            </div>
+            <div class="rec-card-title">Billionaire's Abused Lover</div>
+            <div class="rec-card-tags"><span class="sm-tag">Playboy</span><span class="sm-tag">Secret Baby</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="rec-grid">
+        <div class="rec-col">
+          <div class="rec-card">
+            <div class="rec-card-img">
+              <img src="vibeshort-assets/card-recommend3.png" alt="">
+              <div class="play-badge"><img src="vibeshort-assets/play-icon.svg" alt="">667.3M</div>
+              <div class="sm-badge"><div class="sm-badge-label new">New</div><img src="vibeshort-assets/new-tag-arrow.svg" style="width:4px;height:20px;" alt=""></div>
+            </div>
+            <div class="rec-card-title">Billionaire's Abused Lover</div>
+            <div class="rec-card-tags"><span class="sm-tag">Playboy</span><span class="sm-tag">Secret Baby</span></div>
+          </div>
+        </div>
+        <div class="rec-col">
+          <div class="rec-card">
+            <div class="rec-card-img">
+              <img src="vibeshort-assets/card-recommend6.png" alt="">
+              <div class="play-badge"><img src="vibeshort-assets/play-icon.svg" alt="">667.3M</div>
+              <div class="sm-badge"><div class="sm-badge-label new">New</div><img src="vibeshort-assets/new-tag-arrow.svg" style="width:4px;height:20px;" alt=""></div>
+            </div>
+            <div class="rec-card-title">My Mistaken Lover</div>
+            <div class="rec-card-tags"><span class="sm-tag">Playboy</span><span class="sm-tag">Secret Baby</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- You Might Like -->
+    <div class="might-like">
+      <div class="section-title">You Might Like</div>
+      <!-- Single Card 1 -->
+      <div class="single-card">
+        <div class="single-card-img">
+          <img src="vibeshort-assets/single-list1.png" alt="">
+          <div class="views"><img src="vibeshort-assets/play-icon-small.svg" alt="">667.3M</div>
+          <div class="card-label hot-label">HOT</div>
+        </div>
+        <div class="single-card-body">
+          <div class="title-block">
+            <div class="sc-title">Daddy CEO'S Escaped WifeDaddy CEO'S Escaped Wife</div>
+            <div class="sc-desc">Ethan hurt Amanda again and again for the person he liked when he was a teenager likes...</div>
+          </div>
+          <div class="sc-bottom">
+            <span class="sc-ep">EP.100</span>
+            <button class="play-btn"><img src="vibeshort-assets/play-icon-small.svg" alt=""><span>Play</span></button>
+          </div>
+        </div>
+      </div>
+      <!-- Single Card 2 -->
+      <div class="single-card">
+        <div class="single-card-img">
+          <img src="vibeshort-assets/single-list2.png" alt="">
+          <div class="views"><img src="vibeshort-assets/play-icon-small.svg" alt="">667.3M</div>
+          <div class="card-label excl-label"><img src="vibeshort-assets/exclusive-icon.svg" style="width:12px;height:12px;margin-right:2px;" alt="">EXCLUSIVE</div>
+        </div>
+        <div class="single-card-body">
+          <div class="title-block">
+            <div class="sc-title">The Glory</div>
+            <div class="sc-desc">Ethan hurt Amanda again and again for the person he liked when he was a teenager likes...</div>
+          </div>
+          <div class="sc-bottom">
+            <span class="sc-ep">EP.100</span>
+            <button class="play-btn"><img src="vibeshort-assets/play-icon-small.svg" alt=""><span>Play</span></button>
+          </div>
+        </div>
+      </div>
+      <!-- Single Card 3 -->
+      <div class="single-card">
+        <div class="single-card-img">
+          <img src="vibeshort-assets/single-list3.png" alt="">
+          <div class="views"><img src="vibeshort-assets/play-icon-small.svg" alt="">667.3M</div>
+          <div class="card-label hot-label">HOT</div>
+        </div>
+        <div class="single-card-body">
+          <div class="title-block">
+            <div class="sc-title">My Mistaken Lover</div>
+            <div class="sc-desc">Ethan hurt Amanda again and again for the person he liked when he was a teenager likes...</div>
+          </div>
+          <div class="sc-bottom">
+            <span class="sc-ep">EP.100</span>
+            <button class="play-btn"><img src="vibeshort-assets/play-icon-small.svg" alt=""><span>Play</span></button>
+          </div>
+        </div>
+      </div>
+      <!-- Single Card 4 -->
+      <div class="single-card">
+        <div class="single-card-img">
+          <img src="vibeshort-assets/single-list4.png" alt="">
+          <div class="views"><img src="vibeshort-assets/play-icon-small.svg" alt="">667.3M</div>
+          <div class="card-label new-label">NEW</div>
+        </div>
+        <div class="single-card-body">
+          <div class="title-block">
+            <div class="sc-title">After Revenge Duvorce</div>
+            <div class="sc-desc">Ethan hurt Amanda again and again for the person he liked when he was a teenager likes...</div>
+          </div>
+          <div class="sc-bottom">
+            <span class="sc-ep">EP.100</span>
+            <button class="play-btn"><img src="vibeshort-assets/play-icon-small.svg" alt=""><span>Play</span></button>
+          </div>
+        </div>
+      </div>
+      <!-- Single Card 5 -->
+      <div class="single-card">
+        <div class="single-card-img">
+          <img src="vibeshort-assets/single-list5.png" alt="">
+          <div class="views"><img src="vibeshort-assets/play-icon-small.svg" alt="">667.3M</div>
+          <div class="card-label hot-label">HOT</div>
+        </div>
+        <div class="single-card-body">
+          <div class="title-block">
+            <div class="sc-title">A Tale Of Love And Darkeness</div>
+            <div class="sc-desc">Ethan hurt Amanda again and again for the person he liked when he was a teenager likes...</div>
+          </div>
+          <div class="sc-bottom">
+            <span class="sc-ep">EP.100</span>
+            <button class="play-btn"><img src="vibeshort-assets/play-icon-small.svg" alt=""><span>Play</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /sections -->
+
+  <!-- Bottom spacing for tab bar -->
+  <div style="height:100px;"></div>
+
+  <!-- Tab Bar -->
+  <div class="tab-bar">
+    <div class="tab-bar-inner">
+      <div class="tab-item active">
+        <img src="vibeshort-assets/tab-home.svg" alt="">
+        <span>Home</span>
+      </div>
+      <div class="tab-item">
+        <img src="vibeshort-assets/tab-short.svg" alt="">
+        <span>Short</span>
+      </div>
+      <div class="tab-item">
+        <img src="vibeshort-assets/tab-reward.svg" alt="">
+        <span>Reward</span>
+      </div>
+      <div class="tab-item">
+        <img src="vibeshort-assets/tab-collect.svg" alt="">
+        <span>My List</span>
+      </div>
+      <div class="tab-item">
+        <img src="vibeshort-assets/tab-profile.svg" alt="">
+        <span>Profile</span>
+      </div>
+    </div>
+    <div class="home-indicator">
+      <div class="home-indicator-bar"></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

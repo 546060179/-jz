@@ -1,0 +1,36 @@
+/* Design Tokens */
+:root {
+  /* Colors */
+  --color-primary: #5A68FF;
+  --color-primary-light: #BDC3FF;
+  --color-bg-d1: #050713;
+  --color-bg-d2: #141621;
+  --color-bg-card: rgba(194, 202, 240, 0.12);
+  --color-bg-overlay: rgba(20, 22, 33, 0.12);
+  --color-text-white: #FFFFFF;
+  --color-text-light: #C4C7D6;
+  --color-text-muted: #6C7398;
+  --color-tag-purple: #5D67F4;
+  --color-hot-gradient: linear-gradient(-90deg, #CECECE 0%, #FA5E7B 100%);
+  --color-new-gradient: linear-gradient(-90deg, #CECECE 0%, #6A74FF 100%);
+  --color-vip-gradient: linear-gradient(270deg, #2634C7 0%, #121732 100%);
+  --color-tab-border: linear-gradient(90deg, #CECECE 0%, #4051FF 100%);
+  --color-tab-shadow: rgba(127, 115, 255, 0.59);
+  --color-divider-left: linear-gradient(90deg, rgba(194, 202, 240, 0) 0%, rgba(194, 202, 240, 0.12) 100%);
+  --color-divider-right: linear-gradient(90deg, rgba(194, 202, 240, 0.12) 0%, rgba(194, 202, 240, 0) 100%);
+
+  /* Typography */
+  --font-family: 'Lexend Deca', sans-serif;
+  --font-size-9: 9px;
+  --font-size-10: 10px;
+  --font-size-12: 12px;
+  --font-size-14: 14px;
+  --font-size-16: 16px;
+  --font-size-20: 20px;
+
+  /* Spacing */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 100px;
+}

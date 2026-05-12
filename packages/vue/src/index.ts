@@ -3,6 +3,9 @@
 // Generic Motion component
 export { default as Motion } from './Motion.vue';
 
+// Presence — manages enter/exit lifecycle
+export { default as Presence } from './Presence.vue';
+
 // Fade components (specialized)
 export { default as Fade } from './Fade.vue';
 export { default as FadeIn } from './FadeIn.vue';

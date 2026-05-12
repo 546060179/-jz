@@ -9,24 +9,21 @@ import android.view.Choreographer
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
-import kotlin.math.abs
 import kotlin.math.min
-import kotlin.math.pow
 
 /**
- * 气泡由左向右展开 + 文字淡入动效
- *
- * 使用 FadeAnimation 库的 motion tokens：
- *   - expandDuration: t4 (500ms), easing: expressive
- *   - textFadeDuration: t3 (300ms), easing: enter
+ * 气泡由右向左展开 + 文字淡入动效
  *
  * Figma 设计参考：
  *   - 背景: linear-gradient(90deg, #FFD1C4, #FFD75F)
  *   - 文字: #62241B, Montserrat 10px Medium
- *   - 箭头: #FFD65A, 三角形指向右侧
+ *   - 箭头: pic_arrow 2 图片, 9x40
  *   - 圆角: 8px
- *   - 高度: 28px, 展开宽度: ~145px
+ *   - body 宽度: 120px, 总宽度: 129px (body + arrow)
+ *
+ * Spring bounce: ζ=0.5, ω=9.0, 650ms — 和 iOS/HTML 一致
  */
 class BubbleExpandView @JvmOverloads constructor(
     context: Context,
@@ -34,72 +31,124 @@ class BubbleExpandView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    // ─── Config ───
-    var bubbleHeight = 28f.dp
-    var bubbleRadius = 8f.dp
-    var expandedWidth = 145f.dp
+    // ─── Config (Figma dimensions) ───
+    private val bodyWidthDp = 120f
+    private val arrowWidthDp = 9f
+    private val arrowHeightDp = 40f
+    private val bubbleRadiusDp = 8f
+    private val padTopDp = 6f
+    private val padBottomDp = 6f
+    private val padLeftDp = 8f
+    private val padRightDp = 8f
 
-    // Motion tokens from @fade-animation/core
-    var expandDuration = 650L   // 650ms with bounce
-    var textFadeDuration = 300L // t3
-    var textFadeDelay = 0L
-
+    var expandDuration = 650L   // 650ms with spring bounce
     var listener: BubbleExpandListener? = null
+    /** 阿拉伯语等 RTL 语言设为 true，箭头和展开方向自动镜像 */
+    var isRTL: Boolean = false
 
     // ─── State ───
-    enum class Phase { IDLE, EXPANDING, TEXT_FADING, DONE }
+    enum class Phase { IDLE, EXPANDING, DONE }
     var phase: Phase = Phase.IDLE
         private set
 
     // ─── Views ───
+    private val bodyBg = View(context)
     private val textView = TextView(context)
-    private val arrowView = ArrowView(context)
-    private val collapsedWidth = 28f.dp
+    private val arrowView = ImageView(context).apply {
+        scaleType = ImageView.ScaleType.FIT_XY
+        // 开发者需要将 pic-arrow-2.png 放到 res/drawable/
+        setImageResource(android.R.drawable.arrow_down_float) // 占位，替换为 R.drawable.pic_arrow_2
+    }
+    private val textMaskView = View(context)
 
     // ─── Animation ───
     private val choreographer = Choreographer.getInstance()
-    private var animPhase = ""
     private var phaseStartNanos = 0L
     private var isAnimating = false
 
     private val Float.dp: Float
         get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, resources.displayMetrics)
 
+    private val bodyWidth get() = bodyWidthDp.dp
+    private val arrowWidth get() = arrowWidthDp.dp
+    private val arrowHeight get() = arrowHeightDp.dp
+    val totalWidth get() = bodyWidth + arrowWidth
+    var totalHeight = 40f.dp
+        private set
+
     init {
         clipChildren = false
         clipToPadding = false
 
-        // Gradient background (Figma: linear-gradient(90deg, #FFD1C4, #FFD75F))
-        background = GradientDrawable(
+        // Body 渐变背景 (Figma: linear-gradient(90deg, #FFD1C4, #FFD75F))
+        bodyBg.background = GradientDrawable(
             GradientDrawable.Orientation.LEFT_RIGHT,
             intArrayOf(Color.parseColor("#FFD1C4"), Color.parseColor("#FFD75F"))
-        ).apply { cornerRadius = bubbleRadius }
+        ).apply { cornerRadius = bubbleRadiusDp.dp }
+        addView(bodyBg)
 
         // Text
         textView.setTextColor(Color.parseColor("#62241B"))
         textView.textSize = 10f
         textView.alpha = 0f
-        textView.translationX = 8f.dp
-        textView.setPadding(8f.dp.toInt(), 0, 8f.dp.toInt(), 0)
-        textView.gravity = Gravity.CENTER_VERTICAL
-        addView(textView, LayoutParams(LayoutParams.WRAP_CONTENT, bubbleHeight.toInt()))
+        addView(textView)
+
+        // Text mask (covers text during expand, fades out at 70%)
+        textMaskView.background = GradientDrawable(
+            GradientDrawable.Orientation.LEFT_RIGHT,
+            intArrayOf(Color.parseColor("#FFD1C4"), Color.parseColor("#FFD75F"))
+        ).apply { cornerRadius = 4f.dp }
+        addView(textMaskView)
 
         // Arrow
         arrowView.alpha = 0f
-        addView(arrowView, LayoutParams(9f.dp.toInt(), 16f.dp.toInt()))
+        addView(arrowView)
 
         // Initial state
         alpha = 0f
-        layoutParams = LayoutParams(collapsedWidth.toInt(), bubbleHeight.toInt())
     }
 
     fun configure(text: String) {
         textView.text = text
+        textView.gravity = if (isRTL) Gravity.CENTER_VERTICAL or Gravity.END else Gravity.CENTER_VERTICAL or Gravity.START
         textView.measure(
-            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-            MeasureSpec.makeMeasureSpec(bubbleHeight.toInt(), MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec((bodyWidth - padLeftDp.dp - padRightDp.dp).toInt(), MeasureSpec.AT_MOST),
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
-        expandedWidth = textView.measuredWidth + 4f.dp
+        val textH = textView.measuredHeight + padTopDp.dp + padBottomDp.dp
+        totalHeight = maxOf(textH, arrowHeight)
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        layoutChildren()
+    }
+
+    private fun layoutChildren() {
+        val h = totalHeight.toInt()
+        if (isRTL) {
+            // RTL: [arrow(0~9)][body(8~128)] arrow on left, body on right
+            arrowView.layout(0, 0, arrowWidth.toInt(), arrowHeight.toInt())
+            arrowView.scaleX = -1f
+            bodyBg.layout((arrowWidth - 1).toInt(), 0, (arrowWidth - 1 + bodyWidth).toInt(), h)
+            val tl = (arrowWidth - 1 + padLeftDp.dp).toInt()
+            val tr = (arrowWidth - 1 + bodyWidth - padRightDp.dp).toInt()
+            textView.layout(tl, padTopDp.dp.toInt(), tr, (h - padBottomDp.dp).toInt())
+            textMaskView.layout((tl - 2), (padTopDp.dp - 2).toInt(), tr + 2, (h - padBottomDp.dp + 2).toInt())
+        } else {
+            // LTR: [body(0~120)][arrow(119~128)] body on left, arrow on right
+            bodyBg.layout(0, 0, bodyWidth.toInt(), h)
+            arrowView.layout((bodyWidth - 1).toInt(), 0, (bodyWidth - 1 + arrowWidth).toInt(), arrowHeight.toInt())
+            arrowView.scaleX = 1f
+            val tl = padLeftDp.dp.toInt()
+            val tr = (bodyWidth - padRightDp.dp).toInt()
+            textView.layout(tl, padTopDp.dp.toInt(), tr, (h - padBottomDp.dp).toInt())
+            textMaskView.layout((tl - 2), (padTopDp.dp - 2).toInt(), tr + 2, (h - padBottomDp.dp + 2).toInt())
+        }
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        setMeasuredDimension(totalWidth.toInt(), totalHeight.toInt())
     }
 
     // ─── Public API ───
@@ -108,24 +157,27 @@ class BubbleExpandView @JvmOverloads constructor(
         if (phase != Phase.IDLE) return
         phase = Phase.EXPANDING
         alpha = 1f
-        val lp = layoutParams
-        lp.width = expandedWidth.toInt()
-        layoutParams = lp
-        scaleX = 0f
-        pivotX = expandedWidth
+        textMaskView.alpha = 1f
         textView.alpha = 0f
-        textView.translationX = 8f.dp
         arrowView.alpha = 0f
-        startAnimation("expand")
+        if (isRTL) {
+            pivotX = 0f // RTL: 从左边缘展开
+        } else {
+            pivotX = totalWidth // LTR: 从右边缘展开
+        }
+        scaleX = 0.001f
+        phaseStartNanos = 0L
+        isAnimating = true
+        choreographer.postFrameCallback(frameCallback)
     }
 
     fun reset() {
         stopAnimation()
         phase = Phase.IDLE
         alpha = 0f
-        scaleX = 0f
+        scaleX = 1f
         textView.alpha = 0f
-        textView.translationX = 8f.dp
+        textMaskView.alpha = 1f
         arrowView.alpha = 0f
     }
 
@@ -136,21 +188,9 @@ class BubbleExpandView @JvmOverloads constructor(
             if (!isAnimating) return
             if (phaseStartNanos == 0L) phaseStartNanos = frameTimeNanos
             val elapsedMs = (frameTimeNanos - phaseStartNanos) / 1_000_000f
-
-            when (animPhase) {
-                "expand" -> tickExpand(elapsedMs)
-                "text-fade" -> tickTextFade(elapsedMs)
-            }
-
+            tickExpand(elapsedMs)
             if (isAnimating) choreographer.postFrameCallback(this)
         }
-    }
-
-    private fun startAnimation(startPhase: String) {
-        animPhase = startPhase
-        phaseStartNanos = 0L
-        isAnimating = true
-        choreographer.postFrameCallback(frameCallback)
     }
 
     private fun stopAnimation() {
@@ -158,10 +198,6 @@ class BubbleExpandView @JvmOverloads constructor(
         choreographer.removeFrameCallback(frameCallback)
     }
 
-    // Easing: expressive = cubic-bezier(0.4, 0.14, 0.3, 1)
-    private fun easeExpressive(t: Float) = cubicBezier(t, 0.4f, 0.14f, 0.3f, 1f)
-    // Easing: enter = cubic-bezier(0, 0, 0.3, 1)
-    private fun easeEnter(t: Float) = cubicBezier(t, 0f, 0f, 0.3f, 1f)
     // Spring bounce (ζ=0.5, ω=9.0) — matches iOS and HTML
     private fun springBounce(t: Float): Float {
         if (t <= 0f) return 0f
@@ -176,60 +212,26 @@ class BubbleExpandView @JvmOverloads constructor(
     private fun tickExpand(elapsed: Float) {
         val t = min(elapsed / expandDuration, 1f)
         val s = springBounce(t)
-        scaleX = maxOf(0f, s)
-        pivotX = width.toFloat() // anchor right edge
+        scaleX = maxOf(0.001f, s)
+
+        // 文字在 70% 时开始淡入（和 iOS/HTML 一致）
+        if (t > 0.7f) {
+            val ft = (t - 0.7f) / 0.3f
+            textMaskView.alpha = 1f - ft
+            textView.alpha = ft
+            arrowView.alpha = ft
+        }
 
         if (t >= 1f) {
             scaleX = 1f
-            listener?.onExpandEnd()
-            phase = Phase.TEXT_FADING
-            stopAnimation()
-            postDelayed({ startAnimation("text-fade") }, textFadeDelay)
-        }
-    }
-
-    private fun tickTextFade(elapsed: Float) {
-        val t = min(elapsed / textFadeDuration, 1f)
-        val e = easeEnter(t)
-        textView.alpha = e
-        textView.translationX = lerp(8f.dp, 0f, e)
-        arrowView.alpha = e
-
-        if (t >= 1f) {
+            textMaskView.alpha = 0f
             textView.alpha = 1f
-            textView.translationX = 0f
             arrowView.alpha = 1f
             phase = Phase.DONE
             stopAnimation()
+            listener?.onExpandEnd()
             listener?.onAnimationEnd()
         }
-    }
-
-    private fun layoutArrow() {
-        val lp = arrowView.layoutParams as LayoutParams
-        lp.leftMargin = (layoutParams.width)
-        lp.topMargin = ((bubbleHeight - 16f.dp) / 2).toInt()
-        arrowView.layoutParams = lp
-    }
-
-    // ─── Math ───
-    private fun lerp(a: Float, b: Float, t: Float) = a + (b - a) * t
-
-    private fun cubicBezier(t: Float, p1x: Float, p1y: Float, p2x: Float, p2y: Float): Float {
-        val cx = 3 * p1x; val bx = 3 * (p2x - p1x) - cx; val ax = 1 - cx - bx
-        val cy = 3 * p1y; val by = 3 * (p2y - p1y) - cy; val ay = 1 - cy - by
-        fun sX(tt: Float) = ((ax * tt + bx) * tt + cx) * tt
-        fun sY(tt: Float) = ((ay * tt + by) * tt + cy) * tt
-        fun dX(tt: Float) = (3 * ax * tt + 2 * bx) * tt + cx
-        var x = t
-        repeat(8) {
-            val err = sX(x) - t
-            if (abs(err) < 1e-6f) return@repeat
-            val d = dX(x)
-            if (abs(d) < 1e-6f) return@repeat
-            x -= err / d
-        }
-        return sY(x)
     }
 
     override fun onDetachedFromWindow() {
@@ -238,23 +240,8 @@ class BubbleExpandView @JvmOverloads constructor(
     }
 }
 
-// ─── Arrow View (triangle pointing right, Figma: Polygon 32, #FFD65A) ───
-private class ArrowView(context: Context) : View(context) {
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#FFD65A")
-        style = Paint.Style.FILL
-    }
-    private val path = Path()
-
-    override fun onDraw(canvas: Canvas) {
-        path.reset()
-        path.moveTo(0f, 0f)
-        path.lineTo(width.toFloat(), height / 2f)
-        path.lineTo(0f, height.toFloat())
-        path.close()
-        canvas.drawPath(path, paint)
-    }
-}
+// ─── Arrow: 使用 Figma 导出的 pic_arrow_2 图片 ───
+// 需要将 pic-arrow-2.png (@2x) 放到 res/drawable-xxhdpi/pic_arrow_2.png
 
 // ─── Listener ───
 interface BubbleExpandListener {

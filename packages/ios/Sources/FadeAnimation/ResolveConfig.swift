@@ -47,19 +47,31 @@ func resolveConfigInternal(options: FadeOptions, isReducedMotion: Bool) -> FadeC
         ?? options.intent?.curve
         ?? Defaults.curve
 
-    if isReducedMotion {
+    // --- apply motion level ---
+    let motionLevel = ReducedMotionHelper.resolveMotionLevel()
+
+    switch motionLevel {
+    case .none:
         return FadeConfig(
             duration: 0,
             delay: 0,
             curve: resolvedCurve,
             reducedMotion: true
         )
+    case .reduced:
+        let clampedDuration = min(resolvedDurationMs, ReducedMotionHelper.reducedMaxDurationMs)
+        return FadeConfig(
+            duration: TimeInterval(clampedDuration) / 1000.0,
+            delay: 0,
+            curve: resolvedCurve,
+            reducedMotion: true
+        )
+    case .full:
+        return FadeConfig(
+            duration: TimeInterval(resolvedDurationMs) / 1000.0,
+            delay: TimeInterval(resolvedDelayMs) / 1000.0,
+            curve: resolvedCurve,
+            reducedMotion: false
+        )
     }
-
-    return FadeConfig(
-        duration: TimeInterval(resolvedDurationMs) / 1000.0,
-        delay: TimeInterval(resolvedDelayMs) / 1000.0,
-        curve: resolvedCurve,
-        reducedMotion: false
-    )
 }

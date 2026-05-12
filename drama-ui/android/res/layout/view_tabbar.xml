@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tabbarRoot"
+    android:layout_width="343dp"
+    android:layout_height="56dp"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_tabbar"
+    android:clipChildren="true"
+    android:clipToPadding="false" />

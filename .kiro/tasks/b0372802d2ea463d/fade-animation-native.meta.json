@@ -1,0 +1,354 @@
+{
+  "tasks": {
+    "5. Checkpoint — Android 模块验证": {
+      "createdAt": 1773998653750,
+      "updatedAt": 1773998653759,
+      "taskId": "5. Checkpoint — Android 模块验证",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773998653750
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "6. iOS 模块：数据模型与默认值": {
+      "createdAt": 1773998931152,
+      "updatedAt": 1773998931164,
+      "taskId": "6. iOS 模块：数据模型与默认值",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773998931152
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "1.1 创建 Android 模块项目结构和基础文件": {
+      "createdAt": 1773997040457,
+      "updatedAt": 1773997652492,
+      "taskId": "1.1 创建 Android 模块项目结构和基础文件",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773997040457
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "2.2 实现 `resolveConfig(options: FadeOptions, context: Context): FadeConfig`": {
+      "createdAt": 1773998078659,
+      "updatedAt": 1773998297165,
+      "taskId": "2.2 实现 `resolveConfig(options: FadeOptions, context: Context): FadeConfig`",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773998078659
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "1.3 实现 `FadeOptions` 数据类和 `FadeConfig` 数据类": {
+      "createdAt": 1773997819762,
+      "updatedAt": 1773997897064,
+      "taskId": "1.3 实现 `FadeOptions` 数据类和 `FadeConfig` 数据类",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773997819761
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "7. iOS 模块：配置解析逻辑 `resolveConfig`": {
+      "createdAt": 1773999088930,
+      "updatedAt": 1773999088939,
+      "taskId": "7. iOS 模块：配置解析逻辑 `resolveConfig`",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773999088930
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "2. Android 模块：配置解析逻辑 `resolveConfig`": {
+      "createdAt": 1773998298034,
+      "updatedAt": 1773998298045,
+      "taskId": "2. Android 模块：配置解析逻辑 `resolveConfig`",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773998298034
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "4.1 实现 View 扩展函数 `fadeIn()`、`fadeOut()`、`fade()`": {
+      "createdAt": 1773998547977,
+      "updatedAt": 1773998652048,
+      "taskId": "4.1 实现 View 扩展函数 `fadeIn()`、`fadeOut()`、`fade()`",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773998547977
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "9.1 实现 UIView 扩展方法 `fadeIn()`、`fadeOut()`、`fade()`": {
+      "createdAt": 1773999228933,
+      "updatedAt": 1773999290665,
+      "taskId": "9.1 实现 UIView 扩展方法 `fadeIn()`、`fadeOut()`、`fade()`",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773999228933
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "2.1 实现 `ReducedMotionHelper` 对象": {
+      "createdAt": 1773997905205,
+      "updatedAt": 1773998077727,
+      "taskId": "2.1 实现 `ReducedMotionHelper` 对象",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773997905205
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "1.2 实现 `PresetSpeed` 枚举和 `Defaults` 常量对象": {
+      "createdAt": 1773997660585,
+      "updatedAt": 1773997819237,
+      "taskId": "1.2 实现 `PresetSpeed` 枚举和 `Defaults` 常量对象",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773997660585
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "8. iOS 模块：FadeAnimator 核心动画控制器": {
+      "createdAt": 1773999228230,
+      "updatedAt": 1773999228237,
+      "taskId": "8. iOS 模块：FadeAnimator 核心动画控制器",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773999228230
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "6.2 实现 `PresetSpeed` 枚举和 `Defaults` 常量枚举": {
+      "createdAt": 1773998788272,
+      "updatedAt": 1773998860076,
+      "taskId": "6.2 实现 `PresetSpeed` 枚举和 `Defaults` 常量枚举",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773998788272
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "6.1 创建 iOS 模块项目结构和基础文件": {
+      "createdAt": 1773998661313,
+      "updatedAt": 1773998787102,
+      "taskId": "6.1 创建 iOS 模块项目结构和基础文件",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773998661313
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "9. iOS 模块：UIView 扩展方法与集成": {
+      "createdAt": 1773999291635,
+      "updatedAt": 1773999291665,
+      "taskId": "9. iOS 模块：UIView 扩展方法与集成",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773999291635
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "3.1 实现 `FadeAnimator` 类": {
+      "createdAt": 1773998299118,
+      "updatedAt": 1773998545903,
+      "taskId": "3.1 实现 `FadeAnimator` 类",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773998299118
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "7.1 实现 `ReducedMotionHelper` 枚举": {
+      "createdAt": 1773998932198,
+      "updatedAt": 1773998985339,
+      "taskId": "7.1 实现 `ReducedMotionHelper` 枚举",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773998932198
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "11. 最终检查点": {
+      "createdAt": 1773999293360,
+      "updatedAt": 1773999410569,
+      "taskId": "11. 最终检查点",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773999293360
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "8.1 实现 `FadeAnimator` 类": {
+      "createdAt": 1773999089856,
+      "updatedAt": 1773999227480,
+      "taskId": "8.1 实现 `FadeAnimator` 类",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773999089856
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "6.3 实现 `FadeOptions` 结构体和 `FadeConfig` 结构体": {
+      "createdAt": 1773998861025,
+      "updatedAt": 1773998930166,
+      "taskId": "6.3 实现 `FadeOptions` 结构体和 `FadeConfig` 结构体",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773998861025
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "1. Android 模块：数据模型与默认值": {
+      "createdAt": 1773997898082,
+      "updatedAt": 1773997898091,
+      "taskId": "1. Android 模块：数据模型与默认值",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773997898082
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "4. Android 模块：View 扩展函数与集成": {
+      "createdAt": 1773998652800,
+      "updatedAt": 1773998652814,
+      "taskId": "4. Android 模块：View 扩展函数与集成",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773998652800
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "7.2 实现 `resolveConfig(options: FadeOptions) -> FadeConfig`": {
+      "createdAt": 1773998986545,
+      "updatedAt": 1773999088138,
+      "taskId": "7.2 实现 `resolveConfig(options: FadeOptions) -> FadeConfig`",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773998986545
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "3. Android 模块：FadeAnimator 核心动画控制器": {
+      "createdAt": 1773998546767,
+      "updatedAt": 1773998546777,
+      "taskId": "3. Android 模块：FadeAnimator 核心动画控制器",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773998546767
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "10. Checkpoint — iOS 模块验证": {
+      "createdAt": 1773999292647,
+      "updatedAt": 1773999292656,
+      "taskId": "10. Checkpoint — iOS 模块验证",
+      "specUri": "file:///Users/ju/.kiro/specs/fade-animation-native/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "b373d1fc-7b73-462d-86c4-17621e56e335",
+          "executionId": "f4305dac-6c2f-437c-a408-c31a8fa17d9e",
+          "timestamp": 1773999292647
+        }
+      ],
+      "executionStatus": "succeed"
+    }
+  }
+}

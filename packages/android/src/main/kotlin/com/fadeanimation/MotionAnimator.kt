@@ -82,7 +82,9 @@ class MotionAnimator(
             }
         }
 
-        // 设置初始状态
+        // 设置初始状态和目标状态
+        // entering=true:  初始=变换状态(偏移/缩小/旋转), 目标=identity
+        // entering=false: 初始=identity, 目标=变换状态(偏移/缩小/旋转)
         for (effect in resolvedEffects) {
             when (effect) {
                 is MotionEffect.Fade -> {
@@ -96,11 +98,18 @@ class MotionAnimator(
                 }
                 is MotionEffect.Slide -> {
                     val dist = effect.distance
-                    when (effect.direction) {
-                        SlideDirection.UP -> targetView.translationY = dist
-                        SlideDirection.DOWN -> targetView.translationY = -dist
-                        SlideDirection.LEFT -> targetView.translationX = dist
-                        SlideDirection.RIGHT -> targetView.translationX = -dist
+                    if (entering) {
+                        // 进入：初始偏移
+                        when (effect.direction) {
+                            SlideDirection.UP -> targetView.translationY = dist
+                            SlideDirection.DOWN -> targetView.translationY = -dist
+                            SlideDirection.LEFT -> targetView.translationX = dist
+                            SlideDirection.RIGHT -> targetView.translationX = -dist
+                        }
+                    } else {
+                        // 退出：初始在原位
+                        targetView.translationX = 0f
+                        targetView.translationY = 0f
                     }
                 }
                 is MotionEffect.Rotate -> {
@@ -176,7 +185,19 @@ class MotionAnimator(
                     animator.scaleX(to).scaleY(to)
                 }
                 is MotionEffect.Slide -> {
-                    animator.translationX(0f).translationY(0f)
+                    if (entering) {
+                        // 进入：目标回到原位
+                        animator.translationX(0f).translationY(0f)
+                    } else {
+                        // 退出：目标移到偏移位置
+                        val dist = effect.distance
+                        when (effect.direction) {
+                            SlideDirection.UP -> animator.translationX(0f).translationY(dist)
+                            SlideDirection.DOWN -> animator.translationX(0f).translationY(-dist)
+                            SlideDirection.LEFT -> animator.translationX(dist).translationY(0f)
+                            SlideDirection.RIGHT -> animator.translationX(-dist).translationY(0f)
+                        }
+                    }
                 }
                 is MotionEffect.Rotate -> {
                     val to = effect.to ?: if (entering) 0f else 10f

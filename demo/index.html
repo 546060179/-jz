@@ -5,130 +5,1426 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fade Animation Library — Playground</title>
 <style>
-  :root {
-    --motion-t1: 100ms; --motion-t2: 150ms; --motion-t3: 300ms; --motion-t4: 500ms; --motion-t5: 700ms;
-    --motion-d1: 4px; --motion-d2: 8px; --motion-d3: 16px; --motion-d4: 32px; --motion-d5: 64px;
-    --motion-easing-productive: cubic-bezier(0.2, 0, 0.38, 0.9);
-    --motion-easing-expressive: cubic-bezier(0.4, 0.14, 0.3, 1);
-    --motion-easing-enter: cubic-bezier(0, 0, 0.3, 1);
-    --motion-easing-exit: cubic-bezier(0.4, 0, 1, 1);
-    --motion-easing-linear: linear;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #e0e0e0; padding: 32px; }
-  h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; color: #fff; }
-  .subtitle { color: #888; margin-bottom: 40px; font-size: 14px; }
-  h2 { font-size: 18px; font-weight: 500; margin: 32px 0 16px; color: #ccc; border-bottom: 1px solid #222; padding-bottom: 8px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
-  .card {
-    background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 12px; padding: 24px;
-    display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer;
-    transition: border-color 0.2s;
-  }
-  .card:hover { border-color: #4a4a6e; }
-  .card .box {
-    width: 64px; height: 64px; border-radius: 8px; background: linear-gradient(135deg, #667eea, #764ba2);
-  }
-  .card .label { font-size: 13px; font-weight: 500; color: #aaa; }
-  .card .meta { font-size: 11px; color: #666; }
+:root {
+  --bg: #0a0a0a; --surface: #141420; --surface2: #1a1a2e; --border: #2a2a3e;
+  --border-hover: #4a4a6e; --text: #e0e0e0; --text2: #aaa; --text3: #666;
+  --accent: #667eea; --accent2: #764ba2;
+  --motion-easing-productive: cubic-bezier(0.2, 0, 0.38, 0.9);
+  --motion-easing-expressive: cubic-bezier(0.4, 0.14, 0.3, 1);
+  --motion-easing-enter: cubic-bezier(0, 0, 0.3, 1);
+  --motion-easing-exit: cubic-bezier(0.4, 0, 1, 1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); }
+a { color: var(--accent); text-decoration: none; }
+
+/* ---- Layout ---- */
+.header { padding: 32px 40px 0; }
+.header h1 { font-size: 28px; font-weight: 700; color: #fff; }
+.header p { color: var(--text3); font-size: 14px; margin-top: 4px; }
+
+nav { display: flex; gap: 4px; padding: 16px 40px; position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); }
+nav button {
+  padding: 8px 16px; border: 1px solid var(--border); border-radius: 8px; background: transparent;
+  color: var(--text2); font-size: 13px; cursor: pointer; transition: all .2s;
+}
+nav button:hover { border-color: var(--border-hover); color: #fff; }
+nav button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.page { display: none; padding: 32px 40px 64px; }
+.page.active { display: block; }
+
+h2 { font-size: 18px; font-weight: 500; color: #ccc; border-bottom: 1px solid #222; padding-bottom: 8px; margin: 32px 0 16px; }
+h2:first-child { margin-top: 0; }
+
+/* ---- Cards Grid ---- */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.card {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 24px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; transition: border-color .2s;
+}
+.card:hover { border-color: var(--border-hover); }
+.card .box { width: 64px; height: 64px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+.card .label { font-size: 13px; font-weight: 500; color: var(--text2); }
+.card .meta { font-size: 11px; color: var(--text3); text-align: center; }
+
+/* ---- Playground Panel ---- */
+.playground { display: grid; grid-template-columns: 1fr 320px; gap: 24px; margin-bottom: 32px; }
+.playground-stage {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  display: flex; align-items: center; justify-content: center; min-height: 320px; position: relative; overflow: hidden;
+}
+.playground-stage .demo-box {
+  width: 120px; height: 120px; border-radius: 16px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; font-weight: 600;
+}
+.playground-controls {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px;
+  display: flex; flex-direction: column; gap: 16px; overflow-y: auto; max-height: 500px;
+}
+.ctrl-group label { display: block; font-size: 12px; color: var(--text3); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+.ctrl-group select, .ctrl-group input[type=range], .ctrl-group input[type=number] {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+  color: var(--text); padding: 6px 8px; font-size: 13px; outline: none;
+}
+.ctrl-group input[type=range] { padding: 0; height: 6px; -webkit-appearance: none; appearance: none; border: none; border-radius: 3px; cursor: pointer; }
+.ctrl-group input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+.ctrl-row { display: flex; justify-content: space-between; align-items: center; }
+.ctrl-row .val { font-size: 13px; color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.btn {
+  padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;
+  background: var(--accent); color: #fff; transition: opacity .2s;
+}
+.btn:hover { opacity: .85; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text2); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); opacity: 1; }
+.btn-row { display: flex; gap: 8px; }
+
+/* ---- Code Output ---- */
+.code-block {
+  background: #111; border: 1px solid var(--border); border-radius: 8px; padding: 16px;
+  font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: #c9d1d9;
+  overflow-x: auto; white-space: pre; line-height: 1.6; margin-top: 12px;
+}
+
+/* ---- Stagger ---- */
+.stagger-row { display: flex; gap: 12px; margin: 16px 0; }
+.stagger-item {
+  width: 48px; height: 48px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+}
+.stagger-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+
+/* ---- Spring Canvas ---- */
+.spring-canvas-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+canvas#springCanvas { width: 100%; height: 200px; display: block; border-radius: 8px; }
+
+/* ---- Token Table ---- */
+.token-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+.token-table th, .token-table td { padding: 10px 16px; text-align: left; border-bottom: 1px solid #1a1a2a; font-size: 13px; }
+.token-table th { color: var(--text3); font-weight: 500; text-transform: uppercase; font-size: 11px; letter-spacing: .5px; }
+.token-table td { color: var(--text2); }
+.token-table .mono { font-family: 'SF Mono', monospace; color: var(--accent); font-size: 12px; }
+
+/* ---- Easing Viz ---- */
+.easing-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; cursor: pointer; transition: border-color .2s; }
+.easing-card:hover { border-color: var(--border-hover); }
+.easing-card canvas { width: 100%; height: 100px; display: block; margin-bottom: 8px; border-radius: 4px; }
+.easing-card .label { font-size: 13px; font-weight: 500; color: var(--text2); }
+.easing-card .meta { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+@media (max-width: 768px) {
+  .playground { grid-template-columns: 1fr; }
+  nav { overflow-x: auto; }
+  .header, nav, .page { padding-left: 16px; padding-right: 16px; }
+}
+
+/* ---- Figma Import ---- */
+.figma-status-ok { color: #4caf50; }
+.figma-status-err { color: #f44336; }
+.figma-status-loading { color: var(--accent); }
+#figma-url:focus, #figma-token:focus { border-color: var(--accent); }
+#figma-node-info { font-size: 14px; line-height: 1.8; }
 </style>
 </head>
 <body>
 
-<h1>🎬 Fade Animation Library</h1>
-<p class="subtitle">点击卡片预览动效 · Motion Design Tokens Playground</p>
-
-<h2>Effect Presets</h2>
-<div class="grid" id="effects-grid"></div>
-
-<h2>Timing Scales</h2>
-<div class="grid" id="timing-grid"></div>
-
-<h2>Easing Curves</h2>
-<div class="grid" id="easing-grid"></div>
-
-<h2>Motion Intent</h2>
-<div class="grid" id="intent-grid"></div>
-
-<h2>Stagger Choreography</h2>
-<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
-  <button class="stagger-btn" data-dir="forward">Forward →</button>
-  <button class="stagger-btn" data-dir="reverse">Reverse ←</button>
-  <button class="stagger-btn" data-dir="center">Center ↔</button>
+<div class="header">
+  <h1>🎬 Fade Animation Library</h1>
+  <p>跨框架动效设计系统 · 7 种效果 · Motion Design Tokens · 弹簧物理 · 编排工具</p>
 </div>
-<div id="stagger-row" style="display:flex;gap:12px;"></div>
+
+<nav id="nav">
+  <button data-page="effects" class="active">效果预览</button>
+  <button data-page="playground">调节面板</button>
+  <button data-page="tokens">Design Tokens</button>
+  <button data-page="spring">弹簧物理</button>
+  <button data-page="stagger">编排 Stagger</button>
+  <button data-page="code">代码生成</button>
+  <button data-page="figma">Figma 导入</button>
+</nav>
+
+<!-- ==================== Page 1: Effects ==================== -->
+<div class="page active" id="page-effects">
+  <h2>Effect Presets（点击预览）</h2>
+  <div class="grid" id="effects-grid"></div>
+
+  <h2>Motion Intent</h2>
+  <div class="grid" id="intent-grid"></div>
+</div>
+
+<!-- ==================== Page 2: Playground ==================== -->
+<div class="page" id="page-playground">
+  <h2>交互式调节面板</h2>
+  <div class="playground">
+    <div class="playground-stage" id="pg-stage">
+      <div class="demo-box" id="pg-box">Motion</div>
+    </div>
+    <div class="playground-controls" id="pg-controls"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn" id="pg-play">▶ 播放</button>
+    <button class="btn btn-outline" id="pg-reset">↺ 重置</button>
+  </div>
+  <div class="code-block" id="pg-code"></div>
+</div>
+
+<!-- ==================== Page 3: Tokens ==================== -->
+<div class="page" id="page-tokens">
+  <h2>Timing Scales</h2>
+  <table class="token-table" id="timing-table"></table>
+
+  <h2>Distance Scales</h2>
+  <table class="token-table" id="distance-table"></table>
+
+  <h2>Easing Curves</h2>
+  <div class="grid" id="easing-grid"></div>
+</div>
+
+<!-- ==================== Page 4: Spring ==================== -->
+<div class="page" id="page-spring">
+  <h2>Spring Physics 弹簧动画</h2>
+  <div class="playground">
+    <div class="spring-canvas-wrap">
+      <canvas id="springCanvas"></canvas>
+      <div style="display:flex;gap:12px;margin-top:16px;">
+        <div class="playground-stage" style="flex:1;min-height:120px;">
+          <div class="demo-box" id="spring-box" style="width:60px;height:60px;border-radius:12px;font-size:12px;">Spring</div>
+        </div>
+      </div>
+    </div>
+    <div class="playground-controls" id="spring-controls"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn" id="spring-play">▶ 播放</button>
+    <button class="btn btn-outline" id="spring-reset">↺ 重置</button>
+  </div>
+  <h2 style="margin-top:32px;">Spring Presets</h2>
+  <div class="grid" id="spring-presets-grid"></div>
+</div>
+
+<!-- ==================== Page 5: Stagger ==================== -->
+<div class="page" id="page-stagger">
+  <h2>Stagger 编排</h2>
+  <div class="stagger-controls">
+    <button class="btn" data-dir="forward">Forward →</button>
+    <button class="btn btn-outline" data-dir="reverse">← Reverse</button>
+    <button class="btn btn-outline" data-dir="center">↔ Center</button>
+  </div>
+  <div class="ctrl-group" style="max-width:300px;margin-bottom:16px;">
+    <label>间隔 (ms)</label>
+    <div class="ctrl-row"><input type="range" id="stagger-interval" min="20" max="200" value="60"><span class="val" id="stagger-interval-val">60</span></div>
+  </div>
+  <div class="ctrl-group" style="max-width:300px;margin-bottom:16px;">
+    <label>数量</label>
+    <div class="ctrl-row"><input type="range" id="stagger-count" min="3" max="16" value="8"><span class="val" id="stagger-count-val">8</span></div>
+  </div>
+  <div class="stagger-row" id="stagger-row"></div>
+  <div class="code-block" id="stagger-code"></div>
+</div>
+
+<!-- ==================== Page 6: Code Gen ==================== -->
+<div class="page" id="page-code">
+  <h2>代码生成器</h2>
+  <p style="color:var(--text3);margin-bottom:16px;font-size:14px;">在调节面板中配置效果后，这里会生成对应的 React / Vue / Swift / Kotlin 代码。</p>
+  <div style="display:flex;gap:8px;margin-bottom:16px;">
+    <button class="btn" data-lang="react" id="code-react">React</button>
+    <button class="btn btn-outline" data-lang="vue" id="code-vue">Vue</button>
+    <button class="btn btn-outline" data-lang="swift" id="code-swift">Swift</button>
+    <button class="btn btn-outline" data-lang="kotlin" id="code-kotlin">Kotlin</button>
+  </div>
+  <div class="code-block" id="codegen-output" style="min-height:200px;"></div>
+</div>
+
+<!-- ==================== Page 7: Figma Import ==================== -->
+<div class="page" id="page-figma">
+  <h2>Figma 动效导入</h2>
+  <p style="color:var(--text3);margin-bottom:16px;font-size:14px;">粘贴 Figma 文件链接，自动解析设计中的动效参数并生成可预览的动画。</p>
+
+  <div style="display:grid;grid-template-columns:1fr auto;gap:12px;margin-bottom:16px;align-items:end;">
+    <div class="ctrl-group" style="margin:0;">
+      <label>Figma 链接</label>
+      <input type="text" id="figma-url" placeholder="https://www.figma.com/design/XXXXX/FileName?node-id=1-2" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:10px 12px;font-size:13px;outline:none;">
+    </div>
+    <button class="btn" id="figma-fetch" style="height:40px;">🔍 解析</button>
+  </div>
+
+  <div class="ctrl-group" style="max-width:500px;margin-bottom:20px;">
+    <label>Figma Personal Access Token</label>
+    <div style="display:flex;gap:8px;">
+      <input type="password" id="figma-token" placeholder="figd_xxxxx" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px;outline:none;">
+      <button class="btn btn-outline" id="figma-token-toggle" style="font-size:11px;padding:8px 12px;">显示</button>
+    </div>
+    <p style="color:var(--text3);font-size:11px;margin-top:4px;">Token 仅在浏览器本地使用，不会上传到任何服务器。<a href="https://www.figma.com/developers/api#access-tokens" target="_blank">获取 Token →</a></p>
+  </div>
+
+  <div id="figma-status" style="margin-bottom:16px;"></div>
+
+  <!-- Figma preview area -->
+  <div id="figma-preview" style="display:none;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+      <div>
+        <h2 style="margin-top:0;">设计截图</h2>
+        <div id="figma-screenshot" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;min-height:200px;display:flex;align-items:center;justify-content:center;">
+          <span style="color:var(--text3);">加载中...</span>
+        </div>
+      </div>
+      <div>
+        <h2 style="margin-top:0;">动效预览</h2>
+        <div class="playground-stage" id="figma-stage" style="min-height:200px;">
+          <div class="demo-box" id="figma-demo-box">Motion</div>
+        </div>
+        <div class="btn-row" style="margin-top:12px;">
+          <button class="btn" id="figma-play">▶ 播放动效</button>
+          <button class="btn btn-outline" id="figma-replay">↺ 重播</button>
+        </div>
+      </div>
+    </div>
+
+    <h2>节点信息</h2>
+    <div id="figma-node-info" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px;"></div>
+
+    <h2>检测到的动效参数</h2>
+    <div id="figma-effects-list" style="margin-bottom:24px;"></div>
+
+    <h2>推荐的库配置</h2>
+    <div class="code-block" id="figma-code-output" style="min-height:100px;"></div>
+  </div>
+
+  <!-- Figma gallery for nodes without specific animation -->
+  <div id="figma-gallery" style="display:none;">
+    <h2>子节点列表（点击预览）</h2>
+    <div class="grid" id="figma-nodes-grid"></div>
+  </div>
+</div>
 
 <script>
-// ============ Data ============
-const EFFECTS = [
-  { name: 'fade-in', label: '淡入', effects: [{ type: 'fade', from: 0, to: 1 }] },
-  { name: 'fade-out', label: '淡出', effects: [{ type: 'fade', from: 1, to: 0 }] },
-  { name: 'scale-fade-in', label: '缩放淡入', effects: [{ type: 'fade', from: 0, to: 1 }, { type: 'scale', from: 0.95, to: 1 }] },
-  { name: 'scale-fade-out', label: '缩放淡出', effects: [{ type: 'fade', from: 1, to: 0 }, { type: 'scale', from: 1, to: 0.95 }] },
-  { name: 'slide-up-in', label: '上滑淡入', effects: [{ type: 'fade', from: 0, to: 1 }, { type: 'slide', dir: 'up', dist: 16 }] },
-  { name: 'slide-down-out', label: '下滑淡出', effects: [{ type: 'fade', from: 1, to: 0 }, { type: 'slide', dir: 'down', dist: 16 }] },
-  { name: 'slide-left-in', label: '左滑淡入', effects: [{ type: 'fade', from: 0, to: 1 }, { type: 'slide', dir: 'left', dist: 16 }] },
-  { name: 'slide-right-in', label: '右滑淡入', effects: [{ type: 'fade', from: 0, to: 1 }, { type: 'slide', dir: 'right', dist: 16 }] },
-];
+
+// ============================================================
+// DATA
+// ============================================================
+const EFFECTS = {
+  'fade-in':        { label: '淡入',     effects: [{type:'fade',from:0,to:1}] },
+  'fade-out':       { label: '淡出',     effects: [{type:'fade',from:1,to:0}] },
+  'scale-fade-in':  { label: '缩放淡入', effects: [{type:'fade',from:0,to:1},{type:'scale',from:0.95,to:1}] },
+  'scale-fade-out': { label: '缩放淡出', effects: [{type:'fade',from:1,to:0},{type:'scale',from:1,to:0.95}] },
+  'slide-up-in':    { label: '上滑淡入', effects: [{type:'fade',from:0,to:1},{type:'slide',direction:'up',distance:16}] },
+  'slide-down-out': { label: '下滑淡出', effects: [{type:'fade',from:1,to:0},{type:'slide',direction:'down',distance:16}] },
+  'slide-left-in':  { label: '左滑淡入', effects: [{type:'fade',from:0,to:1},{type:'slide',direction:'left',distance:16}] },
+  'slide-right-in': { label: '右滑淡入', effects: [{type:'fade',from:0,to:1},{type:'slide',direction:'right',distance:16}] },
+  'rotate-fade-in': { label: '旋转淡入', effects: [{type:'fade',from:0,to:1},{type:'rotate',from:-10,to:0}] },
+  'rotate-fade-out':{ label: '旋转淡出', effects: [{type:'fade',from:1,to:0},{type:'rotate',from:0,to:10}] },
+  'blur-fade-in':   { label: '模糊淡入', effects: [{type:'fade',from:0,to:1},{type:'blur',from:8,to:0}] },
+  'blur-fade-out':  { label: '模糊淡出', effects: [{type:'fade',from:1,to:0},{type:'blur',from:0,to:8}] },
+  'flip-x-in':      { label: 'X轴翻转入', effects: [{type:'fade',from:0,to:1},{type:'flip',axis:'x',from:90,to:0}] },
+  'flip-x-out':     { label: 'X轴翻转出', effects: [{type:'fade',from:1,to:0},{type:'flip',axis:'x',from:0,to:90}] },
+  'flip-y-in':      { label: 'Y轴翻转入', effects: [{type:'fade',from:0,to:1},{type:'flip',axis:'y',from:90,to:0}] },
+  'flip-y-out':     { label: 'Y轴翻转出', effects: [{type:'fade',from:1,to:0},{type:'flip',axis:'y',from:0,to:90}] },
+  'collapse-in':    { label: '折叠展开',  effects: [{type:'fade',from:0,to:1},{type:'collapse',collapsedHeight:0}] },
+  'collapse-out':   { label: '折叠收起',  effects: [{type:'fade',from:1,to:0},{type:'collapse',collapsedHeight:0}] },
+};
 
 const TIMINGS = [
-  { token: 't1', alias: 'extra-fast', ms: 100, use: '微交互' },
-  { token: 't2', alias: 'fast', ms: 150, use: 'tooltip' },
-  { token: 't3', alias: 'normal', ms: 300, use: '卡片' },
-  { token: 't4', alias: 'slow', ms: 500, use: '页面切换' },
-  { token: 't5', alias: 'extra-slow', ms: 700, use: '全屏过渡' },
+  { token:'t1', alias:'extra-fast', ms:100, use:'微交互、按钮状态' },
+  { token:'t2', alias:'fast',       ms:150, use:'tooltip、badge' },
+  { token:'t3', alias:'normal',     ms:300, use:'卡片、面板' },
+  { token:'t4', alias:'slow',       ms:500, use:'页面切换' },
+  { token:'t5', alias:'extra-slow', ms:700, use:'全屏过渡' },
+];
+
+const DISTANCES = [
+  { token:'d1', alias:'micro',  px:4,  use:'图标抖动、按压反馈' },
+  { token:'d2', alias:'small',  px:8,  use:'tooltip、badge 滑入' },
+  { token:'d3', alias:'medium', px:16, use:'卡片滑动、面板展开' },
+  { token:'d4', alias:'large',  px:32, use:'抽屉滑出' },
+  { token:'d5', alias:'full',   px:64, use:'全屏过渡、底部弹窗' },
 ];
 
 const EASINGS = [
-  { name: 'productive', css: 'cubic-bezier(0.2, 0, 0.38, 0.9)', desc: '功能性' },
-  { name: 'expressive', css: 'cubic-bezier(0.4, 0.14, 0.3, 1)', desc: '表现性' },
-  { name: 'enter', css: 'cubic-bezier(0, 0, 0.3, 1)', desc: '进入' },
-  { name: 'exit', css: 'cubic-bezier(0.4, 0, 1, 1)', desc: '离开' },
-  { name: 'linear', css: 'linear', desc: '匀速' },
+  { name:'productive', css:'cubic-bezier(0.2, 0, 0.38, 0.9)', desc:'功能性，快速精准' },
+  { name:'expressive', css:'cubic-bezier(0.4, 0.14, 0.3, 1)', desc:'表现性，有弹性' },
+  { name:'enter',      css:'cubic-bezier(0, 0, 0.3, 1)',       desc:'进入（ease-out）' },
+  { name:'exit',       css:'cubic-bezier(0.4, 0, 1, 1)',       desc:'离开（ease-in）' },
+  { name:'linear',     css:'linear',                            desc:'匀速' },
 ];
 
 const INTENTS = [
-  { name: 'enter', timing: 't3', easing: 'enter', desc: '元素进入' },
-  { name: 'exit', timing: 't2', easing: 'exit', desc: '元素离开' },
-  { name: 'focus', timing: 't2', easing: 'expressive', desc: '吸引注意' },
-  { name: 'feedback', timing: 't1', easing: 'productive', desc: '操作反馈' },
-  { name: 'delight', timing: 't4', easing: 'expressive', desc: '品牌个性' },
+  { name:'enter',    timing:'t3', easing:'enter',      desc:'元素进入画面' },
+  { name:'exit',     timing:'t2', easing:'exit',        desc:'元素离开画面' },
+  { name:'focus',    timing:'t2', easing:'expressive',  desc:'吸引注意力' },
+  { name:'feedback', timing:'t1', easing:'productive',  desc:'操作反馈' },
+  { name:'delight',  timing:'t4', easing:'expressive',  desc:'品牌个性' },
 ];
 
-// ============ Helpers ============
-function applyEffects(box, effects, duration, easing) {
-  // Reset to "from" state
-  let fromStyles = { opacity: 1, transform: '' };
-  let toStyles = { opacity: 1, transform: '' };
-  let transforms_from = [], transforms_to = [];
+const SPRING_PRESETS = {
+  gentle:   { stiffness:120, damping:14, mass:1,   desc:'轻柔弹跳，UI 进入' },
+  snappy:   { stiffness:300, damping:20, mass:1,   desc:'快速响应，按钮反馈' },
+  bouncy:   { stiffness:200, damping:10, mass:1,   desc:'明显弹跳，品牌个性' },
+  slow:     { stiffness:80,  damping:12, mass:1.5, desc:'缓慢柔和，大面积过渡' },
+  noWobble: { stiffness:170, damping:26, mass:1,   desc:'无弹跳，临界阻尼' },
+};
 
+// ============================================================
+// NAV
+// ============================================================
+document.getElementById('nav').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-page]');
+  if (!btn) return;
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('page-' + btn.dataset.page).classList.add('active');
+});
+
+// ============================================================
+// HELPERS: resolve effects → CSS
+// ============================================================
+function resolveCSS(effects, entering) {
+  const from = {}, to = {};
+  const tFrom = [], tTo = [];
   effects.forEach(e => {
-    if (e.type === 'fade') {
-      fromStyles.opacity = e.from;
-      toStyles.opacity = e.to;
-    } else if (e.type === 'scale') {
-      transforms_from.push(`scale(${e.from})`);
-      transforms_to.push(`scale(${e.to})`);
-    } else if (e.type === 'slide') {
-      const d = e.dist || 16;
-      if (e.dir === 'up') { transforms_from.push(`translateY(${d}px)`); }
-      else if (e.dir === 'down') { transforms_from.push(`translateY(${-d}px)`); }
-      else if (e.dir === 'left') { transforms_from.push(`translateX(${d}px)`); }
-      else if (e.dir === 'right') { transforms_from.push(`translateX(${-d}px)`); }
-      transforms_to.push('translateX(0) translateY(0)');
+    switch (e.type) {
+      case 'fade':
+        from.opacity = e.from ?? (entering ? 0 : 1);
+        to.opacity = e.to ?? (entering ? 1 : 0);
+        break;
+      case 'scale':
+        tFrom.push(`scale(${e.from ?? (entering ? 0.95 : 1)})`);
+        tTo.push(`scale(${e.to ?? (entering ? 1 : 0.95)})`);
+        break;
+      case 'slide': {
+        const d = e.distance || 16;
+        const dir = e.direction || 'up';
+        if (dir === 'up')    tFrom.push(`translateY(${d}px)`);
+        if (dir === 'down')  tFrom.push(`translateY(${-d}px)`);
+        if (dir === 'left')  tFrom.push(`translateX(${d}px)`);
+        if (dir === 'right') tFrom.push(`translateX(${-d}px)`);
+        tTo.push('translateX(0) translateY(0)');
+        break;
+      }
+      case 'rotate':
+        tFrom.push(`rotate(${e.from ?? (entering ? -10 : 0)}deg)`);
+        tTo.push(`rotate(${e.to ?? (entering ? 0 : 10)}deg)`);
+        break;
+      case 'blur':
+        from.filter = `blur(${e.from ?? (entering ? 8 : 0)}px)`;
+        to.filter = `blur(${e.to ?? (entering ? 0 : 8)}px)`;
+        break;
+      case 'flip': {
+        const axis = e.axis || 'y';
+        const p = e.perspective || 800;
+        const fn = axis === 'x' ? 'rotateX' : 'rotateY';
+        const fFrom = e.from ?? 90, fTo = e.to ?? 0;
+        tFrom.push(`perspective(${p}px) ${fn}(${entering ? fFrom : fTo}deg)`);
+        tTo.push(`perspective(${p}px) ${fn}(${entering ? fTo : fFrom}deg)`);
+        from['backface-visibility'] = e.backfaceVisibility || 'hidden';
+        to['backface-visibility'] = e.backfaceVisibility || 'hidden';
+        break;
+      }
+      case 'collapse': {
+        const ch = e.collapsedHeight ?? 0;
+        if (entering) { from['max-height'] = ch+'px'; to['max-height'] = '120px'; }
+        else { from['max-height'] = '120px'; to['max-height'] = ch+'px'; }
+        from.overflow = 'hidden'; to.overflow = 'hidden';
+        break;
+      }
+    }
+  });
+  if (tFrom.length) { from.transform = tFrom.join(' '); to.transform = tTo.join(' '); }
+  return { from, to };
+}
+
+function applyAnimation(el, effects, duration, easing, entering, delay) {
+  const { from, to } = resolveCSS(effects, entering);
+  el.style.transition = 'none';
+  Object.assign(el.style, from);
+  requestAnimationFrame(() => {
+    const props = [...new Set([...Object.keys(from), ...Object.keys(to)])].filter(k => k !== 'overflow' && k !== 'backface-visibility');
+    el.style.transition = props.map(p => `${p} ${duration}ms ${easing} ${delay||0}ms`).join(', ');
+    Object.assign(el.style, to);
+  });
+}
+
+function getTimingMs(token) { return TIMINGS.find(t => t.token === token)?.ms || 300; }
+function getEasingCSS(name) { return EASINGS.find(e => e.name === name)?.css || 'ease'; }
+
+
+// ============================================================
+// PAGE 1: Effects Grid
+// ============================================================
+(function initEffects() {
+  const grid = document.getElementById('effects-grid');
+  Object.entries(EFFECTS).forEach(([name, {label, effects}]) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<div class="box"></div><div class="label">${label}</div><div class="meta">${name}</div>`;
+    card.addEventListener('click', () => {
+      const box = card.querySelector('.box');
+      const isEnter = name.includes('in') || name.includes('collapse-in');
+      applyAnimation(box, effects, 400, 'cubic-bezier(0.4, 0.14, 0.3, 1)', isEnter, 0);
+    });
+    grid.appendChild(card);
+  });
+
+  // Intent grid
+  const igrid = document.getElementById('intent-grid');
+  INTENTS.forEach(({name, timing, easing, desc}) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<div class="box"></div><div class="label">${name}</div><div class="meta">${desc}<br>${timing} · ${easing}</div>`;
+    card.addEventListener('click', () => {
+      const box = card.querySelector('.box');
+      const isEnter = name === 'enter' || name === 'focus' || name === 'delight';
+      const eff = isEnter
+        ? [{type:'fade',from:0,to:1},{type:'scale',from:0.95,to:1}]
+        : [{type:'fade',from:1,to:0},{type:'scale',from:1,to:0.95}];
+      applyAnimation(box, eff, getTimingMs(timing), getEasingCSS(easing), isEnter, 0);
+    });
+    igrid.appendChild(card);
+  });
+})();
+
+// ============================================================
+// PAGE 2: Playground
+// ============================================================
+const pgState = {
+  effectType: 'fade', entering: true,
+  duration: 300, delay: 0, easing: 'expressive',
+  // fade
+  fadeFrom: 0, fadeTo: 1,
+  // scale
+  scaleFrom: 0.5, scaleTo: 1,
+  // slide
+  slideDir: 'up', slideDist: 16,
+  // rotate
+  rotateFrom: -15, rotateTo: 0,
+  // blur
+  blurFrom: 12, blurTo: 0,
+  // flip
+  flipAxis: 'y', flipFrom: 90, flipTo: 0, flipPerspective: 800,
+  // collapse
+  collapseHeight: 0,
+};
+
+function buildControls() {
+  const c = document.getElementById('pg-controls');
+  c.innerHTML = `
+    <div class="ctrl-group">
+      <label>效果类型</label>
+      <select id="pg-effect">
+        <option value="fade">Fade 透明度</option>
+        <option value="scale">Scale 缩放</option>
+        <option value="slide">Slide 位移</option>
+        <option value="rotate">Rotate 旋转</option>
+        <option value="blur">Blur 模糊</option>
+        <option value="flip">Flip 3D翻转</option>
+        <option value="collapse">Collapse 折叠</option>
+        <option value="scale-fade">Scale + Fade</option>
+        <option value="slide-fade">Slide + Fade</option>
+        <option value="blur-fade">Blur + Fade</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <label>方向</label>
+      <select id="pg-entering"><option value="true">进入 (Enter)</option><option value="false">退出 (Exit)</option></select>
+    </div>
+    <div class="ctrl-group">
+      <label>Duration (ms)</label>
+      <div class="ctrl-row"><input type="range" id="pg-duration" min="50" max="2000" step="50" value="${pgState.duration}"><span class="val" id="pg-duration-val">${pgState.duration}</span></div>
+    </div>
+    <div class="ctrl-group">
+      <label>Delay (ms)</label>
+      <div class="ctrl-row"><input type="range" id="pg-delay" min="0" max="1000" step="50" value="${pgState.delay}"><span class="val" id="pg-delay-val">${pgState.delay}</span></div>
+    </div>
+    <div class="ctrl-group">
+      <label>Easing</label>
+      <select id="pg-easing">${EASINGS.map(e => `<option value="${e.name}" ${e.name===pgState.easing?'selected':''}>${e.name} — ${e.desc}</option>`).join('')}</select>
+    </div>
+    <div id="pg-extra"></div>
+  `;
+  updateExtraControls();
+  bindControlEvents();
+}
+
+function updateExtraControls() {
+  const extra = document.getElementById('pg-extra');
+  const t = pgState.effectType;
+  let html = '';
+  if (t === 'fade' || t === 'scale-fade' || t === 'slide-fade' || t === 'blur-fade') {
+    html += `<div class="ctrl-group"><label>Opacity From</label><div class="ctrl-row"><input type="range" id="pg-fadeFrom" min="0" max="1" step="0.05" value="${pgState.fadeFrom}"><span class="val" id="pg-fadeFrom-val">${pgState.fadeFrom}</span></div></div>`;
+    html += `<div class="ctrl-group"><label>Opacity To</label><div class="ctrl-row"><input type="range" id="pg-fadeTo" min="0" max="1" step="0.05" value="${pgState.fadeTo}"><span class="val" id="pg-fadeTo-val">${pgState.fadeTo}</span></div></div>`;
+  }
+  if (t === 'scale' || t === 'scale-fade') {
+    html += `<div class="ctrl-group"><label>Scale From</label><div class="ctrl-row"><input type="range" id="pg-scaleFrom" min="0" max="2" step="0.05" value="${pgState.scaleFrom}"><span class="val" id="pg-scaleFrom-val">${pgState.scaleFrom}</span></div></div>`;
+    html += `<div class="ctrl-group"><label>Scale To</label><div class="ctrl-row"><input type="range" id="pg-scaleTo" min="0" max="2" step="0.05" value="${pgState.scaleTo}"><span class="val" id="pg-scaleTo-val">${pgState.scaleTo}</span></div></div>`;
+  }
+  if (t === 'slide' || t === 'slide-fade') {
+    html += `<div class="ctrl-group"><label>方向</label><select id="pg-slideDir"><option value="up">Up</option><option value="down">Down</option><option value="left">Left</option><option value="right">Right</option></select></div>`;
+    html += `<div class="ctrl-group"><label>距离 (px)</label><div class="ctrl-row"><input type="range" id="pg-slideDist" min="4" max="128" value="${pgState.slideDist}"><span class="val" id="pg-slideDist-val">${pgState.slideDist}</span></div></div>`;
+  }
+  if (t === 'rotate') {
+    html += `<div class="ctrl-group"><label>From (deg)</label><div class="ctrl-row"><input type="range" id="pg-rotateFrom" min="-180" max="180" value="${pgState.rotateFrom}"><span class="val" id="pg-rotateFrom-val">${pgState.rotateFrom}</span></div></div>`;
+    html += `<div class="ctrl-group"><label>To (deg)</label><div class="ctrl-row"><input type="range" id="pg-rotateTo" min="-180" max="180" value="${pgState.rotateTo}"><span class="val" id="pg-rotateTo-val">${pgState.rotateTo}</span></div></div>`;
+  }
+  if (t === 'blur' || t === 'blur-fade') {
+    html += `<div class="ctrl-group"><label>Blur From (px)</label><div class="ctrl-row"><input type="range" id="pg-blurFrom" min="0" max="30" value="${pgState.blurFrom}"><span class="val" id="pg-blurFrom-val">${pgState.blurFrom}</span></div></div>`;
+    html += `<div class="ctrl-group"><label>Blur To (px)</label><div class="ctrl-row"><input type="range" id="pg-blurTo" min="0" max="30" value="${pgState.blurTo}"><span class="val" id="pg-blurTo-val">${pgState.blurTo}</span></div></div>`;
+  }
+  if (t === 'flip') {
+    html += `<div class="ctrl-group"><label>轴</label><select id="pg-flipAxis"><option value="y">Y 轴（水平翻转）</option><option value="x">X 轴（垂直翻转）</option></select></div>`;
+    html += `<div class="ctrl-group"><label>From (deg)</label><div class="ctrl-row"><input type="range" id="pg-flipFrom" min="0" max="360" value="${pgState.flipFrom}"><span class="val" id="pg-flipFrom-val">${pgState.flipFrom}</span></div></div>`;
+    html += `<div class="ctrl-group"><label>To (deg)</label><div class="ctrl-row"><input type="range" id="pg-flipTo" min="0" max="360" value="${pgState.flipTo}"><span class="val" id="pg-flipTo-val">${pgState.flipTo}</span></div></div>`;
+    html += `<div class="ctrl-group"><label>Perspective (px)</label><div class="ctrl-row"><input type="range" id="pg-flipPerspective" min="200" max="2000" step="50" value="${pgState.flipPerspective}"><span class="val" id="pg-flipPerspective-val">${pgState.flipPerspective}</span></div></div>`;
+  }
+  if (t === 'collapse') {
+    html += `<div class="ctrl-group"><label>折叠高度 (px)</label><div class="ctrl-row"><input type="range" id="pg-collapseHeight" min="0" max="100" value="${pgState.collapseHeight}"><span class="val" id="pg-collapseHeight-val">${pgState.collapseHeight}</span></div></div>`;
+  }
+  extra.innerHTML = html;
+  bindExtraEvents();
+}
+
+function bindControlEvents() {
+  const $ = id => document.getElementById(id);
+  $('pg-effect').addEventListener('change', e => { pgState.effectType = e.target.value; updateExtraControls(); });
+  $('pg-entering').addEventListener('change', e => { pgState.entering = e.target.value === 'true'; });
+  ['duration','delay'].forEach(k => {
+    $(('pg-'+k)).addEventListener('input', e => { pgState[k] = +e.target.value; $('pg-'+k+'-val').textContent = e.target.value; });
+  });
+  $('pg-easing').addEventListener('change', e => { pgState.easing = e.target.value; });
+}
+
+function bindExtraEvents() {
+  const $ = id => document.getElementById(id);
+  const bind = (id, key, isFloat) => {
+    const el = $(id);
+    if (!el) return;
+    if (el.tagName === 'SELECT') {
+      el.addEventListener('change', e => { pgState[key] = e.target.value; });
+    } else {
+      el.addEventListener('input', e => {
+        pgState[key] = isFloat ? parseFloat(e.target.value) : +e.target.value;
+        const valEl = $(id + '-val');
+        if (valEl) valEl.textContent = e.target.value;
+      });
+    }
+  };
+  bind('pg-fadeFrom','fadeFrom',true); bind('pg-fadeTo','fadeTo',true);
+  bind('pg-scaleFrom','scaleFrom',true); bind('pg-scaleTo','scaleTo',true);
+  bind('pg-slideDir','slideDir'); bind('pg-slideDist','slideDist');
+  bind('pg-rotateFrom','rotateFrom'); bind('pg-rotateTo','rotateTo');
+  bind('pg-blurFrom','blurFrom'); bind('pg-blurTo','blurTo');
+  bind('pg-flipAxis','flipAxis'); bind('pg-flipFrom','flipFrom'); bind('pg-flipTo','flipTo'); bind('pg-flipPerspective','flipPerspective');
+  bind('pg-collapseHeight','collapseHeight');
+}
+
+function getPlaygroundEffects() {
+  const t = pgState.effectType;
+  const effs = [];
+  if (t === 'fade') effs.push({type:'fade',from:pgState.fadeFrom,to:pgState.fadeTo});
+  if (t === 'scale') effs.push({type:'scale',from:pgState.scaleFrom,to:pgState.scaleTo});
+  if (t === 'slide') effs.push({type:'slide',direction:pgState.slideDir,distance:pgState.slideDist});
+  if (t === 'rotate') effs.push({type:'rotate',from:pgState.rotateFrom,to:pgState.rotateTo});
+  if (t === 'blur') effs.push({type:'blur',from:pgState.blurFrom,to:pgState.blurTo});
+  if (t === 'flip') effs.push({type:'flip',axis:pgState.flipAxis,from:pgState.flipFrom,to:pgState.flipTo,perspective:pgState.flipPerspective});
+  if (t === 'collapse') effs.push({type:'collapse',collapsedHeight:pgState.collapseHeight});
+  if (t === 'scale-fade') { effs.push({type:'fade',from:pgState.fadeFrom,to:pgState.fadeTo}); effs.push({type:'scale',from:pgState.scaleFrom,to:pgState.scaleTo}); }
+  if (t === 'slide-fade') { effs.push({type:'fade',from:pgState.fadeFrom,to:pgState.fadeTo}); effs.push({type:'slide',direction:pgState.slideDir,distance:pgState.slideDist}); }
+  if (t === 'blur-fade') { effs.push({type:'fade',from:pgState.fadeFrom,to:pgState.fadeTo}); effs.push({type:'blur',from:pgState.blurFrom,to:pgState.blurTo}); }
+  return effs;
+}
+
+function updatePlaygroundCode() {
+  const effs = getPlaygroundEffects();
+  const code = document.getElementById('pg-code');
+  code.textContent = `// Effect Config\nconst effects = ${JSON.stringify(effs, null, 2)};\n\n// Resolved: duration=${pgState.duration}ms, delay=${pgState.delay}ms, easing="${pgState.easing}"`;
+}
+
+document.getElementById('pg-play').addEventListener('click', () => {
+  const box = document.getElementById('pg-box');
+  const effs = getPlaygroundEffects();
+  applyAnimation(box, effs, pgState.duration, getEasingCSS(pgState.easing), pgState.entering, pgState.delay);
+  updatePlaygroundCode();
+});
+
+document.getElementById('pg-reset').addEventListener('click', () => {
+  const box = document.getElementById('pg-box');
+  box.style.transition = 'none';
+  box.style.opacity = '1'; box.style.transform = 'none'; box.style.filter = 'none';
+  box.style.maxHeight = ''; box.style.overflow = '';
+});
+
+buildControls();
+
+
+// ============================================================
+// PAGE 3: Tokens
+// ============================================================
+(function initTokens() {
+  // Timing table
+  const tt = document.getElementById('timing-table');
+  tt.innerHTML = `<tr><th>Token</th><th>别名</th><th>时长</th><th>用途</th><th>预览</th></tr>` +
+    TIMINGS.map(t => `<tr>
+      <td class="mono">${t.token}</td><td>${t.alias}</td><td class="mono">${t.ms}ms</td><td>${t.use}</td>
+      <td><div style="width:40px;height:40px;border-radius:6px;background:linear-gradient(135deg,#667eea,#764ba2);cursor:pointer;" class="timing-preview" data-ms="${t.ms}"></div></td>
+    </tr>`).join('');
+  tt.querySelectorAll('.timing-preview').forEach(el => {
+    el.addEventListener('click', () => {
+      applyAnimation(el, [{type:'fade',from:0,to:1},{type:'scale',from:0.8,to:1}], +el.dataset.ms, 'cubic-bezier(0.4, 0.14, 0.3, 1)', true, 0);
+    });
+  });
+
+  // Distance table
+  const dt = document.getElementById('distance-table');
+  dt.innerHTML = `<tr><th>Token</th><th>别名</th><th>距离</th><th>用途</th><th>预览</th></tr>` +
+    DISTANCES.map(d => `<tr>
+      <td class="mono">${d.token}</td><td>${d.alias}</td><td class="mono">${d.px}px</td><td>${d.use}</td>
+      <td><div style="width:40px;height:40px;border-radius:6px;background:linear-gradient(135deg,#667eea,#764ba2);cursor:pointer;" class="dist-preview" data-px="${d.px}"></div></td>
+    </tr>`).join('');
+  dt.querySelectorAll('.dist-preview').forEach(el => {
+    el.addEventListener('click', () => {
+      applyAnimation(el, [{type:'fade',from:0,to:1},{type:'slide',direction:'up',distance:+el.dataset.px}], 300, 'cubic-bezier(0, 0, 0.3, 1)', true, 0);
+    });
+  });
+
+  // Easing grid with canvas curves
+  const eg = document.getElementById('easing-grid');
+  EASINGS.forEach(({name, css, desc}) => {
+    const card = document.createElement('div');
+    card.className = 'easing-card';
+    card.innerHTML = `<canvas width="200" height="100"></canvas><div class="label">${name}</div><div class="meta">${desc}<br><span style="font-family:monospace;font-size:10px;color:#667eea;">${css}</span></div>`;
+    eg.appendChild(card);
+
+    // Draw easing curve
+    const canvas = card.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+    const w = 200, h = 100;
+    canvas.width = w * 2; canvas.height = h * 2;
+    ctx.scale(2, 2);
+
+    // Parse cubic-bezier
+    let points = null;
+    const m = css.match(/cubic-bezier\(([^)]+)\)/);
+    if (m) points = m[1].split(',').map(Number);
+
+    ctx.strokeStyle = '#333'; ctx.lineWidth = 0.5;
+    ctx.strokeRect(10, 10, w-20, h-20);
+
+    ctx.beginPath(); ctx.strokeStyle = '#667eea'; ctx.lineWidth = 2;
+    for (let t = 0; t <= 1; t += 0.01) {
+      let val;
+      if (points) {
+        const [x1,y1,x2,y2] = points;
+        // Approximate cubic bezier y value
+        val = cubicBezierY(t, x1, y1, x2, y2);
+      } else {
+        val = t; // linear
+      }
+      const px = 10 + t * (w - 20);
+      const py = (h - 10) - val * (h - 20);
+      t === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // Click to preview
+    card.addEventListener('click', () => {
+      const box = card.querySelector('canvas');
+      box.style.transition = 'none';
+      box.style.opacity = '0'; box.style.transform = 'translateY(10px)';
+      requestAnimationFrame(() => {
+        box.style.transition = `all 500ms ${css}`;
+        box.style.opacity = '1'; box.style.transform = 'translateY(0)';
+      });
+    });
+  });
+})();
+
+function cubicBezierY(t, x1, y1, x2, y2) {
+  // Newton's method to find t for x, then compute y
+  let guess = t;
+  for (let i = 0; i < 8; i++) {
+    const x = bezier(guess, x1, x2) - t;
+    if (Math.abs(x) < 0.001) break;
+    const dx = bezierDeriv(guess, x1, x2);
+    if (Math.abs(dx) < 1e-6) break;
+    guess -= x / dx;
+  }
+  return bezier(guess, y1, y2);
+}
+function bezier(t, p1, p2) {
+  return 3*(1-t)*(1-t)*t*p1 + 3*(1-t)*t*t*p2 + t*t*t;
+}
+function bezierDeriv(t, p1, p2) {
+  return 3*(1-t)*(1-t)*p1 + 6*(1-t)*t*(p2-p1) + 3*t*t*(1-p2);
+}
+
+// ============================================================
+// PAGE 4: Spring Physics
+// ============================================================
+const springState = { stiffness: 120, damping: 14, mass: 1, velocity: 0 };
+
+(function initSpring() {
+  const c = document.getElementById('spring-controls');
+  c.innerHTML = `
+    <div class="ctrl-group"><label>Stiffness 刚度</label><div class="ctrl-row"><input type="range" id="sp-stiffness" min="10" max="500" value="${springState.stiffness}"><span class="val" id="sp-stiffness-val">${springState.stiffness}</span></div></div>
+    <div class="ctrl-group"><label>Damping 阻尼</label><div class="ctrl-row"><input type="range" id="sp-damping" min="1" max="50" value="${springState.damping}"><span class="val" id="sp-damping-val">${springState.damping}</span></div></div>
+    <div class="ctrl-group"><label>Mass 质量</label><div class="ctrl-row"><input type="range" id="sp-mass" min="0.1" max="5" step="0.1" value="${springState.mass}"><span class="val" id="sp-mass-val">${springState.mass}</span></div></div>
+    <div class="ctrl-group"><label>Initial Velocity</label><div class="ctrl-row"><input type="range" id="sp-velocity" min="-10" max="10" step="0.5" value="${springState.velocity}"><span class="val" id="sp-velocity-val">${springState.velocity}</span></div></div>
+  `;
+  ['stiffness','damping','mass','velocity'].forEach(k => {
+    const el = document.getElementById('sp-'+k);
+    el.addEventListener('input', e => {
+      springState[k] = parseFloat(e.target.value);
+      document.getElementById('sp-'+k+'-val').textContent = e.target.value;
+      drawSpringCurve();
+    });
+  });
+  drawSpringCurve();
+
+  // Presets grid
+  const grid = document.getElementById('spring-presets-grid');
+  Object.entries(SPRING_PRESETS).forEach(([name, cfg]) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<div class="box"></div><div class="label">${name}</div><div class="meta">${cfg.desc}<br>s=${cfg.stiffness} d=${cfg.damping} m=${cfg.mass}</div>`;
+    card.addEventListener('click', () => {
+      springState.stiffness = cfg.stiffness; springState.damping = cfg.damping; springState.mass = cfg.mass;
+      document.getElementById('sp-stiffness').value = cfg.stiffness; document.getElementById('sp-stiffness-val').textContent = cfg.stiffness;
+      document.getElementById('sp-damping').value = cfg.damping; document.getElementById('sp-damping-val').textContent = cfg.damping;
+      document.getElementById('sp-mass').value = cfg.mass; document.getElementById('sp-mass-val').textContent = cfg.mass;
+      drawSpringCurve();
+      runSpringAnimation();
+    });
+    grid.appendChild(card);
+  });
+})();
+
+function createSpring(config) {
+  const { stiffness=100, damping=10, mass=1, velocity:iv=0 } = config;
+  let pos = 0, vel = iv;
+  return {
+    step(dt) {
+      const disp = pos - 1;
+      const sf = -stiffness * disp;
+      const df = -damping * vel;
+      vel += (sf + df) / mass * dt;
+      pos += vel * dt;
+      const atRest = Math.abs(vel) < 0.001 && Math.abs(pos - 1) < 0.001;
+      if (atRest) { pos = 1; vel = 0; }
+      return { position: pos, velocity: vel, atRest };
+    },
+    reset() { pos = 0; vel = iv; }
+  };
+}
+
+function drawSpringCurve() {
+  const canvas = document.getElementById('springCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const w = rect.width, h = rect.height;
+
+  ctx.fillStyle = '#0d0d1a'; ctx.fillRect(0, 0, w, h);
+
+  // Simulate
+  const spring = createSpring(springState);
+  const dt = 1/60;
+  const points = [];
+  let frames = 0;
+  while (frames < 600) {
+    const s = spring.step(dt);
+    points.push(s.position);
+    frames++;
+    if (s.atRest) break;
+  }
+
+  // Grid
+  ctx.strokeStyle = '#1a1a2e'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, h/2); ctx.lineTo(w, h/2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, h*0.1); ctx.lineTo(w, h*0.1); ctx.stroke();
+
+  // Labels
+  ctx.fillStyle = '#444'; ctx.font = '10px monospace';
+  ctx.fillText('1.0', 4, h*0.1 + 12);
+  ctx.fillText('0.0', 4, h/2 + 12);
+  ctx.fillText(`${frames} frames (${Math.round(frames/60*1000)}ms)`, w - 140, h - 8);
+
+  // Curve
+  ctx.beginPath(); ctx.strokeStyle = '#667eea'; ctx.lineWidth = 2;
+  const scaleX = w / points.length;
+  const baseline = h * 0.5;
+  const amplitude = h * 0.4;
+  points.forEach((p, i) => {
+    const x = i * scaleX;
+    const y = baseline - p * amplitude;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Target line
+  ctx.setLineDash([4, 4]); ctx.strokeStyle = '#667eea44'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, baseline - amplitude); ctx.lineTo(w, baseline - amplitude); ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function runSpringAnimation() {
+  const box = document.getElementById('spring-box');
+  const spring = createSpring(springState);
+  const dt = 1/60;
+  function tick() {
+    const s = spring.step(dt);
+    box.style.transform = `scale(${0.5 + 0.5 * s.position})`;
+    box.style.opacity = s.position;
+    if (!s.atRest) requestAnimationFrame(tick);
+  }
+  box.style.transform = 'scale(0.5)'; box.style.opacity = '0';
+  requestAnimationFrame(tick);
+}
+
+document.getElementById('spring-play').addEventListener('click', () => { drawSpringCurve(); runSpringAnimation(); });
+document.getElementById('spring-reset').addEventListener('click', () => {
+  const box = document.getElementById('spring-box');
+  box.style.transform = 'scale(1)'; box.style.opacity = '1';
+});
+
+
+// ============================================================
+// PAGE 5: Stagger
+// ============================================================
+let staggerDir = 'forward';
+
+function stagger(count, options) {
+  if (count <= 0) return [];
+  const { interval, baseDelay=0, direction='forward' } = options;
+  const delays = [];
+  if (direction === 'reverse') {
+    for (let i = 0; i < count; i++) delays.push(baseDelay + (count-1-i)*interval);
+  } else if (direction === 'center') {
+    const c = (count-1)/2;
+    for (let i = 0; i < count; i++) delays.push(baseDelay + Math.round(Math.abs(i-c)*interval));
+  } else {
+    for (let i = 0; i < count; i++) delays.push(baseDelay + i*interval);
+  }
+  return delays;
+}
+
+function renderStagger() {
+  const count = +document.getElementById('stagger-count').value;
+  const interval = +document.getElementById('stagger-interval').value;
+  const row = document.getElementById('stagger-row');
+  row.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const item = document.createElement('div');
+    item.className = 'stagger-item';
+    row.appendChild(item);
+  }
+  // Animate
+  const delays = stagger(count, { interval, direction: staggerDir });
+  const items = row.children;
+  for (let i = 0; i < items.length; i++) {
+    applyAnimation(items[i], [{type:'fade',from:0,to:1},{type:'scale',from:0.8,to:1},{type:'slide',direction:'up',distance:12}], 300, 'cubic-bezier(0, 0, 0.3, 1)', true, delays[i]);
+  }
+  // Code
+  document.getElementById('stagger-code').textContent =
+    `import { stagger } from '@fade-animation/core';\n\nconst delays = stagger(${count}, {\n  interval: ${interval},\n  direction: '${staggerDir}'\n});\n// → [${delays.join(', ')}]`;
+}
+
+document.querySelectorAll('.stagger-controls .btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    staggerDir = btn.dataset.dir;
+    document.querySelectorAll('.stagger-controls .btn').forEach(b => b.className = 'btn btn-outline');
+    btn.className = 'btn';
+    renderStagger();
+  });
+});
+document.getElementById('stagger-interval').addEventListener('input', e => {
+  document.getElementById('stagger-interval-val').textContent = e.target.value;
+  renderStagger();
+});
+document.getElementById('stagger-count').addEventListener('input', e => {
+  document.getElementById('stagger-count-val').textContent = e.target.value;
+  renderStagger();
+});
+renderStagger();
+
+// ============================================================
+// PAGE 6: Code Generation
+// ============================================================
+let codeLang = 'react';
+
+function generateCode() {
+  const effs = getPlaygroundEffects();
+  const s = pgState;
+  const output = document.getElementById('codegen-output');
+
+  if (codeLang === 'react') {
+    const effectStr = effs.length === 1 && effs[0].type === 'fade'
+      ? ''
+      : `\n  effect={${JSON.stringify(effs)}}`;
+    output.textContent = `import { Motion } from '@fade-animation/react';
+
+<Motion
+  in={show}${effectStr}
+  duration={${s.duration}}
+  delay={${s.delay}}
+  easing="${s.easing}"
+>
+  <YourComponent />
+</Motion>`;
+  } else if (codeLang === 'vue') {
+    const effectStr = effs.length === 1 && effs[0].type === 'fade'
+      ? ''
+      : `\n  :effect='${JSON.stringify(effs)}'`;
+    output.textContent = `<template>
+  <Motion
+    :in="show"${effectStr}
+    :duration="${s.duration}"
+    :delay="${s.delay}"
+    easing="${s.easing}"
+  >
+    <YourComponent />
+  </Motion>
+</template>
+
+<` + `script setup>
+import { Motion } from '@fade-animation/vue';
+<` + `/script>`;
+  } else if (codeLang === 'swift') {
+    const effectLines = effs.map(e => {
+      if (e.type === 'fade') return `.fade(from: ${e.from}, to: ${e.to})`;
+      if (e.type === 'scale') return `.scale(from: ${e.from}, to: ${e.to})`;
+      if (e.type === 'slide') return `.slide(direction: .${e.direction}, distance: ${e.distance})`;
+      if (e.type === 'rotate') return `.rotate(from: ${e.from}, to: ${e.to})`;
+      if (e.type === 'blur') return `.blur(from: ${e.from}, to: ${e.to})`;
+      if (e.type === 'flip') return `.flip(axis: .${e.axis}, from: ${e.from}, to: ${e.to}, perspective: ${e.perspective})`;
+      if (e.type === 'collapse') return `.collapse(collapsedHeight: ${e.collapsedHeight})`;
+      return '';
+    }).join(',\n    ');
+    output.textContent = `let animator = MotionAnimator(
+    effects: [
+    ${effectLines}
+    ],
+    duration: ${s.duration / 1000},
+    delay: ${s.delay / 1000}
+)
+
+animator.animate(view: yourView, entering: true)`;
+  } else if (codeLang === 'kotlin') {
+    const effectLines = effs.map(e => {
+      if (e.type === 'fade') return `FadeEffect(from = ${e.from}f, to = ${e.to}f)`;
+      if (e.type === 'scale') return `ScaleEffect(from = ${e.from}f, to = ${e.to}f)`;
+      if (e.type === 'slide') return `SlideEffect(direction = SlideDirection.${(e.direction||'up').toUpperCase()}, distance = ${e.distance}f)`;
+      if (e.type === 'rotate') return `RotateEffect(from = ${e.from}f, to = ${e.to}f)`;
+      if (e.type === 'blur') return `BlurEffect(from = ${e.from}f, to = ${e.to}f)`;
+      if (e.type === 'flip') return `FlipEffect(axis = FlipAxis.${(e.axis||'y').toUpperCase()}, from = ${e.from}f, to = ${e.to}f, perspective = ${e.perspective}f)`;
+      if (e.type === 'collapse') return `CollapseEffect(collapsedHeight = ${e.collapsedHeight}f)`;
+      return '';
+    }).join(',\n    ');
+    output.textContent = `val animator = MotionAnimator(
+    effects = listOf(
+    ${effectLines}
+    ),
+    duration = ${s.duration}L,
+    delay = ${s.delay}L
+)
+
+animator.animate(view = yourView, entering = true)`;
+  }
+}
+
+document.querySelectorAll('#page-code .btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    codeLang = btn.dataset.lang;
+    document.querySelectorAll('#page-code .btn').forEach(b => b.className = 'btn btn-outline');
+    btn.className = 'btn';
+    generateCode();
+  });
+});
+
+// Generate on page switch
+document.querySelector('[data-page="code"]').addEventListener('click', () => setTimeout(generateCode, 50));
+
+// Initial code gen
+generateCode();
+
+// ============================================================
+// Resize handler for spring canvas
+// ============================================================
+window.addEventListener('resize', () => drawSpringCurve());
+
+// ============================================================
+// PAGE 7: Figma Import
+// ============================================================
+(function initFigma() {
+  const tokenInput = document.getElementById('figma-token');
+  const toggleBtn = document.getElementById('figma-token-toggle');
+
+  // Restore saved token
+  const saved = localStorage.getItem('figma-pat');
+  if (saved) tokenInput.value = saved;
+
+  toggleBtn.addEventListener('click', () => {
+    const isPassword = tokenInput.type === 'password';
+    tokenInput.type = isPassword ? 'text' : 'password';
+    toggleBtn.textContent = isPassword ? '隐藏' : '显示';
+  });
+
+  // Save token on change
+  tokenInput.addEventListener('change', () => {
+    localStorage.setItem('figma-pat', tokenInput.value);
+  });
+
+  document.getElementById('figma-fetch').addEventListener('click', fetchFigmaData);
+})();
+
+function parseFigmaUrl(url) {
+  // https://www.figma.com/design/FILEKEY/Name?node-id=X-Y
+  // https://www.figma.com/file/FILEKEY/Name?node-id=X-Y
+  const m = url.match(/figma\.com\/(?:design|file)\/([a-zA-Z0-9]+)/);
+  if (!m) return null;
+  const fileKey = m[1];
+  const nodeMatch = url.match(/node-id=([^&]+)/);
+  const nodeId = nodeMatch ? decodeURIComponent(nodeMatch[1]).replace(/-/g, ':') : null;
+  return { fileKey, nodeId };
+}
+
+async function figmaAPI(path, token) {
+  const resp = await fetch(`https://api.figma.com/v1${path}`, {
+    headers: { 'X-Figma-Token': token }
+  });
+  if (!resp.ok) throw new Error(`Figma API ${resp.status}: ${resp.statusText}`);
+  return resp.json();
+}
+
+async function figmaImageUrl(fileKey, nodeId, token) {
+  const ids = encodeURIComponent(nodeId);
+  const data = await figmaAPI(`/images/${fileKey}?ids=${ids}&format=png&scale=2`, token);
+  return data.images?.[nodeId] || null;
+}
+
+// Extract animation-relevant info from Figma node
+function extractFigmaEffects(node) {
+  const results = [];
+  const info = {
+    name: node.name,
+    type: node.type,
+    width: node.absoluteBoundingBox?.width,
+    height: node.absoluteBoundingBox?.height,
+    opacity: node.opacity,
+    effects: node.effects || [],
+    transitions: [],
+    interactions: [],
+  };
+
+  // Check for prototype interactions (Smart Animate, transitions)
+  if (node.transitionNodeID) {
+    info.transitions.push({
+      targetNodeId: node.transitionNodeID,
+      duration: node.transitionDuration || 300,
+      easing: node.transitionEasing || 'ease',
+    });
+  }
+
+  // Check interactions array
+  if (node.interactions) {
+    node.interactions.forEach(interaction => {
+      const action = interaction.actions?.[0];
+      if (!action) return;
+      const anim = action.transition;
+      if (anim) {
+        info.interactions.push({
+          trigger: interaction.trigger?.type || 'ON_CLICK',
+          type: anim.type || 'SMART_ANIMATE',
+          duration: anim.duration ? anim.duration * 1000 : 300,
+          easing: anim.easing?.type || 'EASE_OUT',
+          easingFunction: anim.easing?.easingFunctionCubicBezier,
+          direction: anim.direction,
+        });
+      }
+    });
+  }
+
+  // Figma layer effects → our effects
+  (node.effects || []).forEach(fx => {
+    if (fx.type === 'LAYER_BLUR' && fx.visible !== false) {
+      results.push({ type: 'blur', from: fx.radius || 8, to: 0 });
+    }
+    if (fx.type === 'BACKGROUND_BLUR' && fx.visible !== false) {
+      results.push({ type: 'blur', from: fx.radius || 8, to: 0 });
     }
   });
 
-  fromStyles.transform = transforms_from.join(' ') || 'none';
-  toStyles.transform = transforms_to.join(' ') || 'none';
+  // Opacity
+  if (node.opacity !== undefined && node.opacity < 1) {
+    results.push({ type: 'fade', from: 0, to: node.opacity });
+  }
 
-  box.style.transition = 'none';
-  box.style.opacity = fromStyles.opacity;
-  box.style.transform = fromStyles.transform;
+  // Rotation
+  if (node.rotation && node.rotation !== 0) {
+    results.push({ type: 'rotate', from: node.rotation, to: 0 });
+  }
 
-  requestAnimationFrame(() => {
-    box.style.transition = `all ${duration}ms ${easing}`;
-    box.style.opacity = toStyles.opacity;
-    box.style.transform = toStyles.transform;
-  });
+  // If no specific effects detected, suggest defaults based on node type
+  if (results.length === 0) {
+    results.push({ type: 'fade', from: 0, to: 1 });
+    if (node.type === 'FRAME' || node.type === 'COMPONENT' || node.type === 'INSTANCE') {
+      results.push({ type: 'scale', from: 0.95, to: 1 });
+    }
+  }
+
+  return { info, effects: results };
 }
+
+function figmaEasingToCSS(easingType, cubicBezier) {
+  if (cubicBezier) {
+    const { x1, y1, x2, y2 } = cubicBezier;
+    return `cubic-bezier(${x1}, ${y1}, ${x2}, ${y2})`;
+  }
+  const map = {
+    'EASE_IN': 'cubic-bezier(0.4, 0, 1, 1)',
+    'EASE_OUT': 'cubic-bezier(0, 0, 0.3, 1)',
+    'EASE_IN_AND_OUT': 'cubic-bezier(0.4, 0.14, 0.3, 1)',
+    'EASE_IN_BACK': 'cubic-bezier(0.6, -0.28, 0.735, 0.045)',
+    'EASE_OUT_BACK': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+    'LINEAR': 'linear',
+    'GENTLE': 'cubic-bezier(0.4, 0.14, 0.3, 1)',
+    'QUICK': 'cubic-bezier(0.2, 0, 0.38, 0.9)',
+    'BOUNCY': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+    'SLOW': 'cubic-bezier(0.4, 0.14, 0.3, 1)',
+    'CUSTOM_CUBIC_BEZIER': 'cubic-bezier(0.4, 0.14, 0.3, 1)',
+  };
+  return map[easingType] || 'cubic-bezier(0, 0, 0.3, 1)';
+}
+
+function mapToLibraryIntent(duration, easingType) {
+  if (duration <= 100) return 'feedback';
+  if (duration <= 200) return 'exit';
+  if (duration <= 400) return 'enter';
+  if (duration <= 600) return 'focus';
+  return 'delight';
+}
+
+function mapToTimingToken(duration) {
+  if (duration <= 100) return 't1';
+  if (duration <= 200) return 't2';
+  if (duration <= 400) return 't3';
+  if (duration <= 600) return 't4';
+  return 't5';
+}
+
+let figmaCurrentEffects = [];
+let figmaCurrentDuration = 300;
+let figmaCurrentEasing = 'cubic-bezier(0, 0, 0.3, 1)';
+
+async function fetchFigmaData() {
+  const url = document.getElementById('figma-url').value.trim();
+  const token = document.getElementById('figma-token').value.trim();
+  const status = document.getElementById('figma-status');
+
+  if (!url) { status.innerHTML = '<span style="color:#f44;">请输入 Figma 链接</span>'; return; }
+  if (!token) { status.innerHTML = '<span style="color:#f44;">请输入 Figma Personal Access Token</span>'; return; }
+
+  const parsed = parseFigmaUrl(url);
+  if (!parsed) { status.innerHTML = '<span style="color:#f44;">无法解析 Figma 链接，请检查格式</span>'; return; }
+
+  status.innerHTML = '<span style="color:var(--accent);">⏳ 正在获取 Figma 数据...</span>';
+
+  try {
+    // Fetch file/node data
+    let nodeData;
+    if (parsed.nodeId) {
+      const data = await figmaAPI(`/files/${parsed.fileKey}/nodes?ids=${encodeURIComponent(parsed.nodeId)}`, token);
+      const nodeEntry = Object.values(data.nodes)[0];
+      nodeData = nodeEntry?.document;
+    } else {
+      const data = await figmaAPI(`/files/${parsed.fileKey}?depth=2`, token);
+      nodeData = data.document;
+    }
+
+    if (!nodeData) { status.innerHTML = '<span style="color:#f44;">未找到节点数据</span>'; return; }
+
+    status.innerHTML = '<span style="color:#4f4;">✅ 数据获取成功</span>';
+
+    // Get screenshot
+    const preview = document.getElementById('figma-preview');
+    preview.style.display = 'block';
+
+    if (parsed.nodeId) {
+      const imgUrl = await figmaImageUrl(parsed.fileKey, parsed.nodeId, token);
+      const screenshotDiv = document.getElementById('figma-screenshot');
+      if (imgUrl) {
+        screenshotDiv.innerHTML = `<img src="${imgUrl}" style="max-width:100%;border-radius:8px;" alt="${nodeData.name}">`;
+      } else {
+        screenshotDiv.innerHTML = '<span style="color:var(--text3);">无法获取截图</span>';
+      }
+    }
+
+    // Extract effects
+    const { info, effects } = extractFigmaEffects(nodeData);
+    figmaCurrentEffects = effects;
+
+    // Determine duration and easing from interactions
+    let duration = 300;
+    let easingCSS = 'cubic-bezier(0, 0, 0.3, 1)';
+    let easingType = 'EASE_OUT';
+
+    if (info.interactions.length > 0) {
+      const first = info.interactions[0];
+      duration = first.duration;
+      easingCSS = figmaEasingToCSS(first.easing, first.easingFunction);
+      easingType = first.easing;
+    } else if (info.transitions.length > 0) {
+      duration = info.transitions[0].duration;
+    }
+
+    figmaCurrentDuration = duration;
+    figmaCurrentEasing = easingCSS;
+
+    // Render node info
+    const nodeInfoDiv = document.getElementById('figma-node-info');
+    nodeInfoDiv.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;">
+        <div><span style="color:var(--text3);font-size:11px;">名称</span><br><span style="color:#fff;">${info.name}</span></div>
+        <div><span style="color:var(--text3);font-size:11px;">类型</span><br><span style="color:var(--accent);">${info.type}</span></div>
+        <div><span style="color:var(--text3);font-size:11px;">尺寸</span><br><span style="color:#fff;">${info.width ? Math.round(info.width) + ' × ' + Math.round(info.height) : 'N/A'}</span></div>
+        <div><span style="color:var(--text3);font-size:11px;">透明度</span><br><span style="color:#fff;">${info.opacity !== undefined ? info.opacity : 1}</span></div>
+        <div><span style="color:var(--text3);font-size:11px;">图层效果</span><br><span style="color:#fff;">${info.effects.length} 个</span></div>
+        <div><span style="color:var(--text3);font-size:11px;">交互动效</span><br><span style="color:#fff;">${info.interactions.length} 个</span></div>
+        <div><span style="color:var(--text3);font-size:11px;">过渡</span><br><span style="color:#fff;">${info.transitions.length} 个</span></div>
+      </div>
+      ${info.interactions.length > 0 ? `
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+        <span style="color:var(--text3);font-size:11px;text-transform:uppercase;">交互详情</span>
+        ${info.interactions.map((ia, i) => `
+          <div style="margin-top:8px;padding:12px;background:var(--surface2);border-radius:8px;">
+            <span style="color:var(--accent);font-size:12px;">交互 ${i+1}</span>
+            <span style="color:var(--text3);font-size:12px;margin-left:8px;">${ia.trigger}</span>
+            <span style="color:var(--text3);font-size:12px;margin-left:8px;">→ ${ia.type}</span>
+            <span style="color:#fff;font-size:12px;margin-left:8px;">${ia.duration}ms</span>
+            <span style="color:var(--text3);font-size:12px;margin-left:8px;">${ia.easing}</span>
+          </div>
+        `).join('')}
+      </div>` : ''}
+    `;
+
+    // Render detected effects
+    const effectsListDiv = document.getElementById('figma-effects-list');
+    effectsListDiv.innerHTML = `
+      <div class="grid">
+        ${effects.map((eff, i) => `
+          <div class="card" style="cursor:default;">
+            <div class="box" id="figma-eff-box-${i}"></div>
+            <div class="label">${eff.type}</div>
+            <div class="meta">${JSON.stringify(eff)}</div>
+          </div>
+        `).join('')}
+        <div class="card" style="cursor:default;border-color:var(--accent);">
+          <div style="font-size:24px;">⏱</div>
+          <div class="label">Duration</div>
+          <div class="meta">${duration}ms → ${mapToTimingToken(duration)}</div>
+        </div>
+        <div class="card" style="cursor:default;border-color:var(--accent);">
+          <div style="font-size:24px;">📐</div>
+          <div class="label">Easing</div>
+          <div class="meta">${easingCSS}</div>
+        </div>
+        <div class="card" style="cursor:default;border-color:var(--accent);">
+          <div style="font-size:24px;">🎯</div>
+          <div class="label">推荐 Intent</div>
+          <div class="meta">${mapToLibraryIntent(duration, easingType)}</div>
+        </div>
+      </div>
+    `;
+
+    // Generate recommended code
+    const codeOutput = document.getElementById('figma-code-output');
+    const intent = mapToLibraryIntent(duration, easingType);
+    const timingToken = mapToTimingToken(duration);
+    const effectsJSON = JSON.stringify(effects, null, 2);
+    codeOutput.textContent = `// 从 Figma "${info.name}" 解析的动效配置
+// 节点类型: ${info.type} | 尺寸: ${info.width ? Math.round(info.width)+'×'+Math.round(info.height) : 'N/A'}
+
+// React
+import { Motion } from '@fade-animation/react';
+
+<Motion
+  in={show}
+  effect={${effectsJSON}}
+  duration={${Math.round(duration)}}
+  easing="${easingCSS}"
+  intent="${intent}"
+>
+  <YourComponent />
+</Motion>
+
+// 或使用 timing token
+<Motion
+  in={show}
+  effect={${effectsJSON}}
+  timing="${timingToken}"
+  intent="${intent}"
+>
+  <YourComponent />
+</Motion>
+
+// Vue
+<Motion
+  :in="show"
+  :effect='${JSON.stringify(effects)}'
+  :duration="${Math.round(duration)}"
+  easing="${easingCSS}"
+  intent="${intent}"
+/>`;
+
+    // Render child nodes gallery
+    if (nodeData.children && nodeData.children.length > 0) {
+      const gallery = document.getElementById('figma-gallery');
+      gallery.style.display = 'block';
+      const grid = document.getElementById('figma-nodes-grid');
+      grid.innerHTML = '';
+
+      nodeData.children.slice(0, 20).forEach(child => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        const childExtract = extractFigmaEffects(child);
+        card.innerHTML = `
+          <div class="box" style="width:48px;height:48px;"></div>
+          <div class="label">${child.name}</div>
+          <div class="meta">${child.type}${child.absoluteBoundingBox ? '<br>'+Math.round(child.absoluteBoundingBox.width)+'×'+Math.round(child.absoluteBoundingBox.height) : ''}</div>
+        `;
+        card.addEventListener('click', () => {
+          const box = card.querySelector('.box');
+          applyAnimation(box, childExtract.effects, duration, easingCSS, true, 0);
+        });
+        grid.appendChild(card);
+      });
+    }
+
+  } catch (err) {
+    status.innerHTML = `<span style="color:#f44;">❌ 错误: ${err.message}</span>`;
+    console.error(err);
+  }
+}
+
+// Figma preview play/replay
+document.getElementById('figma-play')?.addEventListener('click', () => {
+  const box = document.getElementById('figma-demo-box');
+  if (figmaCurrentEffects.length > 0) {
+    applyAnimation(box, figmaCurrentEffects, figmaCurrentDuration, figmaCurrentEasing, true, 0);
+  }
+});
+
+document.getElementById('figma-replay')?.addEventListener('click', () => {
+  const box = document.getElementById('figma-demo-box');
+  box.style.transition = 'none';
+  box.style.opacity = '1'; box.style.transform = 'none'; box.style.filter = 'none';
+  setTimeout(() => {
+    applyAnimation(box, figmaCurrentEffects, figmaCurrentDuration, figmaCurrentEasing, true, 0);
+  }, 50);
+});
+</script>
+</body>
+</html>

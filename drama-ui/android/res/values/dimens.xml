@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spacing -->
+    <dimen name="drama_spacing_xs">4dp</dimen>
+    <dimen name="drama_spacing_sm">8dp</dimen>
+    <dimen name="drama_spacing_md">12dp</dimen>
+    <dimen name="drama_spacing_base">16dp</dimen>
+    <dimen name="drama_spacing_lg">24dp</dimen>
+    <dimen name="drama_spacing_xl2">40dp</dimen>
+    <dimen name="drama_spacing_xl3">52dp</dimen>
+
+    <!-- Radius -->
+    <dimen name="drama_radius_sm">6dp</dimen>
+    <dimen name="drama_radius_md">8dp</dimen>
+    <dimen name="drama_radius_base">12dp</dimen>
+    <dimen name="drama_radius_lg">16dp</dimen>
+    <dimen name="drama_radius_xl">20dp</dimen>
+    <dimen name="drama_radius_full">100dp</dimen>
+</resources>

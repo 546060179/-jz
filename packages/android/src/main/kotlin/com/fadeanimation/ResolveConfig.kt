@@ -3,11 +3,11 @@ package com.fadeanimation
 import android.content.Context
 
 fun resolveConfig(options: FadeOptions, context: Context): FadeConfig {
-    val reducedMotion = ReducedMotionHelper.isReducedMotionEnabled(context)
-    return resolveConfigInternal(options, reducedMotion)
+    val motionLevel = ReducedMotionHelper.resolveMotionLevel(context)
+    return resolveConfigInternal(options, motionLevel)
 }
 
-fun resolveConfigInternal(options: FadeOptions, reducedMotion: Boolean): FadeConfig {
+fun resolveConfigInternal(options: FadeOptions, motionLevel: ReducedMotionHelper.MotionLevel): FadeConfig {
     val intentDefaults = options.intent
 
     val resolvedDuration: Long = when {
@@ -31,15 +31,20 @@ fun resolveConfigInternal(options: FadeOptions, reducedMotion: Boolean): FadeCon
         ?: intentDefaults?.interpolator
         ?: Defaults.INTERPOLATOR
 
-    return if (reducedMotion) {
-        FadeConfig(
+    return when (motionLevel) {
+        ReducedMotionHelper.MotionLevel.NONE -> FadeConfig(
             duration = 0L,
             delay = 0L,
             interpolator = resolvedInterpolator,
             reducedMotion = true
         )
-    } else {
-        FadeConfig(
+        ReducedMotionHelper.MotionLevel.REDUCED -> FadeConfig(
+            duration = minOf(resolvedDuration, ReducedMotionHelper.REDUCED_MAX_DURATION),
+            delay = 0L,
+            interpolator = resolvedInterpolator,
+            reducedMotion = true
+        )
+        ReducedMotionHelper.MotionLevel.FULL -> FadeConfig(
             duration = resolvedDuration,
             delay = resolvedDelay,
             interpolator = resolvedInterpolator,

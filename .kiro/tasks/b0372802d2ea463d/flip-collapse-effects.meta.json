@@ -1,0 +1,443 @@
+{
+  "tasks": {
+    "10.3 在 `packages/ios/Sources/FadeAnimation/MotionAnimator.swift` 中实现 collapse 动画": {
+      "createdAt": 1775544169282,
+      "updatedAt": 1775544169293,
+      "taskId": "10.3 在 `packages/ios/Sources/FadeAnimation/MotionAnimator.swift` 中实现 collapse 动画",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775544169282
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "9.3 在 `packages/android/src/main/kotlin/com/fadeanimation/MotionAnimator.kt` 中实现 Collapse 动画": {
+      "createdAt": 1775540966051,
+      "updatedAt": 1775541172951,
+      "taskId": "9.3 在 `packages/android/src/main/kotlin/com/fadeanimation/MotionAnimator.kt` 中实现 Collapse 动画",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775540966051
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "12.2 验证 Flip/Collapse 与 Fade 的组合效果在 resolveEffectStyles 中正确工作": {
+      "createdAt": 1775545677887,
+      "updatedAt": 1775548373705,
+      "taskId": "12.2 验证 Flip/Collapse 与 Fade 的组合效果在 resolveEffectStyles 中正确工作",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "2a412301-8a8c-493c-afa5-34e01a79cb9c",
+          "timestamp": 1775545677887
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "3. Core 层：resolveEffectStyles 扩展 Collapse 解析": {
+      "createdAt": 1775534291928,
+      "updatedAt": 1775534291939,
+      "taskId": "3. Core 层：resolveEffectStyles 扩展 Collapse 解析",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775534291928
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "4.2 在 `packages/core/src/effects.ts` 的 EFFECT_PRESETS 中新增 Flip 预设": {
+      "createdAt": 1775535129412,
+      "updatedAt": 1775535245428,
+      "taskId": "4.2 在 `packages/core/src/effects.ts` 的 EFFECT_PRESETS 中新增 Flip 预设",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775535129412
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "9. Android 层：MotionEffect 与 MotionAnimator 扩展": {
+      "createdAt": 1775541233333,
+      "updatedAt": 1775541233345,
+      "taskId": "9. Android 层：MotionEffect 与 MotionAnimator 扩展",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775541233333
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "11. 检查点 — 原生层验证": {
+      "createdAt": 1775544171255,
+      "updatedAt": 1775544171272,
+      "taskId": "11. 检查点 — 原生层验证",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775544171255
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "2.1 在 `packages/core/src/resolveEffectStyles.ts` 中实现 FlipEffect 的 CSS 样式解析": {
+      "createdAt": 1775532885536,
+      "updatedAt": 1775534072496,
+      "taskId": "2.1 在 `packages/core/src/resolveEffectStyles.ts` 中实现 FlipEffect 的 CSS 样式解析",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775532885536
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "5. 检查点 — Core 层验证": {
+      "createdAt": 1775535247889,
+      "updatedAt": 1775535319371,
+      "taskId": "5. 检查点 — Core 层验证",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775535247889
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "7. Web 组件层：Vue Motion 扩展 Collapse 支持": {
+      "createdAt": 1775540515705,
+      "updatedAt": 1775540515738,
+      "taskId": "7. Web 组件层：Vue Motion 扩展 Collapse 支持",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775540515705
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "10. iOS 层：MotionEffect 与 MotionAnimator 扩展": {
+      "createdAt": 1775544170330,
+      "updatedAt": 1775544170341,
+      "taskId": "10. iOS 层：MotionEffect 与 MotionAnimator 扩展",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775544170330
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "3.1 在 `packages/core/src/resolveEffectStyles.ts` 中实现 CollapseEffect 的 CSS 样式解析": {
+      "createdAt": 1775534074329,
+      "updatedAt": 1775534291485,
+      "taskId": "3.1 在 `packages/core/src/resolveEffectStyles.ts` 中实现 CollapseEffect 的 CSS 样式解析",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775534074329
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "1.1 在 `packages/core/src/effects.ts` 中新增 FlipEffect 接口": {
+      "createdAt": 1775532694701,
+      "updatedAt": 1775532769868,
+      "taskId": "1.1 在 `packages/core/src/effects.ts` 中新增 FlipEffect 接口",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775532694701
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "13. 最终检查点 — 全量测试通过": {
+      "createdAt": 1775548375625,
+      "updatedAt": 1775548412184,
+      "taskId": "13. 最终检查点 — 全量测试通过",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "2a412301-8a8c-493c-afa5-34e01a79cb9c",
+          "timestamp": 1775548375625
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "9.1 在 `packages/android/src/main/kotlin/com/fadeanimation/MotionEffect.kt` 中新增 Flip 和 Collapse 密封子类": {
+      "createdAt": 1775540574694,
+      "updatedAt": 1775540667712,
+      "taskId": "9.1 在 `packages/android/src/main/kotlin/com/fadeanimation/MotionEffect.kt` 中新增 Flip 和 Collapse 密封子类",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775540574694
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "9.2 在 `packages/android/src/main/kotlin/com/fadeanimation/MotionAnimator.kt` 中实现 Flip 动画": {
+      "createdAt": 1775540667973,
+      "updatedAt": 1775540965320,
+      "taskId": "9.2 在 `packages/android/src/main/kotlin/com/fadeanimation/MotionAnimator.kt` 中实现 Flip 动画",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775540667973
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "6.1 在 `packages/react/src/Motion.tsx` 中扩展 Collapse 高度测量与初始渲染逻辑": {
+      "createdAt": 1775535320637,
+      "updatedAt": 1775540141376,
+      "taskId": "6.1 在 `packages/react/src/Motion.tsx` 中扩展 Collapse 高度测量与初始渲染逻辑",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775535320637
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "9.4 在 `packages/android/src/main/kotlin/com/fadeanimation/EffectPresets.kt` 中新增 Flip 和 Collapse 预设": {
+      "createdAt": 1775541174137,
+      "updatedAt": 1775541232626,
+      "taskId": "9.4 在 `packages/android/src/main/kotlin/com/fadeanimation/EffectPresets.kt` 中新增 Flip 和 Collapse 预设",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775541174137
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "8. 检查点 — Web 层验证": {
+      "createdAt": 1775540515968,
+      "updatedAt": 1775540573102,
+      "taskId": "8. 检查点 — Web 层验证",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775540515968
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "2. Core 层：resolveEffectStyles 扩展 Flip 解析": {
+      "createdAt": 1775534073595,
+      "updatedAt": 1775534073610,
+      "taskId": "2. Core 层：resolveEffectStyles 扩展 Flip 解析",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775534073595
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "4.3 在 `packages/core/src/effects.ts` 的 EFFECT_PRESETS 中新增 Collapse 预设": {
+      "createdAt": 1775535245888,
+      "updatedAt": 1775535245901,
+      "taskId": "4.3 在 `packages/core/src/effects.ts` 的 EFFECT_PRESETS 中新增 Collapse 预设",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775535245888
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "7.1 在 `packages/vue/src/Motion.vue` 中扩展 Collapse 高度测量与初始渲染逻辑": {
+      "createdAt": 1775540143412,
+      "updatedAt": 1775540515460,
+      "taskId": "7.1 在 `packages/vue/src/Motion.vue` 中扩展 Collapse 高度测量与初始渲染逻辑",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775540143412
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "1. Core 层：FlipEffect 与 CollapseEffect 类型定义": {
+      "createdAt": 1775532884218,
+      "updatedAt": 1775532884235,
+      "taskId": "1. Core 层：FlipEffect 与 CollapseEffect 类型定义",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775532884218
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "4. Core 层：冲突检测与效果预设": {
+      "createdAt": 1775535247384,
+      "updatedAt": 1775535247400,
+      "taskId": "4. Core 层：冲突检测与效果预设",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775535247384
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "10.1 在 `packages/ios/Sources/FadeAnimation/MotionEffect.swift` 中新增 flip 和 collapse case": {
+      "createdAt": 1775541234255,
+      "updatedAt": 1775541349889,
+      "taskId": "10.1 在 `packages/ios/Sources/FadeAnimation/MotionEffect.swift` 中新增 flip 和 collapse case",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775541234255
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "10.2 在 `packages/ios/Sources/FadeAnimation/MotionAnimator.swift` 中实现 flip 动画": {
+      "createdAt": 1775541350305,
+      "updatedAt": 1775544168259,
+      "taskId": "10.2 在 `packages/ios/Sources/FadeAnimation/MotionAnimator.swift` 中实现 flip 动画",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775541350305
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "12.1 在 `packages/core/src/index.ts` 中导出新增的 FlipEffect、CollapseEffect 类型和新预设名称": {
+      "createdAt": 1775544180239,
+      "updatedAt": 1775545676360,
+      "taskId": "12.1 在 `packages/core/src/index.ts` 中导出新增的 FlipEffect、CollapseEffect 类型和新预设名称",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775544180239
+        },
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "2a412301-8a8c-493c-afa5-34e01a79cb9c",
+          "timestamp": 1775545676342
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "6. Web 组件层：React Motion 扩展 Collapse 支持": {
+      "createdAt": 1775540142424,
+      "updatedAt": 1775540142438,
+      "taskId": "6. Web 组件层：React Motion 扩展 Collapse 支持",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775540142424
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "1.2 在 `packages/core/src/effects.ts` 中新增 CollapseEffect 接口": {
+      "createdAt": 1775532770244,
+      "updatedAt": 1775532883560,
+      "taskId": "1.2 在 `packages/core/src/effects.ts` 中新增 CollapseEffect 接口",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775532770244
+        }
+      ],
+      "executionStatus": "aborted"
+    },
+    "12. 集成与端到端验证": {
+      "createdAt": 1775548374816,
+      "updatedAt": 1775548374827,
+      "taskId": "12. 集成与端到端验证",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "2a412301-8a8c-493c-afa5-34e01a79cb9c",
+          "timestamp": 1775548374816
+        }
+      ],
+      "executionStatus": "succeed"
+    },
+    "4.1 在 `packages/core/src/resolveEffectStyles.ts` 中实现 Flip + Rotate 冲突检测": {
+      "createdAt": 1775534293070,
+      "updatedAt": 1775535128252,
+      "taskId": "4.1 在 `packages/core/src/resolveEffectStyles.ts` 中实现 Flip + Rotate 冲突检测",
+      "specUri": "file:///Users/ju/.kiro/specs/flip-collapse-effects/tasks.md",
+      "executionHistory": [
+        {
+          "chatSessionId": "050d468e-1a80-4070-a7ce-89f207383b66",
+          "executionId": "52fa5011-9276-4d5c-ab4b-f06e826e2235",
+          "timestamp": 1775534293070
+        }
+      ],
+      "executionStatus": "aborted"
+    }
+  }
+}

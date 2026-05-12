@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/remindRoot"
+    android:layout_width="wrap_content"
+    android:layout_height="24dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="@dimen/drama_spacing_sm"
+    android:paddingEnd="@dimen/drama_spacing_sm"
+    android:background="@drawable/bg_gradient_remind_off">
+
+    <ImageView
+        android:id="@+id/remindIcon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/icon_remind"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/remindText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:textSize="12sp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Remind Me"
+        android:textColor="@color/drama_bg_blue3" />
+</LinearLayout>

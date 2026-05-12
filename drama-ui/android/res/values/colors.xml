@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="drama_fill_white">#FFFFFFFF</color>
+    <color name="drama_fill_white1">#33FFFFFF</color>
+    <color name="drama_text_white">#ADFFFFFF</color>
+    <color name="drama_bg_blue">#FF141621</color>
+    <color name="drama_fill_blue">#FF5A68FF</color>
+    <color name="drama_text_blue">#FFC4C7D6</color>
+    <color name="drama_bg_blue1">#1F141621</color>
+    <color name="drama_fill_blue1">#FF545472</color>
+    <color name="drama_bg_blue2">#1FC2CAF0</color>
+    <color name="drama_bg_blue3">#FF050713</color>
+    <color name="drama_text_blue1">#FF6C7398</color>
+    <color name="drama_fill_red">#FFFA5E7B</color>
+    <color name="drama_text_orange">#FFFFE0B5</color>
+
+    <!-- Gradient stops -->
+    <color name="drama_gradient_new_start">#FFCECECE</color>
+    <color name="drama_gradient_new_end">#FF6A74FF</color>
+    <color name="drama_gradient_hot_start">#FFCECECE</color>
+    <color name="drama_gradient_hot_end">#FFFA5E7B</color>
+    <color name="drama_gradient_tab_border_start">#FFCECECE</color>
+    <color name="drama_gradient_tab_border_end">#FF4051FF</color>
+    <color name="drama_gradient_divider_left_start">#00C2CAF0</color>
+    <color name="drama_gradient_divider_left_end">#1FC2CAF0</color>
+    <color name="drama_gradient_divider_right_start">#1FC2CAF0</color>
+    <color name="drama_gradient_divider_right_end">#00C2CAF0</color>
+    <color name="drama_members_only_start">#FF121732</color>
+    <color name="drama_members_only_end">#FF2634C7</color>
+
+    <!-- Tag tail colors -->
+    <color name="drama_tag_tail_light">#FFCECECE</color>
+    <color name="drama_tag_tail_dark">#FF545472</color>
+
+    <!-- TabPill glow -->
+    <color name="drama_tab_glow">#967F73FF</color>
+    <color name="drama_tab_active_text">#FFBDC3FF</color>
+
+    <!-- Genre tag dark variant -->
+    <color name="drama_genre_dark_text">#FF5D67F4</color>
+
+    <!-- Rank tag border -->
+    <color name="drama_rank_border">#66FA5E7B</color>
+</resources>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VibeShort — Design System Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;500;600&family=Montserrat:ital,wght@0,500;0,600;0,700;0,800;1,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2/src/fill/style.css">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root, [data-theme="dark"] {
+  --background: #050713;
+  --bg: #050713;
+  --surface1: #141621;
+  --surface2: #191A1E;
+  --surface3: #26282D;
+  --border: #141621;
+  --border-visible: #26282D;
+  --text1: #FFFFFF;
+  --text2: #CED0D6;
+  --text3: #8D9199;
+  --text4: #6E727A;
+  --accent: #5A68FF;
+  --accent-subtle: #0A1580;
+  --success: #0FFFE7;
+  --warning: #FFB347;
+  --error: #FF6164;
+  --tag-hot: linear-gradient(270deg, #FF6164 0%, #FFB1B0 100%);
+  --tag-new: linear-gradient(270deg, #0FFFE7 0%, #C8FFD8 100%);
+  --tag-exclusive: linear-gradient(270deg, #F86DFF 0%, #FBCBFF 100%);
+  --tag-brand: linear-gradient(-90deg, #CECECE 0%, #6A74FF 100%);
+  --font-display: 'Lexend Deca', system-ui, sans-serif;
+  --font-body: 'Montserrat', system-ui, sans-serif;
+  --radius-control: 8px;
+  --radius-component: 12px;
+  --radius-container: 20px;
+  --glass-blur: blur(40px);
+  --glass-bg: rgba(25, 26, 30, 0.76);
+}
+
+[data-theme="light"] {
+  --background: #F0F1F5;
+  --bg: #F0F1F5;
+  --surface1: #FFFFFF;
+  --surface2: #F0F1F5;
+  --surface3: #CED0D6;
+  --border: #CED0D6;
+  --border-visible: #C4C7D6;
+  --text1: #050713;
+  --text2: #6E727A;
+  --text3: #8D9199;
+  --text4: #9F9FA2;
+  --accent: #5A68FF;
+  --accent-subtle: #E8EAFF;
+}
+
+body {
+  background: var(--background);
+  color: var(--text1);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  padding: 32px;
+}
+
+.theme-toggle {
+  position: fixed; top: 16px; right: 16px; z-index: 1000;
+  display: flex; gap: 4px; padding: 4px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border-visible);
+}
+.theme-toggle button {
+  border: none; background: transparent; color: var(--text3);
+  padding: 6px 12px; border-radius: 6px; cursor: pointer;
+  font-family: var(--font-body); font-size: 11px; font-weight: 600;
+}
+.theme-toggle button.active {
+  background: var(--accent); color: #fff;
+}
+
+.bento {
+  max-width: 900px; margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.card {
+  background: var(--surface1);
+  border-radius: var(--radius-container);
+  padding: 20px;
+  border: 1px solid var(--border-visible);
+  overflow: hidden;
+}
+
+/* Hero card */
+.card-hero {
+  grid-column: span 4;
+  position: relative;
+  padding: 0;
+  height: 280px;
+  display: flex; align-items: flex-end;
+  background: linear-gradient(135deg, #0A0E2A 0%, #1A1040 50%, #050713 100%);
+}
+.card-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 50% 30%, rgba(90,104,255,0.15), transparent 70%);
+}
+.card-hero .hero-content {
+  position: relative; z-index: 2;
+  padding: 32px;
+  width: 100%;
+  background: linear-gradient(180deg, transparent 0%, rgba(5,7,19,0.9) 100%);
+}
+.card-hero .exclusive-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px;
+  background: var(--background);
+  border-radius: 100px;
+  margin-bottom: 8px;
+}
+.card-hero .exclusive-pill span {
+  font-family: var(--font-display); font-size: 8px; font-weight: 400;
+  background: linear-gradient(90deg, #4051FF, #CECECE);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.card-hero h1 {
+  font-family: var(--font-display); font-size: 28px; font-weight: 600;
+  color: var(--text1); line-height: 1.3;
+}
+
+/* Color palette */
+.card-colors { grid-column: span 2; }
+.color-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
+  margin-top: 12px;
+}
+.color-swatch {
+  aspect-ratio: 1; border-radius: var(--radius-control);
+  position: relative;
+}
+.color-swatch::after {
+  content: attr(data-label);
+  position: absolute; bottom: -18px; left: 0; right: 0;
+  font-size: 8px; color: var(--text4); text-align: center;
+  font-family: var(--font-body); font-weight: 600;
+}
+
+/* Tags showcase */
+.card-tags { grid-column: span 2; }
+.tags-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.tag {
+  height: 20px; padding: 0 8px;
+  border-radius: var(--radius-control);
+  display: inline-flex; align-items: center;
+  font-family: var(--font-display); font-size: 9px; font-weight: 500;
+}
+.tag-content { background: var(--background); color: var(--accent); }
+.tag-status {
+  height: 16px; padding: 0 8px;
+  border-radius: 4px;
+  font-family: var(--font-body); font-size: 8px; font-weight: 800;
+  font-style: italic; text-transform: uppercase;
+  color: #0D0E10;
+}
+.tag-hot { background: var(--tag-hot); }
+.tag-new { background: var(--tag-new); }
+.tag-exclusive { background: var(--tag-exclusive); }
+.tag-gradient {
+  background: var(--tag-brand);
+  color: var(--surface2);
+  border-radius: 8px 0 0 8px;
+  padding: 0 6px 0 10px;
+}
+
+/* Typography */
+.card-type { grid-column: span 2; }
+.type-samples { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.type-display { font-family: var(--font-display); font-size: 28px; font-weight: 300; color: var(--text1); }
+.type-h2 { font-family: var(--font-display); font-size: 20px; font-weight: 400; color: var(--text2); }
+.type-body { font-family: var(--font-body); font-size: 12px; font-weight: 500; color: var(--text3); }
+.type-label { font-family: var(--font-body); font-size: 8px; font-weight: 800; font-style: italic; text-transform: uppercase; color: var(--text4); letter-spacing: 0.02em; }
+
+/* Cards showcase */
+.card-cards { grid-column: span 2; }
+.mini-cards { display: flex; gap: 8px; margin-top: 12px; }
+.mini-card {
+  width: 80px; height: 107px;
+  border-radius: var(--radius-component);
+  position: relative; overflow: hidden;
+  flex-shrink: 0;
+}
+.mini-card-img {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, #2A1A3A, #1A2A4A);
+}
+.mini-card .play-badge {
+  position: absolute; bottom: 4px; right: 4px;
+  height: 14px; padding: 0 4px;
+  background: rgba(20,22,33,0.5);
+  backdrop-filter: blur(20px);
+  border-radius: 4px;
+  display: flex; align-items: center; gap: 2px;
+  font-size: 7px; color: #fff; font-weight: 600;
+}
+.mini-card .status-tag {
+  position: absolute; top: 0; right: 0;
+  height: 12px; padding: 0 4px;
+  border-radius: 0 0 0 4px;
+  font-size: 6px; font-weight: 800; font-style: italic;
+  text-transform: uppercase; color: #0D0E10;
+}
+
+/* Spacing */
+.card-spacing { grid-column: span 1; }
+.spacing-bars { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.spacing-bar {
+  height: 8px; border-radius: 4px;
+  background: var(--accent);
+  opacity: 0.6;
+}
+
+/* Radii */
+.card-radii { grid-column: span 1; }
+.radii-samples { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+.radius-sample {
+  width: 40px; height: 40px;
+  background: var(--surface3);
+  border: 1px solid var(--border-visible);
+}
+
+/* Elevation */
+.card-elevation { grid-column: span 2; }
+.elevation-samples { margin-top: 12px; display: flex; gap: 12px; }
+.elev-sample {
+  width: 80px; height: 60px;
+  border-radius: var(--radius-component);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: var(--text3); font-weight: 600;
+}
+.elev-flat { background: var(--surface2); border: 1px solid var(--border-visible); }
+.elev-glass { background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid rgba(255,255,255,0.06); }
+.elev-glow { background: var(--surface2); box-shadow: 0 1px 6px rgba(127,115,255,0.85); }
+
+/* Tab bar */
+.card-tabbar { grid-column: span 4; padding: 16px 20px; }
+.tabbar-demo {
+  display: flex; justify-content: space-around;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border-radius: var(--radius-container);
+  padding: 12px 0;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.tab-item {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.tab-item i { font-size: 20px; color: var(--text4); }
+.tab-item span { font-family: var(--font-display); font-size: 9px; font-weight: 400; color: var(--text4); }
+.tab-item.active i { color: var(--text1); }
+.tab-item.active span { color: var(--text1); font-weight: 600; }
+
+.section-label {
+  font-family: var(--font-body); font-size: 9px; font-weight: 700;
+  color: var(--text4); text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+</style>
+</head>
+<body>
+
+<div class="theme-toggle">
+  <button class="active" onclick="setTheme('dark')">Dark</button>
+  <button onclick="setTheme('light')">Light</button>
+</div>
+
+<div class="bento">
+  <!-- Hero -->
+  <div class="card card-hero">
+    <div class="hero-content">
+      <div class="exclusive-pill">
+        <i class="ph-fill ph-play" style="font-size:10px;color:#5A68FF"></i>
+        <span>VibeShort Only</span>
+      </div>
+      <h1>The Months Before<br>Our Wedding</h1>
+    </div>
+  </div>
+
+  <!-- Colors -->
+  <div class="card card-colors">
+    <div class="section-label">Colors</div>
+    <div class="color-grid">
+      <div class="color-swatch" style="background:#050713;border:1px solid #26282D" data-label="BG"></div>
+      <div class="color-swatch" style="background:#141621" data-label="S1"></div>
+      <div class="color-swatch" style="background:#191A1E" data-label="S2"></div>
+      <div class="color-swatch" style="background:#26282D" data-label="S3"></div>
+      <div class="color-swatch" style="background:#5A68FF" data-label="Accent"></div>
+      <div class="color-swatch" style="background:#FFFFFF" data-label="T1"></div>
+      <div class="color-swatch" style="background:#CED0D6" data-label="T2"></div>
+      <div class="color-swatch" style="background:#8D9199" data-label="T3"></div>
+      <div class="color-swatch" style="background:#6E727A" data-label="T4"></div>
+      <div class="color-swatch" style="background:linear-gradient(135deg,#FF6164,#0FFFE7,#F86DFF)" data-label="Tags"></div>
+    </div>
+  </div>
+
+  <!-- Tags -->
+  <div class="card card-tags">
+    <div class="section-label">Tags & Badges</div>
+    <div class="tags-grid">
+      <span class="tag tag-content">Secret Baby</span>
+      <span class="tag tag-content">Playboy</span>
+      <span class="tag tag-content">CEO</span>
+      <span class="tag tag-status tag-hot">HOT</span>
+      <span class="tag tag-status tag-new">NEW</span>
+      <span class="tag tag-status tag-exclusive">EXCLUSIVE</span>
+      <span class="tag tag-gradient">New ▸</span>
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div class="card card-type">
+    <div class="section-label">Typography</div>
+    <div class="type-samples">
+      <div class="type-display">New Coming</div>
+      <div class="type-h2">After Revenge Divorce</div>
+      <div class="type-body">Ethan hurt Amanda again and again for the person he liked...</div>
+      <div class="type-label">EXCLUSIVE · EP.100</div>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="card card-cards">
+    <div class="section-label">Content Cards</div>
+    <div class="mini-cards">
+      <div class="mini-card">
+        <div class="mini-card-img" style="background:linear-gradient(160deg,#3A1A2A,#1A2A5A)"></div>
+        <div class="play-badge"><i class="ph-fill ph-play" style="font-size:7px"></i> 667M</div>
+        <div class="status-tag tag-hot">HOT</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-card-img" style="background:linear-gradient(160deg,#2A1A4A,#1A3A3A)"></div>
+        <div class="play-badge"><i class="ph-fill ph-play" style="font-size:7px"></i> 432M</div>
+        <div class="status-tag tag-new">NEW</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-card-img" style="background:linear-gradient(160deg,#1A2A3A,#2A1A4A)"></div>
+        <div class="play-badge"><i class="ph-fill ph-play" style="font-size:7px"></i> 891M</div>
+        <div class="status-tag tag-exclusive">EXC</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-card-img" style="background:linear-gradient(160deg,#2A2A1A,#1A1A4A)"></div>
+        <div class="play-badge"><i class="ph-fill ph-play" style="font-size:7px"></i> 215M</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spacing -->
+  <div class="card card-spacing">
+    <div class="section-label">Spacing</div>
+    <div class="spacing-bars">
+      <div class="spacing-bar" style="width:8px"></div>
+      <div class="spacing-bar" style="width:16px"></div>
+      <div class="spacing-bar" style="width:24px"></div>
+      <div class="spacing-bar" style="width:40px"></div>
+      <div class="spacing-bar" style="width:64px"></div>
+    </div>
+  </div>
+
+  <!-- Radii -->
+  <div class="card card-radii">
+    <div class="section-label">Radii</div>
+    <div class="radii-samples">
+      <div class="radius-sample" style="border-radius:4px"></div>
+      <div class="radius-sample" style="border-radius:8px"></div>
+      <div class="radius-sample" style="border-radius:12px"></div>
+      <div class="radius-sample" style="border-radius:20px"></div>
+    </div>
+  </div>
+
+  <!-- Elevation -->
+  <div class="card card-elevation">
+    <div class="section-label">Elevation</div>
+    <div class="elevation-samples">
+      <div class="elev-sample elev-flat">Flat</div>
+      <div class="elev-sample elev-glass">Glass</div>
+      <div class="elev-sample elev-glow">Glow</div>
+    </div>
+  </div>
+
+  <!-- Tab Bar -->
+  <div class="card card-tabbar">
+    <div class="section-label">Tab Bar</div>
+    <div class="tabbar-demo">
+      <div class="tab-item active">
+        <i class="ph-fill ph-house"></i>
+        <span>Home</span>
+      </div>
+      <div class="tab-item">
+        <i class="ph-fill ph-film-strip"></i>
+        <span>Short</span>
+      </div>
+      <div class="tab-item">
+        <i class="ph-fill ph-gift"></i>
+        <span>Reward</span>
+      </div>
+      <div class="tab-item">
+        <i class="ph-fill ph-bookmark-simple"></i>
+        <span>My List</span>
+      </div>
+      <div class="tab-item">
+        <i class="ph-fill ph-user"></i>
+        <span>Profile</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('.theme-toggle button').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.toLowerCase() === theme);
+  });
+}
+</script>
+</body>
+</html>

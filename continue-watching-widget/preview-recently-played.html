@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0, user-scalable=no">
+<title>最近播放动效 - VibeShort</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #000;
+  font-family: 'Lexend Deca', -apple-system, sans-serif;
+  display: flex; justify-content: center;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+.phone {
+  width: 375px; height: 812px;
+  position: relative; overflow: hidden;
+  background: #050713;
+}
+
+/* ─── Content placeholders ─── */
+.content-area {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  overflow-y: auto; padding: 100px 8px 160px;
+  display: flex; flex-direction: column; gap: 40px;
+}
+.content-area::-webkit-scrollbar { display: none; }
+.section-title {
+  font-size: 28px; font-weight: 300; color: #fff;
+  line-height: 1.43; text-transform: capitalize;
+  padding: 0 8px;
+  font-family: 'Lexend Deca', sans-serif;
+}
+.card-row { display: flex; gap: 8px; padding: 0 0px; }
+.card-placeholder {
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #141621, #1a1c28);
+  position: relative; overflow: hidden;
+}
+.card-placeholder::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02), transparent);
+  animation: shimmer 2.5s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.card-3col { width: 117px; height: 156px; }
+.card-2col { width: 175.5px; height: 234px; }
+.card-info { padding: 4px; }
+.card-info-title {
+  font-size: 12px; font-weight: 300; color: #C4C7D6;
+  line-height: 1.33; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; font-family: 'Lexend Deca', sans-serif;
+}
+.card-info-tag {
+  display: flex; gap: 4px; margin-top: 4px;
+}
+.tag {
+  font-size: 9px; font-weight: 500; color: #5A68FF;
+  background: #141621; border-radius: 8px;
+  padding: 0 6px; height: 20px; line-height: 20px;
+  font-family: 'Lexend Deca', sans-serif;
+}
+
+/* ─── iOS ContinueWatchingView simulation (absolute positioning) ─── */
+.ios-self {
+  position: absolute; top: 0; left: 0;
+  width: 375px; height: 812px;
+  pointer-events: none;
+  z-index: 20;
+}
+.banner-container {
+  position: absolute;
+  background: rgba(20, 22, 33, 0.76);
+  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(40px);
+  overflow: hidden;
+  border-radius: 16px;
+  display: none;
+  /* GPU compositing hints */
+  will-change: transform, opacity, width, height, border-radius;
+  contain: layout style;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+.cover-img {
+  position: absolute;
+  object-fit: cover;
+  border-radius: 8px;
+  overflow: hidden;
+  /* GPU layer for smooth resize */
+  will-change: transform, width, height;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Smooth image scaling */
+  image-rendering: -webkit-optimize-contrast;
+}
+.info-stack {
+  position: absolute;
+  display: flex; flex-direction: column; gap: 2px;
+  justify-content: center;
+  overflow: hidden;
+}
+.info-title {
+  font-size: 14px; font-weight: 400; color: #fff;
+  line-height: 1.43;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-family: 'Lexend Deca', sans-serif;
+}
+.info-subtitle {
+  font-size: 10px; font-weight: 500; color: #C4C7D6;
+  line-height: 1.6;
+  font-family: 'Lexend Deca', sans-serif;
+}
+.play-btn, .close-btn {
+  position: absolute; cursor: pointer; line-height: 0;
+  background: none; border: none; padding: 0;
+}
+.widget-play, .widget-close {
+  position: absolute; cursor: pointer; line-height: 0;
+  background: none; border: none; padding: 0;
+  opacity: 0; display: none;
+}
+
+/* ─── Tab bar (Figma design) ─── */
+.tabbar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 86px; z-index: 10;
+  padding: 0 16px;
+}
+.tabbar-inner {
+  display: flex; height: 56px;
+  align-items: stretch;
+  background: rgba(20, 22, 33, 0.76);
+  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(40px);
+  border-radius: 20px;
+}
+.tab-btn {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+  gap: 2px; padding: 0 0 8px;
+}
+.tab-btn span {
+  font-size: 9px; font-weight: 400; color: #C4C7D6;
+  line-height: 1.56; font-family: 'Lexend Deca', sans-serif;
+}
+.tab-btn.active span { color: #fff; font-weight: 600; }
+.home-indicator {
+  width: 134px; height: 5px;
+  background: #6E727A; border-radius: 3px;
+  margin: 12px auto 0; opacity: 0.3;
+}
+
+/* ─── Demo controls ─── */
+.demo-ctrl {
+  position: absolute; top: 10px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 100; display: flex; gap: 6px;
+}
+.demo-btn {
+  background: linear-gradient(135deg, #5A68FF, #4051FF);
+  color: #fff; border: none; border-radius: 8px;
+  padding: 8px 12px; font-size: 11px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+  font-family: 'Lexend Deca', sans-serif;
+  box-shadow: 0 2px 8px rgba(90,104,255,0.3);
+}
+.demo-btn:hover { filter: brightness(1.1); }
+.demo-btn:active { transform: translateX(-50%) scale(0.96); }
+.demo-btn.secondary { background: rgba(255,255,255,0.08); box-shadow: none; }
+.demo-btn.secondary:hover { background: rgba(255,255,255,0.14); }
+.phase-label {
+  position: absolute; top: 10px; right: 10px;
+  z-index: 100; background: rgba(0,0,0,0.7);
+  color: #5A68FF; padding: 4px 8px; border-radius: 6px;
+  font-size: 10px; font-family: 'SF Mono', monospace;
+  letter-spacing: 0.5px;
+}
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+
+  <!-- Content area -->
+  <div class="content-area" id="contentArea">
+    <div>
+      <div class="section-title">Exlusive Originals</div>
+      <div style="height:12px"></div>
+      <div class="card-row">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="card-placeholder card-3col"></div>
+          <div class="card-info"><div class="card-info-title">Riding into Love</div><div class="card-info-tag"><span class="tag">Playboy</span><span class="tag">CEO</span></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="card-placeholder card-3col"></div>
+          <div class="card-info"><div class="card-info-title">Daddy CEO's Escaped Wife</div><div class="card-info-tag"><span class="tag">Playboy</span><span class="tag">CEO</span></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="card-placeholder card-3col"></div>
+          <div class="card-info"><div class="card-info-title">Daddy CEO's Escaped Wife</div><div class="card-info-tag"><span class="tag">Playboy</span><span class="tag">CEO</span></div></div>
+        </div>
+      </div>
+      <div style="height:12px"></div>
+      <div class="card-row">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="card-placeholder card-3col"></div>
+          <div class="card-info"><div class="card-info-title">The Unwanted Bride</div><div class="card-info-tag"><span class="tag">Playboy</span><span class="tag">CEO</span></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="card-placeholder card-3col"></div>
+          <div class="card-info"><div class="card-info-title">Billionaire's Abused Lover</div><div class="card-info-tag"><span class="tag">Playboy</span><span class="tag">CEO</span></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="card-placeholder card-3col"></div>
+          <div class="card-info"><div class="card-info-title">Daddy CEO's Escaped Wife</div><div class="card-info-tag"><span class="tag">Playboy</span><span class="tag">CEO</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-title">Recommend For you</div>
+      <div style="height:12px"></div>
+      <div class="card-row">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="card-placeholder card-2col"></div>
+          <div class="card-info"><div class="card-info-title">Daddy CEO's Escaped Wife</div><div class="card-info-tag"><span class="tag">Playboy</span><span class="tag">Secret Baby</span></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="card-placeholder card-2col"></div>
+          <div class="card-info"><div class="card-info-title">My Mistaken Lover</div><div class="card-info-tag"><span class="tag">Playboy</span><span class="tag">Secret Baby</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- iOS ContinueWatchingView simulation -->
+  <div class="ios-self" id="iosSelf">
+    <div class="banner-container" id="bc">
+      <img class="cover-img" id="cover"
+        src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=200&h=300&fit=crop" alt="">
+      <div class="info-stack" id="info">
+        <div class="info-title">Genius Baby：daddy please take mommy away</div>
+        <div class="info-subtitle">Ep.4 / Ep.88</div>
+      </div>
+      <!-- Play button: gradient ring + play icon (Figma design) -->
+      <button class="play-btn" id="playBtn" aria-label="Play">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <defs>
+            <linearGradient id="ringGrad" x1="0" y1="0" x2="40" y2="40">
+              <stop offset="0%" stop-color="#CECECE"/>
+              <stop offset="100%" stop-color="#4051FF"/>
+            </linearGradient>
+          </defs>
+          <circle cx="20" cy="20" r="19" stroke="url(#ringGrad)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="20" r="17.5" fill="rgba(255,255,255,0.04)"/>
+          <path d="M16.67 13.67L27 20L16.67 26.33V13.67Z" fill="#fff"/>
+        </svg>
+      </button>
+      <!-- Close button -->
+      <button class="close-btn" id="closeBtn" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="#6C7398" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="#6C7398" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <!-- Widget buttons -->
+      <button class="widget-play" id="wPlay" aria-label="Play">
+        <svg width="38" height="38" viewBox="0 0 38 38">
+          <circle cx="19" cy="19" r="19" fill="rgba(0,0,0,0.45)"/>
+          <path d="M15.5 11V27L28 19L15.5 11Z" fill="#fff"/>
+        </svg>
+      </button>
+      <button class="widget-close" id="wClose" aria-label="Dismiss">
+        <svg width="18" height="18" viewBox="0 0 18 18">
+          <circle cx="9" cy="9" r="9" fill="rgba(0,0,0,0.55)"/>
+          <line x1="5.5" y1="5.5" x2="12.5" y2="12.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="12.5" y1="5.5" x2="5.5" y2="12.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="tabbar">
+    <div class="tabbar-inner">
+      <div class="tab-btn active">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" fill="#fff"/></svg>
+        <span>Home</span>
+      </div>
+      <div class="tab-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="18" rx="1" stroke="#C4C7D6" stroke-width="1.5" fill="none"/><rect x="14" y="3" width="7" height="18" rx="1" stroke="#C4C7D6" stroke-width="1.5" fill="none"/></svg>
+        <span>Short</span>
+      </div>
+      <div class="tab-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#C4C7D6" stroke-width="1.5" fill="none"/><path d="M12 8v4l3 2" stroke="#C4C7D6" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>Reward</span>
+      </div>
+      <div class="tab-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19 21l-7-4-7 4V5a2 2 0 012-2h10a2 2 0 012 2z" stroke="#C4C7D6" stroke-width="1.5" fill="none"/></svg>
+        <span>My List</span>
+      </div>
+      <div class="tab-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#C4C7D6" stroke-width="1.5" fill="none"/><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="#C4C7D6" stroke-width="1.5" fill="none"/></svg>
+        <span>Profile</span>
+      </div>
+    </div>
+    <div class="home-indicator"></div>
+  </div>
+
+  <!-- Demo controls -->
+  <div class="demo-ctrl">
+    <button class="demo-btn" onclick="replay(1)">▶ 播放</button>
+    <button class="demo-btn secondary" onclick="replay(5)">🐢 0.2x</button>
+    <button class="demo-btn secondary" onclick="resetAll()">↺ 重置</button>
+  </div>
+  <div class="phase-label" id="phaseLabel">hidden</div>
+</div>
+
+
+<script>
+// ============================================================
+// 1:1 iOS ContinueWatchingView.swift simulation
+// Simple & proven: direct width/height/left/top like Swift
+// No boxShadow during animation = no jank
+// ============================================================
+
+const COVER_W = 42, COVER_H = 56;
+const WIDGET_W = 90, WIDGET_H = 120;
+const BOTTOM_INSET = 86;
+const PHONE_H = 812;
+const BANNER_H = COVER_H + 16;
+const COLLAPSED_W = COVER_W + 16;
+const COLLAPSED_H = COVER_H + 16;
+const BANNER_LEFT = 16;
+const BANNER_W = 343;
+
+const T = { slideUp:0.45, delay:3, fade:0.3, shrink:0.4, morph:0.55, dismiss:0.3 };
+
+function lerp(a,b,t){return a+(b-a)*t}
+function easeOutCubic(t){return 1-Math.pow(1-t,3)}
+function easeInOutCubic(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+function easeOutBack(t){const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)}
+
+const bc=document.getElementById('bc'), cover=document.getElementById('cover'),
+      info=document.getElementById('info'), playBtn=document.getElementById('playBtn'),
+      closeBtn=document.getElementById('closeBtn'), wPlay=document.getElementById('wPlay'),
+      wClose=document.getElementById('wClose'), label=document.getElementById('phaseLabel');
+
+let phase='hidden', ts=1, timer=null, anim='', t0=0, raf=0;
+
+function layoutBanner(){
+  bc.style.left=BANNER_LEFT+'px';
+  bc.style.top=(PHONE_H-BOTTOM_INSET-BANNER_H)+'px';
+  bc.style.width=BANNER_W+'px';
+  bc.style.height=BANNER_H+'px';
+  cover.style.left='8px'; cover.style.top='8px';
+  cover.style.width=COVER_W+'px'; cover.style.height=COVER_H+'px';
+  const ix=8+COVER_W+12, px=BANNER_W-16-16-12-40;
+  info.style.left=ix+'px'; info.style.top='8px';
+  info.style.width=(px-ix-8)+'px'; info.style.height=COVER_H+'px';
+  playBtn.style.left=px+'px'; playBtn.style.top=((BANNER_H-40)/2)+'px';
+  playBtn.style.width='40px'; playBtn.style.height='40px';
+  closeBtn.style.left=(BANNER_W-16-16)+'px'; closeBtn.style.top=((BANNER_H-16)/2)+'px';
+  closeBtn.style.width='16px'; closeBtn.style.height='16px';
+}
+
+function show(){
+  if(phase!=='hidden')return;
+  phase='sliding-up'; label.textContent='slidingUp';
+  bc.style.display='block'; bc.style.overflow='hidden';
+  bc.style.background='rgba(20,22,33,0.76)';
+  bc.style.webkitBackdropFilter='blur(40px)'; bc.style.backdropFilter='blur(40px)';
+  bc.style.borderRadius='16px'; bc.style.boxShadow='none'; bc.style.border='none';
+  bc.style.transform='none'; bc.style.opacity='1';
+  info.style.opacity='1'; info.style.display='flex';
+  playBtn.style.opacity='1'; playBtn.style.display='block';
+  closeBtn.style.opacity='1'; closeBtn.style.display='block';
+  wPlay.style.opacity='0'; wPlay.style.display='none';
+  wClose.style.opacity='0'; wClose.style.display='none';
+  cover.style.borderRadius='8px';
+  layoutBanner();
+  bc.style.transform='translateY('+(BANNER_H+16)+'px)';
+  bc.style.opacity='0';
+  go('slide-up');
+}
+
+function go(p){anim=p;t0=0;cancelAnimationFrame(raf);raf=requestAnimationFrame(tick)}
+function stop(){cancelAnimationFrame(raf)}
+
+function tick(now){
+  if(phase==='hidden')return;
+  if(!t0)t0=now;
+  const el=(now-t0)/1000;
+  if(anim==='slide-up')doSlide(el);
+  else if(anim==='fade')doFade(el);
+  else if(anim==='shrink')doShrink(el);
+  else if(anim==='morph')doMorph(el);
+  else if(anim==='dismiss')doDismiss(el);
+  else return;
+  raf=requestAnimationFrame(tick);
+}
+
+function doSlide(el){
+  const t=Math.min(el/(T.slideUp*ts),1), e=easeOutCubic(t);
+  bc.style.transform='translateY('+((1-e)*(BANNER_H+16))+'px)';
+  bc.style.opacity=String(Math.min(t*3,1));
+  if(t>=1){
+    bc.style.transform='none'; bc.style.opacity='1';
+    phase='banner'; label.textContent='banner'; stop();
+    timer=setTimeout(()=>{if(phase==='banner'){phase='fading';label.textContent='fading';go('fade')}},T.delay*1000*ts);
+  }
+}
+
+function doFade(el){
+  const t=Math.min(el/(T.fade*ts),1), e=easeOutCubic(t), v=String(1-e);
+  info.style.opacity=v; playBtn.style.opacity=v; closeBtn.style.opacity=v;
+  if(t>=1){
+    info.style.opacity='0'; playBtn.style.opacity='0'; closeBtn.style.opacity='0';
+    anim='shrink'; t0=0; phase='shrinking'; label.textContent='shrinking';
+  }
+}
+
+function doShrink(el){
+  const t=Math.min(el/(T.shrink*ts),1), e=easeInOutCubic(t);
+  const w=lerp(BANNER_W,COLLAPSED_W,e), h=lerp(BANNER_H,COLLAPSED_H,e);
+  bc.style.left=BANNER_LEFT+'px';
+  bc.style.top=(PHONE_H-BOTTOM_INSET-h)+'px';
+  bc.style.width=w+'px'; bc.style.height=h+'px';
+  cover.style.left=lerp(8,0,e)+'px'; cover.style.top=lerp(8,0,e)+'px';
+  bc.style.borderRadius=lerp(16,8,e)+'px';
+  const bg=lerp(0.76,0,Math.max(0,(t-0.5)*2));
+  bc.style.background='rgba(20,22,33,'+bg+')';
+  const bl=lerp(40,0,Math.max(0,(t-0.4)/0.6));
+  bc.style.webkitBackdropFilter=bl>1?'blur('+bl+'px)':'none';
+  bc.style.backdropFilter=bl>1?'blur('+bl+'px)':'none';
+  if(t>=1){
+    anim='morph'; t0=0; phase='morphing'; label.textContent='morphing';
+    bc.style.background='transparent';
+    bc.style.webkitBackdropFilter='none'; bc.style.backdropFilter='none';
+    bc.style.overflow='visible';
+    cover.style.left='0px'; cover.style.top='0px';
+    cover.style.width=COLLAPSED_W+'px'; cover.style.height=COLLAPSED_H+'px';
+    cover.style.borderRadius='8px';
+    info.style.display='none'; playBtn.style.display='none'; closeBtn.style.display='none';
+  }
+}
+
+function doMorph(el){
+  const t=Math.min(el/(T.morph*ts),1);
+  const e=easeOutBack(t), es=easeOutCubic(t);
+  const x=lerp(BANNER_LEFT,0,e);
+  const bot=lerp(BOTTOM_INSET,BOTTOM_INSET+8,e);
+  const w=lerp(COLLAPSED_W,WIDGET_W,e), h=lerp(COLLAPSED_H,WIDGET_H,e);
+  const y=PHONE_H-bot-h;
+  bc.style.left=x+'px'; bc.style.top=y+'px';
+  bc.style.width=w+'px'; bc.style.height=h+'px';
+  cover.style.left='0px'; cover.style.top='0px';
+  cover.style.width=w+'px'; cover.style.height=h+'px';
+  const r=lerp(8,12,es);
+  bc.style.borderRadius=r+'px'; cover.style.borderRadius=r+'px';
+  // No boxShadow during animation — set once at end
+  bc.style.border='1px solid rgba(255,255,255,'+es*0.15+')';
+  if(t>=1){
+    phase='widget'; label.textContent='widget'; stop();
+    bc.style.boxShadow='4px 4px 16px rgba(0,0,0,0.4)';
+    wPlay.style.display='block'; wClose.style.display='block';
+    wPlay.style.left=((WIDGET_W-38)/2)+'px'; wPlay.style.top=((WIDGET_H-38)/2)+'px';
+    wClose.style.left=(WIDGET_W-11)+'px'; wClose.style.top='-7px';
+    requestAnimationFrame(()=>{
+      wPlay.style.transition='opacity 0.35s ease';
+      wClose.style.transition='opacity 0.35s ease';
+      wPlay.style.opacity='1'; wClose.style.opacity='1';
+    });
+  }
+}
+
+function doDismiss(el){
+  const t=Math.min(el/(T.dismiss*ts),1), e=easeOutCubic(t);
+  bc.style.opacity=String(1-e);
+  const s=lerp(1,0.7,e);
+  bc.style.transform='scale('+s+') translateY('+lerp(0,30,e)+'px)';
+  if(t>=1){
+    phase='hidden'; label.textContent='hidden'; stop();
+    bc.style.display='none'; bc.style.transform='none'; bc.style.opacity='1';
+  }
+}
+
+closeBtn.addEventListener('click',()=>{
+  if(phase==='banner'){clearTimeout(timer);phase='fading';label.textContent='fading';go('fade')}
+});
+wClose.addEventListener('click',()=>{
+  if(phase==='widget'){phase='dismissing';label.textContent='dismissing';go('dismiss')}
+});
+playBtn.addEventListener('click',()=>alert('Play!'));
+wPlay.addEventListener('click',()=>alert('Play!'));
+
+function replay(s){resetAll();ts=s;setTimeout(show,150)}
+function resetAll(){
+  clearTimeout(timer);stop();phase='hidden';label.textContent='hidden';
+  bc.style.display='none';bc.style.transform='none';bc.style.opacity='1';
+  bc.style.overflow='hidden';bc.style.boxShadow='none';bc.style.border='none';
+  bc.style.webkitBackdropFilter='blur(40px)';bc.style.backdropFilter='blur(40px)';
+}
+setTimeout(()=>{ts=1;show()},800);
+</script>
+</body>
+</html>

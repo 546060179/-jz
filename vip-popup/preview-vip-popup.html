@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0">
+<title>VIP 会员限时优惠 - 翻转弹窗动效</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  width: 375px;
+  height: 812px;
+  overflow: hidden;
+  font-family: 'PingFang SC', -apple-system, sans-serif;
+  background: #F7F7F7;
+  position: relative;
+}
+
+/* ── 背景：会员详情页模拟 ── */
+.bg-page {
+  position: absolute;
+  top: 0; left: 0;
+  width: 375px; height: 812px;
+  background: linear-gradient(180deg, #E5F9FA 0%, #F7F7F7 40%);
+}
+.bg-page-header {
+  height: 234px;
+  background: linear-gradient(180deg, #00C4D0 0%, #00EFB9 100%);
+  opacity: 0.15;
+}
+
+/* ── Mask 遮罩层 ── */
+.mask-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 375px; height: 812px;
+  background: rgba(0,0,0,0.6);
+  z-index: 10;
+}
+
+/* ── 弹窗容器（翻转动效目标） ── */
+.popup-container {
+  position: absolute;
+  top: 190px; left: 0;
+  width: 375px; height: 431px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── 呼吸光背景 ── */
+.glow-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 375px; height: 375px;
+  pointer-events: none;
+}
+.glow-bg img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+/* ── 卡片主体 ── */
+.card-wrapper {
+  position: absolute;
+  top: 7px; left: 57px;
+  width: 260px; height: 360px;
+}
+
+/* 卡片外框装饰 SVG */
+.card-shape {
+  position: absolute;
+  top: 10px; left: -4px;
+  width: 284px; height: 360px;
+  pointer-events: none;
+}
+
+/* 卡片内容区 */
+.card-body {
+  position: absolute;
+  top: 17px; left: 0;
+  width: 260px; height: 343px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #FDF4D7 0%, #FFFAEC 68%);
+  box-shadow: inset 0 0 10px 4px rgba(255,255,255,1);
+}
+
+/* 顶部装饰区 */
+.card-top-decor {
+  position: relative;
+  width: 260px; height: 86px;
+  overflow: hidden;
+}
+.card-top-decor .gradient-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 260px; height: 86px;
+  background: linear-gradient(180deg, rgba(196,196,196,1) 0%, rgba(94,94,94,0) 100%);
+  opacity: 0.15;
+}
+.card-top-decor .checker {
+  position: absolute;
+  top: -33px; left: -41px;
+  width: 341px; height: 192px;
+  object-fit: cover;
+  opacity: 0.08;
+}
+
+/* 彩色光斑 */
+.color-blobs {
+  position: absolute;
+  top: 0; left: 0;
+  width: 260px; height: 343px;
+  pointer-events: none;
+  overflow: hidden;
+}
+.blob {
+  position: absolute;
+  border-radius: 50%;
+}
+.blob-1 { top: -40px; left: 161px; width: 170px; height: 170px; background: #FFE3D5; filter: blur(134px); }
+.blob-2 { top: -64px; left: 9px; width: 148px; height: 148px; background: rgba(254,103,77,0.42); filter: blur(124px); }
+.blob-3 { top: -86px; left: -63px; width: 209px; height: 209px; background: #FFEF78; filter: blur(114px); }
+.blob-4 { top: -113px; left: 111px; width: 170px; height: 170px; background: #FB923D; filter: blur(124px); }
+.blob-5 { top: 255px; left: -42px; width: 340px; height: 168px; background: rgba(246,255,0,0.34); filter: blur(104px); }
+.blob-6 { top: 5px; left: 211px; width: 98px; height: 98px; background: rgba(255,99,107,0.6); filter: blur(104px); }
+
+/* 角色插画 */
+.character-img {
+  position: absolute;
+  top: 10px; right: -20px;
+  width: 151px; height: 141px;
+  object-fit: cover;
+  z-index: 2;
+}
+
+/* 卡片边框 SVG */
+.card-border-svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 260px; height: 343px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ── 毛玻璃底部区域 ── */
+.glass-bottom {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 260px; height: 199px;
+  backdrop-filter: blur(4px);
+  background: rgba(255,255,255,0.3);
+  box-shadow: inset 0 2px 4px 0 rgba(255,255,255,1);
+  z-index: 4;
+}
+
+/* ── 标题横幅 ── */
+.title-banner {
+  position: absolute;
+  top: 94px; left: 0;
+  width: 184px; height: 44px;
+  z-index: 10;
+}
+.title-banner img {
+  width: 100%; height: 100%;
+}
+.title-banner-text {
+  position: absolute;
+  top: 2px; left: 16px;
+  font-family: 'Alimama ShuHeiTi', 'PingFang SC', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.2;
+  color: #010000;
+  -webkit-text-stroke: 3px transparent;
+}
+.title-stroke-bg {
+  position: absolute;
+  top: 28px; left: 80px;
+  width: 67px; height: 12px;
+}
+
+/* ── 优惠券区域 ── */
+.coupon-area {
+  position: absolute;
+  top: 186px; left: 22px;
+  width: 216px; height: 74px;
+  z-index: 10;
+}
+.coupon-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 216px; height: 74px;
+  border-radius: 12px;
+  background: linear-gradient(143deg, rgba(255,152,74,1) 0%, rgba(255,71,54,1) 100%);
+  box-shadow: inset 2px 0 3px 0 rgba(255,255,255,0.5), inset -2px 0 3px 0 rgba(255,255,255,0.5);
+}
+.coupon-price {
+  position: absolute;
+  top: 16px; left: 20px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  color: #FFF;
+}
+.coupon-price .amount {
+  font-family: 'D-DIN-PRO', sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1.05;
+}
+.coupon-price .unit {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+.coupon-info {
+  position: absolute;
+  top: 16px; left: 112px;
+  color: #FFF;
+}
+.coupon-info .name {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.coupon-info .desc {
+  font-size: 12px;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+.coupon-divider {
+  position: absolute;
+  top: 16px; left: 98px;
+  width: 0; height: 42px;
+  border-left: 1px solid;
+  border-image: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.1) 100%) 1;
+}
+
+/* 装饰丝带 */
+.ribbon-decor {
+  position: absolute;
+  top: 5px; left: 64px;
+  width: 70px; height: 37px;
+  z-index: 5;
+}
+
+/* 波浪装饰 */
+.wave-decor {
+  position: absolute;
+  top: 60px; left: -22px;
+  width: 170px; height: 36px;
+  z-index: 5;
+}
+
+/* 文案装饰 */
+.coupon-text-decor {
+  position: absolute;
+  top: 66px; left: -12px;
+  width: 144px; height: 22px;
+  z-index: 6;
+}
+
+/* ── 可用时间 ── */
+.expire-info {
+  position: absolute;
+  top: 135px; left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 10;
+  font-size: 14px;
+  line-height: 1.57;
+}
+.expire-info .label { color: #832604; }
+.expire-info .time { color: #FF383C; font-variant-numeric: tabular-nums; }
+
+/* ── 按钮 ── */
+.cta-button {
+  position: absolute;
+  top: 286px; left: 22px;
+  width: 216px; height: 48px;
+  z-index: 10;
+  border: none;
+  cursor: pointer;
+  border-radius: 99px;
+  background: linear-gradient(180deg, rgba(255,87,0,1) 0%, rgba(239,82,0,1) 100%);
+  box-shadow:
+    0 0 0 5px #FFF,
+    0 0 0 4px #F1E7E0,
+    0 3.7px 4.8px 0 rgba(255,88,0,0.15),
+    0 10.3px 13.4px 0 rgba(255,88,0,0.22),
+    inset 0 1px 4px 2px #FFEDDB,
+    inset 0 1px 18px 2px #FFEDDB;
+  color: #FFF;
+  font-family: 'Alimama ShuHeiTi', 'PingFang SC', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  overflow: hidden;
+  position: relative;
+}
+.cta-button .sweep {
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: skewX(-20deg);
+  animation: btnSweep 2.5s 1.2s ease-in-out infinite;
+}
+
+/* ── 关闭按钮 ── */
+.close-btn {
+  position: absolute;
+  top: 395px; left: 170px;
+  width: 36px; height: 36px;
+  z-index: 30;
+  cursor: pointer;
+}
+.close-btn img { width: 100%; height: 100%; }
+
+/* ══════ 动效 Keyframes ══════ */
+@keyframes btnSweep {
+  0%   { left: -100%; }
+  40%  { left: 160%; }
+  100% { left: 160%; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%      { opacity: 0.7; transform: scale(1.03); }
+}
+
+@keyframes countdownPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.05); }
+}
+</style>
+</head>
+<body>
+
+<!-- 背景页面 -->
+<div class="bg-page">
+  <div class="bg-page-header"></div>
+</div>
+
+<!-- Mask 遮罩 -->
+<div class="mask-overlay" id="maskOverlay"></div>
+
+<!-- 弹窗主体 -->
+<div class="popup-container" id="popupContainer">
+  <!-- 呼吸光 -->
+  <div class="glow-bg" id="glowBg">
+    <img src="assets/glow-bg.png" alt="">
+  </div>
+
+  <!-- 卡片外框 -->
+  <div class="card-wrapper">
+    <img class="card-shape" src="assets/card-shape.svg" alt="">
+
+    <!-- 卡片主体 -->
+    <div class="card-body">
+      <!-- 顶部装饰 -->
+      <div class="card-top-decor">
+        <div class="gradient-bg"></div>
+        <img class="checker" src="assets/checker-pattern.png" alt="">
+      </div>
+
+      <!-- 彩色光斑 -->
+      <div class="color-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="blob blob-4"></div>
+        <div class="blob blob-5"></div>
+        <div class="blob blob-6"></div>
+      </div>
+
+      <!-- 角色 -->
+      <img class="character-img" src="assets/character.png" alt="">
+
+      <!-- 边框 -->
+      <img class="card-border-svg" src="assets/card-border.svg" alt="">
+
+      <!-- 毛玻璃底部 -->
+      <div class="glass-bottom"></div>
+    </div>
+
+    <!-- 标题横幅 -->
+    <div class="title-banner">
+      <img src="assets/title-banner.png" alt="">
+      <img class="title-stroke-bg" src="assets/title-stroke.svg" alt="">
+      <div class="title-banner-text">会员限时优惠</div>
+    </div>
+
+    <!-- 装饰 -->
+    <img class="ribbon-decor" src="assets/ribbon.svg" alt="">
+    <img class="wave-decor" src="assets/wave-decoration.svg" alt="">
+    <img class="coupon-text-decor" src="assets/coupon-text.png" alt="">
+
+    <!-- 优惠券 -->
+    <div class="coupon-area">
+      <div class="coupon-bg"></div>
+      <div class="coupon-price">
+        <span class="amount">20</span>
+        <span class="unit">元</span>
+      </div>
+      <div class="coupon-divider"></div>
+      <div class="coupon-info">
+        <div class="name">包周优惠券</div>
+        <div class="desc">仅连续包周可用</div>
+      </div>
+    </div>
+
+    <!-- 可用时间 -->
+    <div class="expire-info">
+      <span class="label">可用时间：</span>
+      <span class="time" id="countdown">23:59:59</span>
+    </div>
+
+    <!-- 按钮 -->
+    <button class="cta-button" id="ctaBtn">
+      立即开通
+      <div class="sweep"></div>
+    </button>
+  </div>
+</div>
+
+<!-- 关闭按钮 -->
+<div class="close-btn" id="closeBtn">
+  <img src="assets/close-btn.svg" alt="关闭">
+</div>
+
+<!-- 引入动效组件库 core -->
+<script type="module">
+/**
+ * VIP 会员限时优惠弹窗 — 翻转出现动效
+ *
+ * 调用本地动效组件库 @fade-animation/core 的 resolveEffectStyles + resolveConfig
+ * 使用 FlipEffect (flip-x-in) 实现 3D 翻转进入效果
+ */
+import { resolveEffectStyles, resolveConfig, EFFECT_PRESETS } from '../../packages/core/src/index.ts';
+
+// ── 动效参数 ──
+const FLIP_EFFECTS = [
+  { type: 'fade', from: 0, to: 1 },
+  { type: 'flip', axis: 'x', from: 90, to: 0, perspective: 1000 },
+  { type: 'scale', from: 0.85, to: 1 },
+];
+
+const maskFadeEffects = [{ type: 'fade', from: 0, to: 1 }];
+
+const config = resolveConfig({
+  intent: 'enter',
+  timing: 't3',
+  easing: 'expressive',
+  duration: 500,
+});
+
+const maskConfig = resolveConfig({
+  intent: 'enter',
+  timing: 't2',
+  duration: 300,
+});
+
+// ── 获取元素 ──
+const maskOverlay = document.getElementById('maskOverlay');
+const popupContainer = document.getElementById('popupContainer');
+const glowBg = document.getElementById('glowBg');
+const closeBtn = document.getElementById('closeBtn');
+
+// ── 遮罩淡入 ──
+const maskStyles = resolveEffectStyles(maskFadeEffects, true);
+Object.assign(maskOverlay.style, maskStyles.from);
+maskOverlay.style.transition = maskStyles.transitionProperties
+  .map(p => `${p} ${maskConfig.duration}ms ${maskConfig.easing} 0ms`)
+  .join(', ');
+
+// ── 弹窗翻转进入 ──
+const flipStyles = resolveEffectStyles(FLIP_EFFECTS, true);
+Object.assign(popupContainer.style, flipStyles.from);
+popupContainer.style.transformOrigin = 'center center';
+popupContainer.style.transition = flipStyles.transitionProperties
+  .map(p => `${p} ${config.duration}ms ${config.easing} 100ms`)
+  .join(', ');
+
+// ── 关闭按钮延迟出现 ──
+closeBtn.style.opacity = '0';
+closeBtn.style.transition = `opacity 300ms ease 600ms`;
+
+// ── 呼吸光延迟 + 脉冲 ──
+glowBg.style.opacity = '0';
+glowBg.style.transform = 'scale(0.6)';
+glowBg.style.transition = 'opacity 400ms ease 200ms, transform 500ms cubic-bezier(0.34,1.56,0.64,1) 200ms';
+
+// ── 触发进入动画（下一帧） ──
+requestAnimationFrame(() => {
+  // 遮罩淡入
+  Object.assign(maskOverlay.style, maskStyles.to);
+
+  // 弹窗翻转
+  Object.assign(popupContainer.style, flipStyles.to);
+
+  // 呼吸光
+  glowBg.style.opacity = '0.6';
+  glowBg.style.transform = 'scale(1)';
+
+  // 关闭按钮
+  closeBtn.style.opacity = '1';
+});
+
+// ── 呼吸光循环脉冲（翻转完成后启动） ──
+popupContainer.addEventListener('transitionend', (e) => {
+  if (e.propertyName === 'transform') {
+    glowBg.style.transition = 'none';
+    glowBg.style.animation = 'glowPulse 3s ease-in-out infinite';
+  }
+}, { once: true });
+
+// ── 关闭弹窗：翻转退出 ──
+closeBtn.addEventListener('click', () => {
+  const exitConfig = resolveConfig({
+    intent: 'exit',
+    timing: 't2',
+    duration: 300,
+  });
+
+  const exitFlipEffects = [
+    { type: 'fade', from: 1, to: 0 },
+    { type: 'flip', axis: 'x', from: 0, to: 90, perspective: 1000 },
+    { type: 'scale', from: 1, to: 0.85 },
+  ];
+
+  const exitStyles = resolveEffectStyles(exitFlipEffects, false);
+
+  // 弹窗翻转退出
+  popupContainer.style.transition = exitStyles.transitionProperties
+    .map(p => `${p} ${exitConfig.duration}ms ${exitConfig.easing} 0ms`)
+    .join(', ');
+  Object.assign(popupContainer.style, exitStyles.from);
+
+  // 关闭按钮淡出
+  closeBtn.style.transition = 'opacity 200ms ease 0ms';
+  closeBtn.style.opacity = '0';
+
+  // 遮罩淡出
+  maskOverlay.style.transition = `opacity 300ms ease 100ms`;
+  maskOverlay.style.opacity = '0';
+
+  // 呼吸光淡出
+  glowBg.style.animation = 'none';
+  glowBg.style.transition = 'opacity 250ms ease 0ms';
+  glowBg.style.opacity = '0';
+});
+
+// ── 倒计时 ──
+let totalSeconds = 23 * 3600 + 59 * 60 + 59;
+const countdownEl = document.getElementById('countdown');
+
+setInterval(() => {
+  if (totalSeconds <= 0) return;
+  totalSeconds--;
+  const h = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+  const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+  const s = String(totalSeconds % 60).padStart(2, '0');
+  countdownEl.textContent = `${h}:${m}:${s}`;
+}, 1000);
+</script>
+</body>
+</html>

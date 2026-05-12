@@ -5,13 +5,24 @@
       "args": [
         "-y",
         "figma-developer-mcp",
-        "--figma-api-key=figd_EPHY6Xh26ZpQohtPHv-NsU_tg0-qyc2MslTDWlAb",
+        "--figma-api-key=figd_UoQX7oIGFjJ7XOpfVPIZgOSOuqtmBv7RDkx1QfDC",
         "--stdio"
       ],
       "disabled": false,
       "autoApprove": [
         "get_figma_data",
         "download_figma_images"
+      ]
+    },
+    "pencil": {
+      "command": "/Users/ju/.pencil/mcp/kiro/out/mcp-server-darwin-arm64",
+      "args": [
+        "--app",
+        "kiro"
+      ],
+      "env": {},
+      "disabledTools": [
+        "batch_design"
       ]
     }
   },

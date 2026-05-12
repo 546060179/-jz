@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=375, initial-scale=1.0" />
+<title>TypingDots — 跨平台原生预览</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0b0e;
+    font-family: -apple-system, 'SF Pro', Montserrat, sans-serif;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px;
+    gap: 28px;
+  }
+
+  .platform-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #4C4B50;
+    align-self: flex-start;
+    max-width: 343px;
+    width: 100%;
+  }
+
+  /* 手机模拟框 */
+  .phone-frame {
+    width: 343px;
+    background: #111218;
+    border-radius: 20px;
+    padding: 16px;
+    border: 1px solid #23252A;
+  }
+  .phone-frame .header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .phone-frame .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: #191B21;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: #F6610F;
+    flex-shrink: 0;
+  }
+  .phone-frame .name-col {
+    display: flex; flex-direction: column;
+  }
+  .phone-frame .name { font-size: 14px; font-weight: 600; color: #fff; }
+  .phone-frame .subtitle { font-size: 10px; color: #828386; }
+
+  /* 聊天区域 */
+  .chat-area {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .chat-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .chat-row .mini-avatar {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #191B21;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: #F6610F;
+    flex-shrink: 0;
+  }
+  .bubble-col {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .sender { font-size: 11px; color: #828386; }
+
+  /* 消息气泡 */
+  .msg-bubble {
+    background: #23252A;
+    border-radius: 0 12px 12px 12px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #CCCDD4;
+    line-height: 1.4;
+    max-width: 240px;
+  }
+  .msg-bubble.sent {
+    background: #F6610F;
+    border-radius: 12px 0 12px 12px;
+    color: #fff;
+    align-self: flex-end;
+  }
+  .chat-row.sent {
+    justify-content: flex-end;
+  }
+
+  /* Keyframes */
+  @keyframes typing-dots-pulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.15); }
+  }
+
+  /* TypingDots 组件 */
+  .typing-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px;
+    background: #23252A;
+    border-radius: 0px 12px 12px 12px;
+    height: 44px;
+  }
+  .typing-dots .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #4C4B50;
+    animation: typing-dots-pulse 800ms cubic-bezier(0.4, 0.14, 0.3, 1) infinite;
+    will-change: opacity, transform;
+  }
+  .typing-dots .dot:nth-child(1) { animation-delay: 0ms; }
+  .typing-dots .dot:nth-child(2) { animation-delay: 150ms; }
+  .typing-dots .dot:nth-child(3) { animation-delay: 300ms; }
+
+  /* 平台标签 */
+  .platform-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .platform-badge.ios { background: #1a1a2e; color: #5AC8FA; }
+  .platform-badge.android { background: #1a2e1a; color: #78C257; }
+  .platform-badge.web { background: #2e1a1a; color: #F6610F; }
+
+  .api-section {
+    width: 100%; max-width: 343px;
+    background: #191B21;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .api-section h3 {
+    font-size: 12px;
+    color: #828386;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .api-section pre {
+    font-size: 11px;
+    color: #CCCDD4;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+  .api-section pre .kw { color: #FF79C6; }
+  .api-section pre .fn { color: #50FA7B; }
+  .api-section pre .str { color: #F1FA8C; }
+  .api-section pre .cm { color: #4C4B50; }
+</style>
+</head>
+<body>
+
+<!-- iOS 模拟 -->
+<span class="platform-label">
+  <span class="platform-badge ios">iOS</span> UIKit · TypingDotsView
+</span>
+<div class="phone-frame">
+  <div class="header">
+    <div class="avatar">S</div>
+    <div class="name-col">
+      <span class="name">Max</span>
+      <span class="subtitle">Customer Service Assistant</span>
+    </div>
+  </div>
+  <div class="chat-area">
+    <div class="chat-row">
+      <div class="mini-avatar">S</div>
+      <div class="bubble-col">
+        <span class="sender">Max</span>
+        <div class="msg-bubble">Hello, how can I help you today?</div>
+      </div>
+    </div>
+    <div class="chat-row sent">
+      <div class="msg-bubble sent">Why haven't I received my purchase?</div>
+    </div>
+    <div class="chat-row">
+      <div class="mini-avatar">S</div>
+      <div class="bubble-col">
+        <span class="sender">Max</span>
+        <div class="typing-dots" role="status" aria-label="Loading">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Android 模拟 -->
+<span class="platform-label">
+  <span class="platform-badge android">Android</span> View · TypingDotsView
+</span>
+<div class="phone-frame">
+  <div class="header">
+    <div class="avatar">S</div>
+    <div class="name-col">
+      <span class="name">Max</span>
+      <span class="subtitle">Customer Service Assistant</span>
+    </div>
+  </div>
+  <div class="chat-area">
+    <div class="chat-row">
+      <div class="mini-avatar">S</div>
+      <div class="bubble-col">
+        <span class="sender">Max</span>
+        <div class="msg-bubble">Hi there! What can I do for you?</div>
+      </div>
+    </div>
+    <div class="chat-row sent">
+      <div class="msg-bubble sent">How do I cancel my subscription?</div>
+    </div>
+    <div class="chat-row">
+      <div class="mini-avatar">S</div>
+      <div class="bubble-col">
+        <span class="sender">Max</span>
+        <div class="typing-dots" role="status" aria-label="Loading">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Web/React 模拟 -->
+<span class="platform-label">
+  <span class="platform-badge web">React</span> Web · TypingDots
+</span>
+<div class="phone-frame">
+  <div class="header">
+    <div class="avatar">S</div>
+    <div class="name-col">
+      <span class="name">Max</span>
+      <span class="subtitle">Customer Service Assistant</span>
+    </div>
+  </div>
+  <div class="chat-area">
+    <div class="chat-row">
+      <div class="mini-avatar">S</div>
+      <div class="bubble-col">
+        <span class="sender">Max</span>
+        <div class="msg-bubble">Welcome! Please describe your issue.</div>
+      </div>
+    </div>
+    <div class="chat-row sent">
+      <div class="msg-bubble sent">What is PayPal?</div>
+    </div>
+    <div class="chat-row">
+      <div class="mini-avatar">S</div>
+      <div class="bubble-col">
+        <span class="sender">Max</span>
+        <div class="typing-dots" role="status" aria-label="Loading">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- API 用法对比 -->
+<div class="api-section">
+  <h3>跨平台 API 用法</h3>
+  <pre>
+<span class="cm">// iOS (Swift)</span>
+<span class="kw">let</span> dots = <span class="fn">TypingDotsView</span>()
+view.<span class="fn">addSubview</span>(dots)
+dots.<span class="fn">startAnimating</span>()
+
+<span class="cm">// Android (Kotlin)</span>
+<span class="kw">val</span> dots = <span class="fn">TypingDotsView</span>(context)
+container.<span class="fn">addView</span>(dots)
+dots.<span class="fn">startAnimating</span>()
+
+<span class="cm">// React (TSX)</span>
+&lt;<span class="fn">TypingDots</span> /&gt;
+  </pre>
+</div>
+
+</body>
+</html>

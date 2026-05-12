@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --color-primary: #5A68FF;
+  --color-primary-light: #BDC3FF;
+  --color-bg-d1: #050713;
+  --color-bg-d2: #141621;
+  --color-bg-card: rgba(194, 202, 240, 0.12);
+  --color-text-white: #FFFFFF;
+  --color-text-light: #C4C7D6;
+  --color-text-muted: #6C7398;
+  --color-tag-purple: #5D67F4;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #282828; font-family: 'Lexend Deca', sans-serif; padding: 40px; color: #fff; }
+.section { margin-bottom: 48px; }
+.section-title { font-size: 14px; color: var(--color-text-muted); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+.row { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+
+/* Tag */
+.tag { display: inline-flex; align-items: center; height: 16px; border-radius: 6px 0 0 6px; padding: 0 2px 0 8px; font-size: 9px; font-weight: 500; line-height: 1.33; }
+.tag--new { background: linear-gradient(-90deg, #CECECE 0%, #6A74FF 100%); color: #141621; }
+.tag--hot { background: linear-gradient(-90deg, #CECECE 0%, #FA5E7B 100%); color: #141621; }
+.tag--free { background: linear-gradient(-90deg, #CECECE 0%, #6A74FF 100%); color: #141621; }
+.tag--exclusive { background: linear-gradient(-90deg, #CECECE 0%, #6A74FF 100%); color: #141621; }
+.tag--members { background: linear-gradient(270deg, #2634C7 0%, #121732 100%); color: #FFE0B5; }
+
+/* Genre Tag */
+.genre-tag { display: inline-flex; align-items: center; height: 20px; padding: 0 6px; border-radius: 8px; font-size: 9px; }
+.genre-tag--light { background: #050713; color: #5A68FF; font-weight: 400; }
+.genre-tag--dark { background: #141621; color: #5D67F4; font-weight: 500; }
+
+/* Tab */
+.tab { display: flex; justify-content: center; align-items: center; padding: 4px 12px; height: 40px; border-radius: 12px; background: rgba(194,202,240,0.12); backdrop-filter: blur(40px); cursor: pointer; border: none; }
+.tab--active { border: 2px solid; border-image: linear-gradient(90deg, #CECECE, #4051FF) 1; box-shadow: 0 4px 8px rgba(127,115,255,0.59); font-weight: 500; font-size: 16px; color: #BDC3FF; }
+.tab--inactive { font-weight: 400; font-size: 14px; color: rgba(255,255,255,0.68); }
+</style>
+</head>
+<body>
+<h1 style="font-size:24px; margin-bottom:32px; font-weight:400;">📚 Design System Components</h1>
+
+<!-- Tags -->
+<div class="section">
+  <div class="section-title">Tag Variants</div>
+  <div class="row">
+    <span class="tag tag--new">New</span>
+    <span class="tag tag--hot">Hot</span>
+    <span class="tag tag--free">Free</span>
+    <span class="tag tag--exclusive">Exclusive</span>
+    <span class="tag tag--members">Members Only</span>
+  </div>
+</div>
+
+<!-- Genre Tags -->
+<div class="section">
+  <div class="section-title">Genre Tags</div>
+  <div class="row">
+    <span class="genre-tag genre-tag--light">Secret Baby</span>
+    <span class="genre-tag genre-tag--light">Playboy</span>
+    <span class="genre-tag genre-tag--dark">CEO</span>
+    <span class="genre-tag genre-tag--dark">Playboy</span>
+  </div>
+</div>
+
+<!-- Tab Switch -->
+<div class="section">
+  <div class="section-title">Tab Switch</div>
+  <div class="row">
+    <button class="tab tab--active">Popular</button>
+    <button class="tab tab--inactive">Categories</button>
+  </div>
+</div>
+</body>
+</html>

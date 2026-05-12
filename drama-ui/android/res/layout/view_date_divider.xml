@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <View
+        android:id="@+id/lineLeft"
+        android:layout_width="28dp"
+        android:layout_height="1dp"
+        android:background="@drawable/bg_gradient_divider_left" />
+
+    <TextView
+        android:id="@+id/dateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_date_pill"
+        android:paddingStart="@dimen/drama_spacing_sm"
+        android:paddingEnd="@dimen/drama_spacing_sm"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:textSize="12sp"
+        android:textColor="@color/drama_text_blue1"
+        android:fontFamily="sans-serif-light" />
+
+    <View
+        android:id="@+id/lineRight"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_gradient_divider_right" />
+</LinearLayout>

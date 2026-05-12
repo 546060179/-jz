@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drama UI — Design System Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #000; font-family: 'Lexend Deca', sans-serif; padding: 40px; color: #fff; }
+.section { margin-bottom: 48px; }
+.section-title { font-size: 14px; color: #6C7398; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+.swatch { width: 80px; height: 80px; border-radius: 8px; position: relative; }
+.swatch-label { font-size: 8px; color: #808080; position: absolute; bottom: 4px; left: 4px; }
+.typo-row { margin-bottom: 8px; }
+.spacing-bar { height: 24px; border-radius: 4px; background: rgba(163,181,166,0.3); border: 1px solid #A3B5A6; margin-bottom: 4px; }
+.radius-box { width: 80px; height: 80px; background: #F2F2F2; border: 1px solid #B3B3B3; }
+.effect-box { width: 120px; height: 60px; background: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #666; }
+</style>
+</head>
+<body>
+
+<h1 style="font-size:28px; font-weight:700; margin-bottom:8px; font-family:Inter,sans-serif; color:#1A1A1A;">📐 Design System</h1>
+<p style="font-size:14px; color:#666; margin-bottom:40px; font-family:Inter,sans-serif;">Auto-generated Design System Library</p>
+
+<!-- 🎨 Colors -->
+<div class="section">
+  <div class="section-title">🎨 Colors</div>
+
+  <p style="font-size:12px; color:#333; margin-bottom:8px;">White / Transparent</p>
+  <div class="row">
+    <div class="swatch" style="background:#FFF; border:1px solid #eee;"><span class="swatch-label">#FFFFFF<br>white</span></div>
+    <div class="swatch" style="background:rgba(255,255,255,0.2); border:1px solid #eee;"><span class="swatch-label">#FFF 20%<br>white-1</span></div>
+    <div class="swatch" style="background:rgba(255,255,255,0.68); border:1px solid #eee;"><span class="swatch-label">#FFF 68%<br>text/white</span></div>
+  </div>
+
+  <p style="font-size:12px; color:#333; margin-bottom:8px;">Blue</p>
+  <div class="row">
+    <div class="swatch" style="background:#141621;"><span class="swatch-label" style="color:#808080;">#141621<br>bg/blue</span></div>
+    <div class="swatch" style="background:#5A68FF;"><span class="swatch-label" style="color:#fff;">#5A68FF<br>fill/blue</span></div>
+    <div class="swatch" style="background:#C4C7D6;"><span class="swatch-label">#C4C7D6<br>text/blue</span></div>
+    <div class="swatch" style="background:rgba(20,22,33,0.12); border:1px solid #eee;"><span class="swatch-label">#141621 12%<br>bg/blue-1</span></div>
+    <div class="swatch" style="background:#545472;"><span class="swatch-label" style="color:#fff;">#545472<br>fill/blue-1</span></div>
+    <div class="swatch" style="background:rgba(194,202,240,0.12); border:1px solid #eee;"><span class="swatch-label">#C2CAF0 12%<br>bg/blue-2</span></div>
+    <div class="swatch" style="background:#050713;"><span class="swatch-label" style="color:#808080;">#050713<br>bg/blue-3</span></div>
+    <div class="swatch" style="background:#6C7398;"><span class="swatch-label" style="color:#fff;">#6C7398<br>text/blue-1</span></div>
+  </div>
+
+  <p style="font-size:12px; color:#333; margin-bottom:8px;">Red</p>
+  <div class="row">
+    <div class="swatch" style="background:#FA5E7B;"><span class="swatch-label" style="color:#fff;">#FA5E7B<br>red</span></div>
+  </div>
+
+  <p style="font-size:12px; color:#333; margin-bottom:8px;">Orange</p>
+  <div class="row">
+    <div class="swatch" style="background:#FFE0B5;"><span class="swatch-label">#FFE0B5<br>text/orange</span></div>
+  </div>
+</div>
+
+<!-- 🌈 Gradients -->
+<div class="section">
+  <div class="section-title">🌈 Gradients</div>
+  <div class="row">
+    <div style="width:200px; height:60px; border-radius:12px; background:linear-gradient(90deg, #CECECE 0%, #6A74FF 100%);"></div>
+  </div>
+  <p style="font-size:10px; color:#808080;">gradient/linear-2stops-3 — #CECECE → #6A74FF</p>
+</div>
+
+<!-- 🔤 Typography -->
+<div class="section" style="background:#fff; padding:24px; border-radius:12px;">
+  <div class="section-title" style="color:#333;">🔤 Typography — Lexend Deca</div>
+  <p class="typo-row" style="font-weight:500; font-size:9px; line-height:1.25em; color:#1A1A1A;">text/caption/medium — Medium / 9px / LH: 11.25px</p>
+  <p class="typo-row" style="font-weight:400; font-size:9px; line-height:1.25em; color:#1A1A1A;">text/caption/regular — Regular / 9px / LH: 11.25px</p>
+  <p class="typo-row" style="font-weight:400; font-size:10px; line-height:1.25em; color:#1A1A1A;">text/caption/regular-1 — Regular / 10px / LH: 12.5px</p>
+  <p class="typo-row" style="font-weight:300; font-size:12px; line-height:1.25em; color:#1A1A1A;">text/body-sm/light — Light / 12px / LH: 15px</p>
+  <p class="typo-row" style="font-weight:500; font-size:12px; line-height:1.25em; color:#1A1A1A;">text/body-sm/medium — Medium / 12px / LH: 15px</p>
+  <p class="typo-row" style="font-weight:400; font-size:14px; line-height:1.25em; color:#1A1A1A;">text/body/regular — Regular / 14px / LH: 17.5px</p>
+  <p class="typo-row" style="font-weight:300; font-size:16px; line-height:1.25em; color:#1A1A1A;">text/body-lg/light — Light / 16px / LH: 20px</p>
+  <p class="typo-row" style="font-weight:400; font-size:20px; line-height:1.25em; color:#1A1A1A;">text/heading-sm/regular — Regular / 20px / LH: 25px</p>
+  <p class="typo-row" style="font-weight:300; font-size:28px; line-height:1.25em; color:#1A1A1A;">text/heading-lg/light — Light / 28px / LH: 35px</p>
+</div>
+
+<!-- 📏 Spacing -->
+<div class="section" style="background:#fff; padding:24px; border-radius:12px; margin-top:24px;">
+  <div class="section-title" style="color:#333;">📏 Spacing</div>
+  <div class="spacing-bar" style="width:8px;"></div>
+  <p style="font-size:10px; color:#666; margin-bottom:8px;">4px — spacing/xs</p>
+  <div class="spacing-bar" style="width:16px;"></div>
+  <p style="font-size:10px; color:#666; margin-bottom:8px;">8px — spacing/sm</p>
+  <div class="spacing-bar" style="width:24px;"></div>
+  <p style="font-size:10px; color:#666; margin-bottom:8px;">12px — spacing/md</p>
+  <div class="spacing-bar" style="width:32px;"></div>
+  <p style="font-size:10px; color:#666; margin-bottom:8px;">16px — spacing/base</p>
+  <div class="spacing-bar" style="width:48px;"></div>
+  <p style="font-size:10px; color:#666; margin-bottom:8px;">24px — spacing/lg</p>
+  <div class="spacing-bar" style="width:80px;"></div>
+  <p style="font-size:10px; color:#666; margin-bottom:8px;">40px — spacing/2xl</p>
+  <div class="spacing-bar" style="width:104px;"></div>
+  <p style="font-size:10px; color:#666; margin-bottom:8px;">52px — spacing/3xl</p>
+</div>
+
+<!-- ⬜ Border Radius -->
+<div class="section" style="background:#fff; padding:24px; border-radius:12px; margin-top:24px;">
+  <div class="section-title" style="color:#333;">⬜ Border Radius</div>
+  <div class="row">
+    <div><div class="radius-box" style="border-radius:6px;"></div><p style="font-size:9px; color:#999; margin-top:4px;">6px — sm</p></div>
+    <div><div class="radius-box" style="border-radius:8px;"></div><p style="font-size:9px; color:#999; margin-top:4px;">8px — md</p></div>
+    <div><div class="radius-box" style="border-radius:12px;"></div><p style="font-size:9px; color:#999; margin-top:4px;">12px — base</p></div>
+    <div><div class="radius-box" style="border-radius:16px;"></div><p style="font-size:9px; color:#999; margin-top:4px;">16px — lg</p></div>
+    <div><div class="radius-box" style="border-radius:20px;"></div><p style="font-size:9px; color:#999; margin-top:4px;">20px — xl</p></div>
+  </div>
+</div>
+
+<!-- ✨ Effects -->
+<div class="section" style="background:#fff; padding:24px; border-radius:12px; margin-top:24px;">
+  <div class="section-title" style="color:#333;">✨ Effects</div>
+  <div class="row">
+    <div><div class="effect-box" style="backdrop-filter:blur(40px); background:rgba(255,255,255,0.5);">背景模糊 40</div></div>
+    <div><div class="effect-box" style="box-shadow:inset 0px -1px 3px 0px rgba(255,255,255,1);">内阴影</div></div>
+    <div><div class="effect-box" style="box-shadow:0px 1px 4px 0px rgba(127,115,255,0.6);">外阴影</div></div>
+  </div>
+</div>
+
+<!-- 🧩 Components -->
+<div class="section" style="background:#141621; padding:24px; border-radius:12px; margin-top:24px;">
+  <div class="section-title" style="color:rgba(255,255,255,0.68);">🧩 Components</div>
+
+  <!-- TabPill -->
+  <p style="font-size:10px; color:#6C7398; margin-bottom:8px;">TabPill</p>
+  <div class="row" style="margin-bottom:24px;">
+    <div style="display:inline-flex; border-radius:12px; padding:2px; background:linear-gradient(90deg,#CECECE,#4051FF); box-shadow:0 4px 8px rgba(127,115,255,0.59);"><button style="display:flex; justify-content:center; align-items:center; padding:4px 12px; height:36px; border-radius:10px; background:rgba(20,22,33,0.9); backdrop-filter:blur(40px); border:none; font-family:'Lexend Deca',sans-serif; font-weight:500; font-size:16px; color:#BDC3FF; cursor:pointer;">Popular</button></div>
+    <button style="display:flex; justify-content:center; align-items:center; padding:4px 12px; height:40px; border-radius:12px; background:rgba(194,202,240,0.12); backdrop-filter:blur(40px); border:none; font-family:'Lexend Deca',sans-serif; font-weight:400; font-size:14px; color:rgba(255,255,255,0.68); cursor:pointer;">Categories</button>
+  </div>
+
+  <!-- RemindButton -->
+  <p style="font-size:10px; color:#6C7398; margin-bottom:8px;">RemindButton</p>
+  <div class="row" style="margin-bottom:24px;">
+    <img src="assets/btn-remind-off.svg" height="24" alt="Remind Me">
+    <img src="assets/btn-remind-on.svg" height="24" alt="Reserved">
+  </div>
+
+  <!-- DateDivider -->
+  <p style="font-size:10px; color:#6C7398; margin-bottom:8px;">DateDivider</p>
+  <div style="display:flex; align-items:center; width:200px; margin-bottom:24px;">
+    <div style="flex:0 0 28.5px; height:1px; background:linear-gradient(90deg,rgba(194,202,240,0),rgba(194,202,240,0.12));"></div>
+    <span style="display:flex; align-items:center; padding:0 8px; height:20px; border-radius:100px; background:rgba(194,202,240,0.12); font-size:12px; font-weight:300; color:#6C7398; white-space:nowrap;">Feb. 23</span>
+    <div style="flex:1; height:1px; background:linear-gradient(90deg,rgba(194,202,240,0.12),rgba(194,202,240,0));"></div>
+  </div>
+
+  <!-- RankTag -->
+  <p style="font-size:10px; color:#6C7398; margin-bottom:8px;">RankTag</p>
+  <div class="row" style="margin-bottom:24px;">
+    <span style="display:inline-flex; align-items:center; gap:2px; padding:0 6px; height:16px; border-radius:100px; border:1px solid rgba(250,94,123,0.4); font-size:10px; font-weight:500; color:#FA5E7B;">
+      <img src="assets/icon-fire.svg" width="12" height="12" alt="fire"> 4th in Most Popular <img src="assets/icon-more.svg" width="12" height="12" alt="more">
+    </span>
+  </div>
+
+  <!-- Tabbar -->
+  <p style="font-size:10px; color:#6C7398; margin-bottom:8px;">Tabbar</p>
+  <div style="display:flex; width:343px; height:56px; background:rgba(20,22,33,0.76); backdrop-filter:blur(40px); border-radius:20px; align-items:flex-end;">
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; padding-bottom:8px;">
+      <img src="assets/icon-tab-home.svg" width="24" height="24" style="margin-bottom:2px;" alt="Home">
+      <span style="font-size:9px; font-weight:600; color:#fff;">Home</span>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; padding-bottom:8px;">
+      <img src="assets/icon-tab-short.svg" width="24" height="24" style="margin-bottom:2px;" alt="Short">
+      <span style="font-size:9px; font-weight:400; color:#C4C7D6;">Short</span>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; padding-bottom:8px;">
+      <img src="assets/icon-tab-reward.svg" width="24" height="24" style="margin-bottom:2px;" alt="Reward">
+      <span style="font-size:9px; font-weight:400; color:#C4C7D6;">Reward</span>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; padding-bottom:8px;">
+      <img src="assets/icon-tab-collect.svg" width="24" height="24" style="margin-bottom:2px;" alt="My List">
+      <span style="font-size:9px; font-weight:400; color:#C4C7D6;">My List</span>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; padding-bottom:8px;">
+      <img src="assets/icon-tab-profile.svg" width="24" height="24" style="margin-bottom:2px;" alt="Profile">
+      <span style="font-size:9px; font-weight:400; color:#C4C7D6;">Profile</span>
+    </div>
+  </div>
+</div>
+
+  <!-- 🧩 Component Inventory -->
+  <p style="font-size:10px; color:#6C7398; margin-bottom:12px;">Component Inventory</p>
+  <table style="width:100%; border-collapse:collapse; margin-bottom:32px; font-size:11px;">
+    <thead>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.12); text-align:left;">
+        <th style="padding:8px 4px; color:#6C7398; font-weight:400; width:60px;">Preview</th>
+        <th style="padding:8px 4px; color:#6C7398; font-weight:400;">Name</th>
+        <th style="padding:8px 4px; color:#6C7398; font-weight:400; width:120px;">Info</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><div style="display:inline-flex; border-radius:12px; padding:2px; background:linear-gradient(90deg,#CECECE,#4051FF); box-shadow:0 4px 8px rgba(127,115,255,0.59);"><div style="display:inline-flex; height:36px; align-items:center; padding:4px 12px; border-radius:10px; background:rgba(20,22,33,0.9); font-size:14px; color:#BDC3FF; font-weight:500;">Popular</div></div></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">layout_unnamed</td>
+        <td style="padding:8px 4px; color:#808080;">40 个引用 · 86×40</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><img src="assets/icon-play-filled.svg" width="16" height="16" alt="play"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">icon_Filled_24_Play</td>
+        <td style="padding:8px 4px; color:#808080;">25 个引用 · 16×16</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><div style="width:80px; height:60px; border-radius:12px; background:#1a1040; position:relative; overflow:hidden;"><div style="position:absolute; bottom:2px; left:2px; font-size:7px; color:#C4C7D6;">Card</div></div></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">layout_container</td>
+        <td style="padding:8px 4px; color:#808080;">117×252</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><img src="assets/icon-play-liner.svg" width="12" height="12" alt="play liner"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">icon/Liner/24/icon_Play</td>
+        <td style="padding:8px 4px; color:#808080;">2 个引用 · 12×12</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><img src="assets/icon-list-edit.svg" width="16" height="16" alt="list edit"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">icon/Liner/24/icon_list_edit</td>
+        <td style="padding:8px 4px; color:#808080;">2 个引用 · 16×16</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><img src="assets/icon-remind.svg" width="16" height="16" alt="remind"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">icon/Filled/24/icon_remind</td>
+        <td style="padding:8px 4px; color:#808080;">2 个引用 · 16×16</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><img src="assets/icon-checkin.svg" width="16" height="16" alt="checkin"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">icon/filled/24/icon_checkin</td>
+        <td style="padding:8px 4px; color:#808080;">2 个引用 · 16×16</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><img src="assets/icon-search.svg" width="24" height="24" alt="search"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">icon_Liner_24_Search</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 24×24</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><img src="assets/icon-faq.svg" width="10" height="10" alt="faq"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">icon_Liner_24_FAQ</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 10×10</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><img src="assets/tag-rank.svg" height="16" alt="tag"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">tag</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 135×16</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><img src="assets/icon-fire.svg" width="12" height="12" alt="fire"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">Fire_()</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 12×12</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><img src="assets/icon-more.svg" width="12" height="12" alt="more"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">icon/Outline/24/icon_more</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 12×12</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:12px 4px;">
+          <div style="display:flex; width:200px; height:40px; background:rgba(20,22,33,0.76); border-radius:20px; align-items:flex-end;">
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; padding-bottom:4px;"><img src="assets/icon-tab-home.svg" width="16" height="16"><span style="font-size:7px; font-weight:600; color:#fff;">Home</span></div>
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; padding-bottom:4px;"><img src="assets/icon-tab-short.svg" width="16" height="16"><span style="font-size:7px; color:#C4C7D6;">Short</span></div>
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; padding-bottom:4px;"><img src="assets/icon-tab-reward.svg" width="16" height="16"><span style="font-size:7px; color:#C4C7D6;">Reward</span></div>
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; padding-bottom:4px;"><img src="assets/icon-tab-collect.svg" width="16" height="16"><span style="font-size:7px; color:#C4C7D6;">My List</span></div>
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; padding-bottom:4px;"><img src="assets/icon-tab-profile.svg" width="16" height="16"><span style="font-size:7px; color:#C4C7D6;">Profile</span></div>
+          </div>
+        </td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">Tabbar/01</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 343×56</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><div style="display:flex; flex-direction:column; align-items:center; width:40px;"><img src="assets/icon-tab-home.svg" width="24" height="24"><span style="font-size:7px; font-weight:600; color:#fff;">Home</span></div></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">home</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 69×56</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><img src="assets/icon-tab-home.svg" width="24" height="24" alt="home icon"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">icon_Tab_24_home</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 24×24</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><div style="display:flex; flex-direction:column; align-items:center; width:40px;"><img src="assets/icon-tab-short.svg" width="24" height="24"><span style="font-size:7px; color:#C4C7D6;">Short</span></div></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">short</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 69×56</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><img src="assets/icon-tab-short.svg" width="24" height="24" alt="short icon"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">icon_Tab_24_short</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 24×24</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><div style="display:flex; flex-direction:column; align-items:center; width:40px;"><img src="assets/icon-tab-reward.svg" width="24" height="24"><span style="font-size:7px; color:#C4C7D6;">Reward</span></div></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">Reward</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 69×56</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><img src="assets/icon-tab-reward.svg" width="24" height="24" alt="reward icon"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">icon_Tab_24_reward</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 24×24</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><div style="display:flex; flex-direction:column; align-items:center; width:40px;"><img src="assets/icon-tab-collect.svg" width="24" height="24"><span style="font-size:7px; color:#C4C7D6;">My List</span></div></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">collect</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 69×56</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><img src="assets/icon-tab-collect.svg" width="24" height="24" alt="collect icon"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">icon_Tab_24_collect</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 24×24</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(194,202,240,0.06);">
+        <td style="padding:8px 4px;"><div style="display:flex; flex-direction:column; align-items:center; width:40px;"><img src="assets/icon-tab-profile.svg" width="24" height="24"><span style="font-size:7px; color:#C4C7D6;">Profile</span></div></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">Profile</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 69×56</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 4px;"><img src="assets/icon-tab-profile.svg" width="24" height="24" alt="profile icon"></td>
+        <td style="padding:8px 4px; color:#fff; font-weight:700;">icon_Tab_24_Profile</td>
+        <td style="padding:8px 4px; color:#808080;">1 个引用 · 24×24</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Tag Variants -->
+  <p style="font-size:10px; color:#6C7398; margin-bottom:8px; margin-top:24px;">Tag (5 variants)</p>
+  <div class="row" style="margin-bottom:24px; align-items:flex-start;">
+    <img src="assets/tag-new.svg" height="26" alt="New">
+    <img src="assets/tag-hot.svg" height="20" alt="Hot">
+    <img src="assets/tag-free.svg" height="26" alt="Free">
+    <img src="assets/tag-exclusive.svg" height="26" alt="Exclusive">
+    <img src="assets/tag-members-only.svg" height="16" alt="Members Only">
+  </div>
+
+  <!-- GenreTag -->
+  <p style="font-size:10px; color:#6C7398; margin-bottom:8px;">GenreTag</p>
+  <div class="row" style="margin-bottom:24px;">
+    <span style="display:inline-flex; align-items:center; height:20px; padding:0 6px; border-radius:8px; background:#050713; font-size:9px; font-weight:400; color:#5A68FF;">Secret Baby</span>
+    <span style="display:inline-flex; align-items:center; height:20px; padding:0 6px; border-radius:8px; background:#050713; font-size:9px; font-weight:400; color:#5A68FF;">Playboy</span>
+    <span style="display:inline-flex; align-items:center; height:20px; padding:0 6px; border-radius:8px; background:#141621; font-size:9px; font-weight:500; color:#5D67F4;">CEO</span>
+    <span style="display:inline-flex; align-items:center; height:20px; padding:0 6px; border-radius:8px; background:#141621; font-size:9px; font-weight:500; color:#5D67F4;">Playboy</span>
+  </div>
+
+  <!-- BookCard -->
+  <p style="font-size:10px; color:#6C7398; margin-bottom:8px;">BookCard (Large 225×400)</p>
+  <div style="position:relative; width:225px; border-radius:12px; overflow:hidden; background:#141621; margin-bottom:24px;">
+    <div style="width:225px; height:300px; background:linear-gradient(135deg, #2a1f4e 0%, #1a1040 50%, #0d0820 100%);"></div>
+    <div style="position:absolute; top:260px; left:0; right:0; display:flex; flex-direction:column;">
+      <div style="height:40px; background:linear-gradient(180deg, rgba(20,22,33,0) 0%, #141621 100%);"></div>
+      <div style="background:#141621; padding:0 4px 4px; display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; gap:4px;">
+          <span style="display:inline-flex; align-items:center; height:20px; padding:0 6px; border-radius:8px; background:#050713; font-size:9px; color:#5A68FF;">Secret Baby</span>
+          <span style="display:inline-flex; align-items:center; height:20px; padding:0 6px; border-radius:8px; background:#050713; font-size:9px; color:#5A68FF;">Playboy</span>
+        </div>
+        <div style="padding:0 4px 4px;">
+          <h3 style="font-weight:400; font-size:20px; line-height:1.4; color:#fff; margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">The Unwanted Bride</h3>
+          <p style="font-weight:300; font-size:12px; line-height:1.33; color:#6C7398; margin:4px 0 0; height:32px; overflow:hidden;">Ethan hurt Amanda again and again for the person he liked...</p>
+        </div>
+      </div>
+    </div>
+    <div style="position:absolute; top:8px; right:0;">
+      <span style="display:inline-flex; align-items:center; height:16px; border-radius:6px 0 0 6px; padding:0 2px 0 8px; font-size:9px; font-weight:500; background:linear-gradient(-90deg,#CECECE,#6A74FF); color:#141621;">New</span>
+    </div>
+  </div>
+
+  <!-- SmallBookCard -->
+  <p style="font-size:10px; color:#6C7398; margin-bottom:8px;">SmallBookCard (117×156)</p>
+  <div class="row" style="align-items:flex-start; margin-bottom:24px;">
+    <div style="display:flex; flex-direction:column; gap:4px; width:117px;">
+      <div style="position:relative; width:117px; height:156px; border-radius:12px; overflow:hidden; background:linear-gradient(135deg, #3a2f5e 0%, #1a1040 100%);">
+        <div style="position:absolute; bottom:4px; right:4px; display:flex; align-items:center; gap:4px; padding:0 4px; height:20px; border-radius:8px; background:rgba(20,22,33,0.12); backdrop-filter:blur(40px);">
+          <img src="assets/icon-play-filled.svg" width="10" height="10" alt="play">
+          <span style="font-weight:500; font-size:10px; color:#fff;">667.3M</span>
+        </div>
+        <div style="position:absolute; top:4px; right:0;">
+          <span style="display:inline-flex; align-items:center; height:16px; border-radius:6px 0 0 6px; padding:0 2px 0 8px; font-size:9px; font-weight:500; background:linear-gradient(-90deg,#CECECE,#6A74FF); color:#141621;">New</span>
+        </div>
+      </div>
+      <div style="padding:0 4px;">
+        <p style="font-weight:300; font-size:12px; line-height:1.33; color:#C4C7D6; margin:0; height:32px; overflow:hidden;">Daddy CEO's Escaped Wife</p>
+        <div style="display:flex; gap:4px; margin-top:4px;">
+          <span style="display:inline-flex; align-items:center; height:20px; padding:0 6px; border-radius:8px; background:#141621; font-size:9px; font-weight:500; color:#5D67F4;">Playboy</span>
+          <span style="display:inline-flex; align-items:center; height:20px; padding:0 6px; border-radius:8px; background:#141621; font-size:9px; font-weight:500; color:#5D67F4;">CEO</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:4px; width:117px;">
+      <div style="position:relative; width:117px; height:156px; border-radius:12px; overflow:hidden; background:linear-gradient(135deg, #2e1f5e 0%, #0d0820 100%);">
+        <div style="position:absolute; bottom:4px; right:4px; display:flex; align-items:center; gap:4px; padding:0 4px; height:20px; border-radius:8px; background:rgba(20,22,33,0.12); backdrop-filter:blur(40px);">
+          <img src="assets/icon-play-filled.svg" width="10" height="10" alt="play">
+          <span style="font-weight:500; font-size:10px; color:#fff;">667.3M</span>
+        </div>
+      </div>
+      <div style="padding:0 4px;">
+        <p style="font-weight:300; font-size:12px; line-height:1.33; color:#C4C7D6; margin:0; height:32px; overflow:hidden;">Riding into Love</p>
+        <div style="display:flex; gap:4px; margin-top:4px;">
+          <span style="display:inline-flex; align-items:center; height:20px; padding:0 6px; border-radius:8px; background:#141621; font-size:9px; font-weight:500; color:#5D67F4;">Playboy</span>
+          <span style="display:inline-flex; align-items:center; height:20px; padding:0 6px; border-radius:8px; background:#141621; font-size:9px; font-weight:500; color:#5D67F4;">CEO</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="@dimen/drama_radius_md" />
+    <gradient
+        android:startColor="@color/drama_gradient_new_start"
+        android:endColor="@color/drama_gradient_new_end"
+        android:angle="180" />
+</shape>

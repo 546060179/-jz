@@ -1,0 +1,108 @@
+/* ============================================
+   Drama UI — Design System Tokens
+   Auto-generated from Figma Design System
+   ============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;500;600&display=swap');
+
+:root {
+  /* ===== 🎨 Colors ===== */
+  /* White / Transparent */
+  --fill-white: #FFFFFF;
+  --fill-white-1: rgba(255, 255, 255, 0.2);
+  --text-white: rgba(255, 255, 255, 0.68);
+
+  /* Blue */
+  --bg-blue: #141621;
+  --fill-blue: #5A68FF;
+  --text-blue: #C4C7D6;
+  --bg-blue-1: rgba(20, 22, 33, 0.12);
+  --fill-blue-1: #545472;
+  --bg-blue-2: rgba(194, 202, 240, 0.12);
+  --bg-blue-3: #050713;
+  --text-blue-1: #6C7398;
+
+  /* Red */
+  --fill-red: #FA5E7B;
+
+  /* Orange */
+  --text-orange: #FFE0B5;
+
+  /* ===== 🌈 Gradients ===== */
+  --gradient-new: linear-gradient(90deg, #CECECE 0%, #6A74FF 100%);
+  --gradient-hot: linear-gradient(90deg, #CECECE 0%, #FA5E7B 100%);
+  --gradient-tab-border: linear-gradient(90deg, #CECECE 0%, #4051FF 100%);
+  --gradient-cover: linear-gradient(180deg, rgba(20,22,33,0) 0%, #141621 100%);
+  --gradient-divider-left: linear-gradient(90deg, rgba(194,202,240,0) 0%, rgba(194,202,240,0.12) 100%);
+  --gradient-divider-right: linear-gradient(90deg, rgba(194,202,240,0.12) 0%, rgba(194,202,240,0) 100%);
+
+  /* ===== 🔤 Typography ===== */
+  --font-family: 'Lexend Deca', sans-serif;
+
+  /* text/caption/medium — 9px Medium */
+  --text-caption-medium-size: 9px;
+  --text-caption-medium-weight: 500;
+  --text-caption-medium-lh: 1.25em;
+
+  /* text/caption/regular — 9px Regular */
+  --text-caption-regular-size: 9px;
+  --text-caption-regular-weight: 400;
+  --text-caption-regular-lh: 1.25em;
+
+  /* text/caption/regular-1 — 10px Regular */
+  --text-caption-regular1-size: 10px;
+  --text-caption-regular1-weight: 400;
+  --text-caption-regular1-lh: 1.25em;
+
+  /* text/body-sm/light — 12px Light */
+  --text-body-sm-light-size: 12px;
+  --text-body-sm-light-weight: 300;
+  --text-body-sm-light-lh: 1.25em;
+
+  /* text/body-sm/medium — 12px Medium */
+  --text-body-sm-medium-size: 12px;
+  --text-body-sm-medium-weight: 500;
+  --text-body-sm-medium-lh: 1.25em;
+
+  /* text/body/regular — 14px Regular */
+  --text-body-regular-size: 14px;
+  --text-body-regular-weight: 400;
+  --text-body-regular-lh: 1.25em;
+
+  /* text/body-lg/light — 16px Light */
+  --text-body-lg-light-size: 16px;
+  --text-body-lg-light-weight: 300;
+  --text-body-lg-light-lh: 1.25em;
+
+  /* text/heading-sm/regular — 20px Regular */
+  --text-heading-sm-size: 20px;
+  --text-heading-sm-weight: 400;
+  --text-heading-sm-lh: 1.25em;
+
+  /* text/heading-lg/light — 28px Light */
+  --text-heading-lg-size: 28px;
+  --text-heading-lg-weight: 300;
+  --text-heading-lg-lh: 1.25em;
+
+  /* ===== 📏 Spacing ===== */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-base: 16px;
+  --spacing-lg: 24px;
+  --spacing-2xl: 40px;
+  --spacing-3xl: 52px;
+
+  /* ===== ⬜ Border Radius ===== */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-base: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 100px;
+
+  /* ===== ✨ Effects ===== */
+  --effect-blur-bg: blur(40px);
+  --effect-shadow-inner: inset 0px -1px 3px 0px rgba(255, 255, 255, 1);
+  --effect-shadow-drop: 0px 1px 4px 0px rgba(127, 115, 255, 0.6);
+  --effect-shadow-tab: 0px 4px 8px 0px rgba(127, 115, 255, 0.59);
+}

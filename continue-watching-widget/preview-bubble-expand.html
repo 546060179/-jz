@@ -42,13 +42,15 @@ body {
   padding: 6px 8px;
   width: 120px;
   position: relative;
+  overflow: visible;
 }
-/* 箭头：Figma pic_arrow 2，固定 9x40 */
+/* 箭头：Figma pic_arrow 2，在body内部absolute定位，和body一体 */
 .bubble-arrow {
+  position: absolute;
+  right: -9px;
+  top: 0;
   width: 9px;
-  height: 40px;
-  flex-shrink: 0;
-  margin-left: -1px;
+  height: 100%;
   display: block;
 }
 /* 文字 */
@@ -87,8 +89,8 @@ body {
   <div class="bubble-anchor" id="bubble">
     <div class="bubble-body">
       <div class="bubble-text" id="bubbleText">Get free bouns to unlock！</div>
-    </div>
     <img class="bubble-arrow" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAB4CAYAAAADtImhAAAACXBIWXMAACE4AAAhOAFFljFgAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAAahJREFUeAHt181NAkEYxvFnJhaAHezVeJAOpASvggl0IB0gFYAVcNQbJWgVEL1ICZwQ+XqdWYyKurAfs288PL8Ewlfyz8zO7C4AEREREREREdEOeWlVoMRiPleM2aMqlFis1xGUWMBEUOJj51DiYlLVWpE2fp4tLqBgGzOmCQXbGKSmMZX289Vs0UbJvmIG12WPzn57XSl7dHbnXcmjsz/eV/C67KAk9vdH0pbxVQ06Md/bDMqYTpvweeSmcwilGOKNPq4HPX5277eCGxldBjtv2sM/MQMZtyIEkCLmtoMsHkIsmDQxL8Js2UNBaWNuNqXljl+h01n62LbYK7LhM8aw3fA5F0z2mD9+ssi14fPEvKqMGpkXTN4Y4hN2xgVTIOaZjjzXU9++F4y5Db/CMO2GLxrzUl8hQsQQXyFSLJhAsTjYlqdGUynmrKW/b8OHjR24QoSOeW7BvLWgFPN/VM6gFtvgGGoxgwn0Yps+VGKCrjm5n/z11RGCMVN3sLrm9K6f9IuPmHl0j1s311PkspokjWaHjOrBb7OTWDe2LoiIiIiIiIjoX3sHBeGDqyiLoSAAAAAASUVORK5CYII=" alt="">
+    </div>
   </div>
 
   <div class="demo-ctrl">

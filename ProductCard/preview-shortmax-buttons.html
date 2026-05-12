@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=375">
+<title>ShortMax 右侧按钮点击交互动效</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Montserrat', -apple-system, sans-serif;
+    background: #111218;
+    color: #fff;
+    height: 812px;
+    width: 375px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* 视频背景 */
+  .video-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 375px; height: 729px;
+    object-fit: cover;
+  }
+
+  /* 状态栏 */
+  .status-bar {
+    position: relative;
+    z-index: 10;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0 21px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  /* 底部信息区 */
+  .bottom-info {
+    position: absolute;
+    bottom: 116px;
+    left: 16px;
+    right: 64px;
+    z-index: 10;
+  }
+  .drama-title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.43;
+    color: #fff;
+    text-shadow: 0 2px 2px rgba(0,0,0,0.12);
+  }
+  .drama-desc {
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.33;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: -0.24px;
+    text-shadow: 0 2px 2px rgba(0,0,0,0.3);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .drama-desc .more {
+    color: #F29B6B;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .ep-label {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: -0.28px;
+  }
+
+  /* 右侧按钮组 */
+  .side-buttons {
+    position: absolute;
+    right: 16px;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .side-buttons .avatar-wrap {
+    margin-bottom: 4px;
+  }
+
+  /* 头像 */
+  .avatar-wrap {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #fff;
+    margin-bottom: 0;
+  }
+  .avatar-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  /* 单个按钮 */
+  .side-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    width: 48px;
+  }
+  .side-btn .icon-wrap {
+    width: 32px; height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .side-btn .icon-wrap svg {
+    width: 32px; height: 32px;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .side-btn .label {
+    margin-top: 0;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.8);
+    text-shadow: 0 2px 2px rgba(0,0,0,0.3);
+    text-align: center;
+    transition: color 0.3s ease, transform 0.2s ease;
+  }
+
+  /* ===== 点赞/收藏按钮动效 ===== */
+  .side-btn.like-btn .icon-wrap.active svg path {
+    fill: #FFD700;
+    transition: fill 0.3s ease;
+  }
+  .side-btn.like-btn .icon-wrap.active {
+    animation: likePopBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .side-btn.like-btn .label.active {
+    color: #FFD700;
+  }
+
+  @keyframes likePopBounce {
+    0%   { transform: scale(1); }
+    15%  { transform: scale(0.7); }
+    40%  { transform: scale(1.3); }
+    60%  { transform: scale(0.95); }
+    80%  { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  /* 点赞粒子爆发 */
+  .like-particles {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    pointer-events: none;
+  }
+  .like-particle {
+    position: absolute;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    opacity: 0;
+  }
+  .like-particle.burst {
+    animation: particleBurst 0.6s ease-out forwards;
+  }
+
+  @keyframes particleBurst {
+    0%   { opacity: 1; transform: translate(0, 0) scale(1); }
+    100% { opacity: 0; transform: var(--particle-end) scale(0); }
+  }
+
+  /* 星星粒子 */
+  .star-particle {
+    position: absolute;
+    font-size: 10px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .star-particle.burst {
+    animation: starBurst 0.7s ease-out forwards;
+  }
+  @keyframes starBurst {
+    0%   { opacity: 1; transform: translate(0, 0) scale(0.5) rotate(0deg); }
+    50%  { opacity: 1; }
+    100% { opacity: 0; transform: var(--star-end) scale(1.2) rotate(180deg); }
+  }
+
+  /* ===== List 按钮动效 ===== */
+  .side-btn.list-btn .icon-wrap:active {
+    transform: scale(0.85);
+  }
+  .side-btn.list-btn .icon-wrap.tap {
+    animation: listTap 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes listTap {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(0.8); }
+    100% { transform: scale(1); }
+  }
+
+  /* ===== 选集底部弹窗 ===== */
+  .episode-sheet-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    z-index: 50;
+    pointer-events: none;
+    transition: background 0.3s ease;
+  }
+  .episode-sheet-overlay.open {
+    background: rgba(0,0,0,0.5);
+    pointer-events: auto;
+  }
+  .episode-sheet {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    max-width: 375px;
+    margin: 0 auto;
+    background: #191B21;
+    border-radius: 20px 20px 0 0;
+    z-index: 51;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+    height: 458px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .episode-sheet.open {
+    transform: translateY(0);
+  }
+
+  /* 拖拽把手 */
+  .sheet-handle {
+    width: 33.5px;
+    height: 4px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    margin: 14px 0 14px;
+    flex-shrink: 0;
+  }
+
+  /* 剧集信息卡 */
+  .sheet-drama-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 343px;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .sheet-cover {
+    width: 64px;
+    height: 86px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .sheet-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+  }
+  .sheet-drama-title {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #fff;
+    letter-spacing: -0.24px;
+  }
+  .sheet-summary {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .sheet-tag-following {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #00B9A0, #7ACEC0);
+    font-size: 9px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.33;
+    flex-shrink: 0;
+  }
+  .sheet-update-text {
+    font-size: 12px;
+    font-weight: 500;
+    color: #9F9FA2;
+    letter-spacing: -0.24px;
+    line-height: 1.5;
+  }
+  .sheet-genres {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #4C4B50;
+    letter-spacing: -0.24px;
+    line-height: 1.5;
+  }
+  .sheet-genres .dot {
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+    flex-shrink: 0;
+  }
+  .sheet-genres svg {
+    flex-shrink: 0;
+  }
+
+  /* 范围 Tab */
+  .sheet-range-tabs {
+    display: flex;
+    gap: 8px;
+    width: 343px;
+    margin-top: 12px;
+    flex-shrink: 0;
+  }
+  .range-tab {
+    width: 72px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #828386;
+    cursor: pointer;
+    position: relative;
+    letter-spacing: 0.26px;
+    border-radius: 4px;
+    transition: color 0.2s ease;
+  }
+  .range-tab.active {
+    color: #FC6F03;
+  }
+  .range-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 1.5px;
+    background: #FC6F03;
+  }
+
+  /* 集数网格 */
+  .sheet-ep-body {
+    width: 342px;
+    margin-top: 12px;
+    overflow-y: auto;
+    flex: 1;
+    padding-bottom: 30px;
+  }
+  .episode-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ep-cell {
+    width: 62px;
+    height: 38px;
+    border-radius: 4px;
+    background: #23252A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease;
+    opacity: 0;
+    transform: translateY(6px);
+    text-shadow: 0 2px 2px rgba(0,0,0,0.12);
+  }
+  .ep-cell.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .ep-cell:active { transform: scale(0.92) !important; }
+
+  /* 选中态 — 橙色背景 + 音频波形 */
+  .ep-cell.selected {
+    background: #FC6F03;
+    color: #fff;
+  }
+  .ep-cell.selected .ep-waveform {
+    display: flex;
+  }
+  .ep-cell.selected .ep-num {
+    display: none;
+  }
+
+  /* 音频波形指示器 */
+  .ep-waveform {
+    display: none;
+    align-items: flex-end;
+    gap: 2px;
+    height: 16px;
+  }
+  .ep-waveform .bar {
+    width: 2px;
+    background: #fff;
+    border-radius: 1px;
+    animation: waveformPulse 1.2s ease-in-out infinite;
+  }
+  .ep-waveform .bar:nth-child(1) { height: 4px; animation-delay: 0s; }
+  .ep-waveform .bar:nth-child(2) { height: 10px; animation-delay: 0.15s; }
+  .ep-waveform .bar:nth-child(3) { height: 6px; animation-delay: 0.3s; }
+  .ep-waveform .bar:nth-child(4) { height: 14px; animation-delay: 0.1s; }
+  .ep-waveform .bar:nth-child(5) { height: 8px; animation-delay: 0.25s; }
+
+  @keyframes waveformPulse {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.4); }
+  }
+
+  /* 播放指示器 — 隐藏旧的 */
+  .ep-playing {
+    display: none;
+  }
+
+  /* 锁定态 */
+  .ep-cell.locked {
+    color: #828386;
+  }
+  .ep-cell .lock-badge {
+    position: absolute;
+    top: 0; right: 0;
+    width: 14px; height: 14px;
+    display: none;
+    pointer-events: none;
+  }
+  .ep-cell .lock-badge svg.corner-svg {
+    position: absolute;
+    top: 0; right: 0;
+    width: 14px; height: 14px;
+  }
+  .ep-cell .lock-badge svg.lock-svg {
+    position: absolute;
+    top: 2px; right: 2px;
+    width: 10px; height: 10px;
+  }
+  .ep-cell.locked .lock-badge { display: block; }
+  .ep-cell.locked .lock-badge .corner-fill { fill: #FC6F03; }
+
+  /* 深度锁定（更远的集数） */
+  .ep-cell.deep-locked {
+    color: #828386;
+  }
+  .ep-cell.deep-locked .lock-badge { display: block; }
+  .ep-cell.deep-locked .lock-badge .corner-fill { fill: #4C4B50; }
+
+  /* Home Indicator */
+  .sheet-home-indicator {
+    width: 134px;
+    height: 5px;
+    background: #fff;
+    border-radius: 100px;
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* ===== Share 按钮动效 ===== */
+  .side-btn.share-btn .icon-wrap:active {
+    transform: scale(0.85);
+  }
+  .side-btn.share-btn .icon-wrap.tap {
+    animation: shareTap 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes shareTap {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(0.8); }
+    60%  { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  /* 剧集信息条 */
+  .episode-bar {
+    position: absolute;
+    bottom: 83px;
+    left: 0; right: 0;
+    height: 32px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    padding: 0 36px 0 36px;
+  }
+  .episode-bar-bg {
+    position: absolute;
+    inset: 0;
+    background: rgba(25,27,33,0.3);
+  }
+  .episode-bar-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    text-shadow: 0 2px 2px rgba(0,0,0,0.12);
+  }
+  .episode-arrow {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    opacity: 0.8;
+  }
+
+  /* 进度条 */
+  .progress-bar {
+    position: absolute;
+    bottom: 83px;
+    left: 0; right: 0;
+    height: 2px;
+    z-index: 11;
+  }
+  .progress-track {
+    width: 100%; height: 100%;
+    background: rgba(255,255,255,0.24);
+  }
+  .progress-fill {
+    width: 26%;
+    height: 100%;
+    background: #fff;
+    border-radius: 0 1px 1px 0;
+  }
+
+  /* 列表图标 */
+  .list-icon-small {
+    position: absolute;
+    bottom: 88px;
+    left: 16px;
+    z-index: 12;
+    opacity: 0.8;
+  }
+
+  /* 底部 Tab Bar */
+  .tab-bar-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 83px;
+    background: #191B21;
+    backdrop-filter: blur(24px);
+    z-index: 30;
+  }
+  .tab-bar-items {
+    display: flex;
+    height: 53px;
+    align-items: center;
+  }
+  .tab-bar-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 8px;
+    cursor: pointer;
+  }
+  .tab-bar-item .icon { font-size: 20px; }
+  .tab-bar-item .label {
+    font-size: 10px;
+    font-weight: 400;
+    color: #9F9FA2;
+    letter-spacing: 0.2px;
+  }
+  .tab-bar-item.active .label { color: #fff; }
+  .home-indicator {
+    width: 134px; height: 5px;
+    background: #fff;
+    border-radius: 100px;
+    margin: 0 auto;
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* ===== iOS 分享底部弹窗 ===== */
+  .share-sheet-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    z-index: 50;
+    pointer-events: none;
+    transition: background 0.3s ease;
+  }
+  .share-sheet-overlay.open {
+    background: rgba(0,0,0,0.4);
+    pointer-events: auto;
+  }
+  .share-sheet {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    max-width: 375px;
+    margin: 0 auto;
+    z-index: 51;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 8px 40px;
+  }
+  .share-sheet.open {
+    transform: translateY(0);
+  }
+
+  /* 主面板 */
+  .share-panel {
+    background: rgba(242,242,247,0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  /* 链接预览头 */
+  .share-link-header {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    gap: 12px;
+    border-bottom: 0.5px solid rgba(0,0,0,0.1);
+  }
+  .share-app-icon {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    background: #1a1a2e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 700;
+    color: #FC6F03;
+    border: 0.5px solid rgba(0,0,0,0.08);
+  }
+  .share-app-icon span {
+    background: linear-gradient(135deg, #FC6F03, #FF9357);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .share-link-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .share-link-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+  }
+  .share-link-url {
+    font-size: 11px;
+    color: #8e8e93;
+    line-height: 1.4;
+  }
+  .share-link-close {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.06);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .share-link-close svg { width: 12px; height: 12px; }
+
+  /* App 分享行 */
+  .share-apps-row {
+    display: flex;
+    gap: 0;
+    padding: 16px 8px 12px;
+    overflow-x: auto;
+    border-bottom: 0.5px solid rgba(0,0,0,0.1);
+  }
+  .share-apps-row::-webkit-scrollbar { display: none; }
+  .share-app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 72px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .share-app-item:active { transform: scale(0.9); }
+  .share-app-item .app-icon {
+    width: 60px; height: 60px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+  .share-app-item .app-name {
+    font-size: 10px;
+    color: #000;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  /* 操作行 */
+  .share-actions-row {
+    display: flex;
+    gap: 0;
+    padding: 12px 8px 16px;
+    overflow-x: auto;
+  }
+  .share-actions-row::-webkit-scrollbar { display: none; }
+  .share-action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 72px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .share-action-item:active { transform: scale(0.9); }
+  .share-action-item .action-icon {
+    width: 60px; height: 60px;
+    border-radius: 14px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .share-action-item .action-name {
+    font-size: 10px;
+    color: #000;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  /* 列表操作 */
+  .share-list-panel {
+    background: rgba(242,242,247,0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .share-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 0.5px solid rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: background 0.15s ease;
+    font-family: -apple-system, 'SF Pro Text', sans-serif;
+  }
+  .share-list-item:last-child { border-bottom: none; }
+  .share-list-item:active { background: rgba(0,0,0,0.05); }
+  .share-list-item .list-icon {
+    width: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .share-list-item .list-text {
+    font-size: 14px;
+    color: #000;
+    font-weight: 400;
+  }
+
+  /* 编辑操作按钮 */
+  .share-edit-panel {
+    background: rgba(242,242,247,0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .share-edit-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    background: none;
+    font-size: 14px;
+    font-weight: 400;
+    color: #007AFF;
+    cursor: pointer;
+    font-family: -apple-system, 'SF Pro Text', sans-serif;
+    transition: background 0.15s ease;
+  }
+  .share-edit-btn:active { background: rgba(0,0,0,0.05); }
+
+  /* Toast 提示 */
+  .toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+</style>
+</head>
+<body>
+
+<!-- 视频背景 -->
+<div style="position:absolute;top:0;left:0;width:375px;height:812px;background:#0F1016;z-index:0;"></div>
+<img style="position:absolute;top:73px;left:0;width:375px;height:666px;object-fit:cover;z-index:0;" src="assets/video-bg-main-361d9d.png" alt="bg">
+<div style="position:absolute;top:0;left:0;width:375px;height:812px;background:linear-gradient(180deg, rgba(15,16,22,0) 0%, rgba(15,16,22,0) 60%, rgba(15,16,22,0.6) 80%, rgba(15,16,22,1) 95%);z-index:1;pointer-events:none;"></div>
+
+<!-- 顶部区域 -->
+<div style="position:absolute;top:0;left:0;width:375px;z-index:10;background:#111218;">
+  <!-- 状态栏 -->
+  <div class="status-bar">
+    <span>9:27</span>
+  </div>
+  <!-- 返回箭头 -->
+  <div style="height:44px;cursor:pointer;position:relative;">
+    <svg width="30" height="44" viewBox="0 0 30 44" fill="none" style="position:absolute;left:8px;top:0;">
+      <path d="M18 28L11 21L18 14" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ShortMax 水印 -->
+<div style="position:absolute;top:89px;left:16px;z-index:2;font-size:15px;font-weight:600;color:#fff;opacity:0.4;line-height:1.5;">ShortMax</div>
+
+<!-- 右侧按钮组 -->
+<div class="side-buttons" style="top:423px;right:16px;">
+  <!-- 头像 -->
+  <div class="avatar-wrap">
+    <img src="assets/cover-avatar.png" alt="avatar">
+  </div>
+
+  <!-- 收藏/点赞按钮 -->
+  <div class="side-btn like-btn" onclick="handleLike(this)">
+    <div class="icon-wrap">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M21.2914 27.8643C23.1461 28.6595 24.7689 27.4754 24.5848 25.4702L24.0604 19.7263L28.4945 14.6552C29.463 13.547 28.982 12.0596 27.5444 11.7324L20.9816 10.2396L17.5366 4.45022C16.7815 3.1838 15.2182 3.18272 14.4631 4.45022L11.0171 10.2396L4.4542 11.7324C3.0242 12.0585 2.53453 13.5459 3.50412 14.6552L7.93821 19.7263L7.32829 26.4397C7.19504 27.9066 8.4593 28.8274 9.81347 28.2457L15.9993 25.5915L21.2914 27.8632V27.8643Z" fill="white"/>
+      </svg>
+      <div class="like-particles"></div>
+    </div>
+    <span class="label">9.9k</span>
+  </div>
+
+  <!-- List 按钮 -->
+  <div class="side-btn list-btn" onclick="handleList(this)">
+    <div class="icon-wrap">
+      <svg width="32" height="32" viewBox="-2 0 30 28" fill="none">
+        <path d="M1.75116 8.52865C1.08045 8.15414 1.0637 7.19509 1.72093 6.79739L12.7149 0.14477C13.0341 -0.0483577 13.4341 -0.0480921 13.753 0.145459L24.8138 6.85855C25.4706 7.25718 25.4525 8.21639 24.7811 8.5899L13.7876 14.7057C13.4843 14.8744 13.1154 14.8741 12.8124 14.705L1.75116 8.52865Z" fill="white"/>
+        <path d="M1.00175 13.9868L13.2998 20.4233L25.5979 13.9868" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <path d="M1.00175 19.4332L13.2998 25.8697L25.5979 19.4332" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="label">List</span>
+  </div>
+
+  <!-- Share 按钮 -->
+  <div class="side-btn share-btn" onclick="handleShare(this)">
+    <div class="icon-wrap">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M27.7438 13.6512L19.2028 4.25623C18.8612 3.91459 18.3488 3.91459 18.0071 4.25623C17.6655 4.59786 17.6655 4.76868 17.6655 5.11032V10.0641C10.6619 10.0641 4 15.8719 4 22.8754C4 24.7544 4.85409 27.1459 5.70818 28C6.7331 22.7046 12.0285 18.605 17.6655 18.605C17.6655 19.1174 17.6655 23.7295 17.6655 23.7295C17.6655 23.9004 17.6655 24.0712 17.8363 24.4128C18.1779 24.7544 18.8612 24.5836 19.032 24.4128L27.573 15.1886C27.9146 14.847 27.9146 14.5053 27.9146 14.3345C27.9146 14.1637 27.9146 13.8221 27.7438 13.6512Z" fill="white"/>
+      </svg>
+    </div>
+    <span class="label">Share</span>
+  </div>
+</div>
+
+<!-- 底部剧情信息 -->
+<div style="position:absolute;left:16px;top:610px;right:68px;z-index:10;padding:12px 0;display:flex;flex-direction:column;gap:8px;">
+    <!-- 标题 -->
+    <div style="font-size:14px;font-weight:600;line-height:1.43;color:#fff;text-shadow:0 2px 2px rgba(0,0,0,0.12);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Mommy, We Need Daddy! CEO's Escaped Wife Returns Momy We Need Daddy</div>
+    <!-- 标签行 -->
+    <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;">
+      <span style="display:inline-flex;align-items:center;padding:2px 4px;border-radius:2px;background:linear-gradient(90deg,#F6610F,#FF9357);font-size:9px;font-weight:600;color:#fff;line-height:1.33;">Following</span>
+      <span style="display:inline-flex;align-items:center;padding:0 4px;height:16px;background:rgba(255,255,255,0.2);border:0.5px solid rgba(255,255,255,0.1);border-radius:2px;font-size:10px;font-weight:500;color:#fff;line-height:1.6;">Secret Baby</span>
+      <span style="display:inline-flex;align-items:center;padding:0 4px;height:16px;background:rgba(255,255,255,0.2);border:0.5px solid rgba(255,255,255,0.1);border-radius:2px;font-size:10px;font-weight:500;color:#fff;line-height:1.6;gap:0;">CEO<svg width="6" height="12" viewBox="0 0 12 12" fill="none" style="margin-left:0;"><path d="M4 2L8 6L4 10" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+    </div>
+    <!-- 描述 -->
+    <div style="font-size:12px;font-weight:500;line-height:1.33;color:rgba(255,255,255,0.8);letter-spacing:-0.24px;text-shadow:0 2px 2px rgba(0,0,0,0.3);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Ethan hurt Amanda again and again for the person he liked when he was ...&nbsp;&nbsp;<span style="color:#F29B6B;font-weight:600;cursor:pointer;">More</span></div>
+</div>
+
+<!-- 底部工具栏 -->
+<div style="position:absolute;left:0;top:738px;width:375px;z-index:10;">
+  <img src="assets/bottom-toolbar.svg" alt="toolbar" style="width:375px;display:block;">
+</div>
+
+<!-- 选集底部弹窗 -->
+<div class="episode-sheet-overlay" id="sheetOverlay" onclick="closeEpisodeSheet()"></div>
+<div class="episode-sheet" id="episodeSheet">
+  <!-- 拖拽把手 -->
+  <div class="sheet-handle"></div>
+
+  <!-- 剧集信息 -->
+  <div class="sheet-drama-info">
+    <img class="sheet-cover" src="assets/cover-avatar.png" alt="cover">
+    <div class="sheet-detail">
+      <div class="sheet-drama-title">Mommy, We Need Daddy! CEO's Escaped Wife Returns</div>
+      <div class="sheet-summary">
+        <span class="sheet-tag-following">Following</span>
+        <span class="sheet-update-text">Updated to EP.12/EP.60</span>
+      </div>
+      <div class="sheet-genres">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7.535 1H4.45C3.1 1 2 1.535 2 2.895V10.485C2 10.765 2.225 10.995 2.505 10.995C2.59 10.995 2.676 10.97 2.75 10.93L5.995 9.31L9.235 10.93C9.355 11 9.5 11.02 9.63 10.98C9.765 10.94 9.875 10.85 9.94 10.73C9.98 10.655 10 10.57 10 10.485V2.895C9.985 1.535 8.89 1 7.535 1Z" fill="#9F9FA2"/></svg>
+        <span>Vampire</span>
+        <span class="dot"></span>
+        <span>Fantasy</span>
+        <span class="dot"></span>
+        <span>Werewolf</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 范围 Tab -->
+  <div class="sheet-range-tabs" id="rangeTabs">
+    <div class="range-tab active" data-start="1" data-end="25" onclick="switchRange(this)">1-25</div>
+    <div class="range-tab" data-start="26" data-end="50" onclick="switchRange(this)">26-50</div>
+    <div class="range-tab" data-start="51" data-end="60" onclick="switchRange(this)">51-60</div>
+  </div>
+
+  <!-- 集数网格 -->
+  <div class="sheet-ep-body">
+    <div class="episode-grid" id="episodeGrid"></div>
+  </div>
+
+  <div class="sheet-home-indicator"></div>
+</div>
+
+<!-- 分享底部弹窗 (iOS 风格) -->
+<div class="share-sheet-overlay" id="shareOverlay" onclick="closeShareSheet()"></div>
+<div class="share-sheet" id="shareSheet">
+  <!-- 主面板 -->
+  <div class="share-panel">
+    <!-- 链接预览 -->
+    <div class="share-link-header">
+      <div class="share-app-icon"><span>S</span></div>
+      <div class="share-link-info">
+        <div class="share-link-title">After the Deep, My Family B...</div>
+        <div class="share-link-url">h5.shorttv.live</div>
+      </div>
+      <button class="share-link-close" onclick="closeShareSheet()">
+        <svg viewBox="0 0 12 12" fill="none"><path d="M1 1L11 11M11 1L1 11" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <!-- App 分享 -->
+    <div class="share-apps-row">
+      <div class="share-app-item" onclick="shareAction('AirDrop')">
+        <div class="app-icon" style="background:linear-gradient(180deg,#1BB4F5,#0E8AD6);border-radius:14px;">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><circle cx="15" cy="12" r="4" stroke="white" stroke-width="1.5"/><path d="M8 22c0-3.87 3.13-7 7-7s7 3.13 7 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <span class="app-name">AirDrop</span>
+      </div>
+      <div class="share-app-item" onclick="shareAction('Messages')">
+        <div class="app-icon" style="background:linear-gradient(180deg,#5EDA64,#34C759);">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="3" y="5" width="22" height="16" rx="8" fill="white" fill-opacity="0.9"/><path d="M10 21L7 25V21" fill="white" fill-opacity="0.9"/></svg>
+        </div>
+        <span class="app-name">Messages</span>
+      </div>
+      <div class="share-app-item" onclick="shareAction('Mail')">
+        <div class="app-icon" style="background:linear-gradient(180deg,#5AC8FA,#007AFF);">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="3" y="7" width="22" height="14" rx="2" stroke="white" stroke-width="1.5"/><path d="M3 8L14 16L25 8" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <span class="app-name">Mail</span>
+      </div>
+      <div class="share-app-item" onclick="shareAction('Notes')">
+        <div class="app-icon" style="background:linear-gradient(180deg,#FFED4A,#FFD60A);border:0.5px solid rgba(0,0,0,0.08);">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="5" y="3" width="16" height="20" rx="2" fill="white"/><line x1="8" y1="9" x2="18" y2="9" stroke="#ccc" stroke-width="1"/><line x1="8" y1="12" x2="18" y2="12" stroke="#ccc" stroke-width="1"/><line x1="8" y1="15" x2="14" y2="15" stroke="#ccc" stroke-width="1"/></svg>
+        </div>
+        <span class="app-name">Notes</span>
+      </div>
+    </div>
+    <!-- 操作行 -->
+    <div class="share-actions-row">
+      <div class="share-action-item" onclick="shareAction('Copy')">
+        <div class="action-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="8" y="3" width="11" height="14" rx="2" stroke="#000" stroke-width="1.5"/><path d="M5 7v10a2 2 0 002 2h7" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <span class="action-name">Copy</span>
+      </div>
+      <div class="share-action-item" onclick="shareAction('Save Image')">
+        <div class="action-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3v13M12 16l-4-4M12 16l4-4" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <span class="action-name">Save Image</span>
+      </div>
+      <div class="share-action-item" onclick="shareAction('Contacts')">
+        <div class="action-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#000" stroke-width="1.5"/><path d="M5 20c0-3.87 3.13-7 7-7s7 3.13 7 7" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <span class="action-name">Contacts</span>
+      </div>
+      <div class="share-action-item" onclick="shareAction('Print')">
+        <div class="action-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="6" y="3" width="12" height="6" rx="1" stroke="#000" stroke-width="1.5"/><rect x="3" y="9" width="18" height="9" rx="2" stroke="#000" stroke-width="1.5"/><rect x="7" y="15" width="10" height="5" rx="1" stroke="#000" stroke-width="1.5"/></svg>
+        </div>
+        <span class="action-name">Print</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 列表操作 -->
+  <div class="share-list-panel">
+    <div class="share-list-item" onclick="shareAction('Quick Note')">
+      <span class="list-icon">📝</span>
+      <span class="list-text">Add to Quick Note</span>
+    </div>
+    <div class="share-list-item" onclick="shareAction('Baidu')">
+      <span class="list-icon">🔗</span>
+      <span class="list-text">Open in Browser</span>
+    </div>
+    <div class="share-list-item" onclick="shareAction('Reading List')">
+      <span class="list-icon">👓</span>
+      <span class="list-text">Add to Reading List</span>
+    </div>
+  </div>
+
+  <!-- 编辑操作 -->
+  <div class="share-edit-panel">
+    <button class="share-edit-btn" onclick="shareAction('Edit Actions')">Edit Actions...</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== 状态管理 =====
+let likeState = { active: false, count: 9900 };
+
+// ===== 工具函数 =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 1200);
+}
+
+function formatCount(n) {
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+  return n.toString();
+}
+
+// ===== 收藏/点赞按钮 =====
+function handleLike(btn) {
+  const iconWrap = btn.querySelector('.icon-wrap');
+  const label = btn.querySelector('.label');
+  const particles = btn.querySelector('.like-particles');
+
+  likeState.active = !likeState.active;
+
+  iconWrap.classList.remove('active');
+  void iconWrap.offsetWidth;
+
+  if (likeState.active) {
+    likeState.count++;
+    iconWrap.classList.add('active');
+    label.classList.add('active');
+    label.textContent = formatCount(likeState.count);
+    spawnLikeParticles(particles);
+    spawnStarParticles(iconWrap);
+    showToast('⭐ Added to favorites');
+  } else {
+    likeState.count--;
+    iconWrap.classList.remove('active');
+    label.classList.remove('active');
+    label.textContent = formatCount(likeState.count);
+    iconWrap.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    iconWrap.style.transform = 'scale(0.7)';
+    setTimeout(() => { iconWrap.style.transform = 'scale(1)'; }, 150);
+    setTimeout(() => { iconWrap.style.transition = ''; iconWrap.style.transform = ''; }, 500);
+    showToast('Removed from favorites');
+  }
+}
+
+function spawnLikeParticles(container) {
+  container.innerHTML = '';
+  const colors = ['#FFD700', '#FFA500', '#FF6347', '#FFE4B5', '#FFFF00', '#FF69B4'];
+  for (let i = 0; i < 8; i++) {
+    const p = document.createElement('div');
+    p.className = 'like-particle';
+    const angle = (i / 8) * Math.PI * 2;
+    const dist = 18 + Math.random() * 14;
+    const x = Math.cos(angle) * dist;
+    const y = Math.sin(angle) * dist;
+    p.style.cssText = `
+      background: ${colors[i % colors.length]};
+      --particle-end: translate(${x}px, ${y}px);
+      width: ${4 + Math.random() * 4}px;
+      height: ${4 + Math.random() * 4}px;
+    `;
+    container.appendChild(p);
+    requestAnimationFrame(() => p.classList.add('burst'));
+  }
+  setTimeout(() => container.innerHTML = '', 700);
+}
+
+function spawnStarParticles(wrap) {
+  const stars = ['✦', '✧', '⭑', '★'];
+  for (let i = 0; i < 5; i++) {
+    const s = document.createElement('div');
+    s.className = 'star-particle';
+    const angle = (i / 5) * Math.PI * 2 - Math.PI / 2;
+    const dist = 24 + Math.random() * 16;
+    const x = Math.cos(angle) * dist;
+    const y = Math.sin(angle) * dist;
+    s.style.cssText = `
+      --star-end: translate(${x}px, ${y}px);
+      color: ${['#FFD700', '#FFA500', '#FFFF00', '#FFE4B5', '#FF6347'][i]};
+      font-size: ${8 + Math.random() * 6}px;
+    `;
+    s.textContent = stars[i % stars.length];
+    wrap.appendChild(s);
+    requestAnimationFrame(() => s.classList.add('burst'));
+    setTimeout(() => s.remove(), 800);
+  }
+}
+
+// ===== List 按钮 → 打开选集弹窗 =====
+function handleList(btn) {
+  const iconWrap = btn.querySelector('.icon-wrap');
+  iconWrap.classList.remove('tap');
+  void iconWrap.offsetWidth;
+  iconWrap.classList.add('tap');
+  setTimeout(() => iconWrap.classList.remove('tap'), 350);
+
+  openEpisodeSheet();
+}
+
+// ===== 选集弹窗 =====
+let sheetOpen = false;
+let currentEp = 1;
+const TOTAL_EPS = 60;
+const FREE_EPS = 9; // EP 1-9 免费, 10+ 锁定
+const DEEP_LOCK_START = 13; // 13+ 深度锁定样式
+
+function openEpisodeSheet() {
+  if (sheetOpen) return;
+  sheetOpen = true;
+  document.getElementById('sheetOverlay').classList.add('open');
+  document.getElementById('episodeSheet').classList.add('open');
+
+  // 默认显示第一个 tab
+  const firstTab = document.querySelector('.range-tab');
+  switchRange(firstTab);
+}
+
+function closeEpisodeSheet() {
+  sheetOpen = false;
+  document.getElementById('sheetOverlay').classList.remove('open');
+  document.getElementById('episodeSheet').classList.remove('open');
+}
+
+function switchRange(tabEl) {
+  // 切换 tab 高亮
+  document.querySelectorAll('.range-tab').forEach(t => t.classList.remove('active'));
+  tabEl.classList.add('active');
+
+  const start = parseInt(tabEl.dataset.start);
+  const end = parseInt(tabEl.dataset.end);
+  renderEpisodes(start, end);
+}
+
+function renderEpisodes(start, end) {
+  const grid = document.getElementById('episodeGrid');
+  grid.innerHTML = '';
+
+  for (let i = start; i <= end && i <= TOTAL_EPS; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'ep-cell';
+
+    const isSelected = (i === currentEp);
+    const isLocked = (i > FREE_EPS);
+    const isDeepLocked = (i >= DEEP_LOCK_START);
+
+    if (isSelected) cell.classList.add('selected');
+    if (isDeepLocked) cell.classList.add('deep-locked');
+    else if (isLocked) cell.classList.add('locked');
+
+    // 音频波形（选中态）+ 数字 + 锁定角标
+    cell.innerHTML = `
+      <div class="ep-waveform">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      </div>
+      <span class="ep-num">${i}</span>
+      <div class="lock-badge">
+        <svg class="corner-svg" viewBox="0 0 14 14" fill="none">
+          <path class="corner-fill" d="M0 0H10C12.2091 0 14 1.79086 14 4V14H4C1.79086 14 0 12.2091 0 10V0Z"/>
+        </svg>
+        <svg class="lock-svg" viewBox="0 0 10 12" fill="none">
+          <path d="M7.84 5.94V5.04C7.84 3.99 6.99 3.15 5.95 3.15C4.9 3.14 4.05 3.99 4.04 5.03V5.04V5.94" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="2.77" y="5.91" width="6.34" height="4.95" rx="1" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M5.94 7.92V8.84" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    `;
+
+    cell.onclick = (e) => {
+      e.stopPropagation();
+      if (isLocked) {
+        showToast('🔒 Unlock to watch EP.' + i);
+        // 抖动动画
+        cell.style.animation = 'none';
+        void cell.offsetWidth;
+        cell.style.animation = 'cellShake 0.3s ease';
+        return;
+      }
+      currentEp = i;
+      // 重新渲染当前 range
+      renderEpisodes(start, end);
+      showToast('▶ Playing EP.' + i);
+    };
+
+    grid.appendChild(cell);
+
+    // 交错入场
+    setTimeout(() => cell.classList.add('visible'), (i - start) * 15);
+  }
+}
+
+// 抖动动画
+const cellShakeStyle = document.createElement('style');
+cellShakeStyle.textContent = `
+  @keyframes cellShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    50% { transform: translateX(3px); }
+    75% { transform: translateX(-2px); }
+  }
+`;
+document.head.appendChild(cellShakeStyle);
+
+// ===== Share 按钮 =====
+function handleShare(btn) {
+  const iconWrap = btn.querySelector('.icon-wrap');
+  iconWrap.classList.remove('tap');
+  void iconWrap.offsetWidth;
+  iconWrap.classList.add('tap');
+  setTimeout(() => iconWrap.classList.remove('tap'), 400);
+
+  openShareSheet();
+}
+
+// ===== 分享弹窗 =====
+let shareSheetOpen = false;
+
+function openShareSheet() {
+  if (shareSheetOpen) return;
+  shareSheetOpen = true;
+  document.getElementById('shareOverlay').classList.add('open');
+  document.getElementById('shareSheet').classList.add('open');
+}
+
+function closeShareSheet() {
+  shareSheetOpen = false;
+  document.getElementById('shareOverlay').classList.remove('open');
+  document.getElementById('shareSheet').classList.remove('open');
+}
+
+function shareAction(name) {
+  closeShareSheet();
+  if (name === 'Copy') {
+    showToast('🔗 Link copied');
+  } else {
+    showToast('Shared via ' + name);
+  }
+}
+</script>
+</body>
+</html>
