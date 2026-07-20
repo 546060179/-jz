@@ -117,7 +117,20 @@ class MotionAnimator(
                     targetView.rotation = from
                 }
                 is MotionEffect.Blur -> {
-                    // Blur requires RenderEffect (API 31+), skip on older versions
+                    // Blur requires RenderEffect (API 31+), apply initial blur
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        val blurFrom = effect.from ?: if (entering) 8f else 0f
+                        if (blurFrom > 0f) {
+                            targetView.setRenderEffect(
+                                android.graphics.RenderEffect.createBlurEffect(
+                                    blurFrom, blurFrom,
+                                    android.graphics.Shader.TileMode.CLAMP
+                                )
+                            )
+                        } else {
+                            targetView.setRenderEffect(null)
+                        }
+                    }
                 }
                 is MotionEffect.Flip -> {
                     // Flip initial state is applied via Camera+Matrix in the ValueAnimator below
@@ -205,7 +218,36 @@ class MotionAnimator(
                 }
                 is MotionEffect.Blur -> {
                     // Blur animated via ValueAnimator + RenderEffect on API 31+
-                    // Graceful degradation: no blur on older APIs
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        val blurFrom = effect.from ?: if (entering) 8f else 0f
+                        val blurTo = effect.to ?: if (entering) 0f else 8f
+                        val blurVa = ValueAnimator.ofFloat(blurFrom, blurTo).apply {
+                            duration = config.duration
+                            startDelay = config.delay
+                            interpolator = config.interpolator
+                            addUpdateListener { animation ->
+                                val radius = (animation.animatedValue as Float).coerceAtLeast(0.01f)
+                                if (radius < 0.1f) {
+                                    targetView.setRenderEffect(null)
+                                } else {
+                                    targetView.setRenderEffect(
+                                        android.graphics.RenderEffect.createBlurEffect(
+                                            radius, radius,
+                                            android.graphics.Shader.TileMode.CLAMP
+                                        )
+                                    )
+                                }
+                            }
+                            addListener(object : AnimatorListenerAdapter() {
+                                override fun onAnimationEnd(animation: Animator) {
+                                    if (blurTo < 0.1f) {
+                                        targetView.setRenderEffect(null)
+                                    }
+                                }
+                            })
+                        }
+                        blurVa.start()
+                    }
                 }
                 is MotionEffect.Flip -> {
                     // Flip is driven by a separate ValueAnimator below
@@ -217,6 +259,18 @@ class MotionAnimator(
         }
 
         animator.withEndAction { invokeOnEnd() }
+        // withLayer(): 对纯绘制类效果（fade/scale/slide/rotate）启用硬件层加速，
+        // 相当于 Web 端 will-change，动画期间提升为 LAYER_TYPE_HARDWARE、结束自动复位。
+        // 含 collapse（逐帧改布局，硬件层反而会反复重栅格化）或 flip（由独立
+        // ValueAnimator 驱动、自行管理硬件层）时跳过，避免副作用或双重管理。
+        val hasCollapseEffect = resolvedEffects.any { it is MotionEffect.Collapse }
+        val hasDrawProp = resolvedEffects.any {
+            it is MotionEffect.Fade || it is MotionEffect.Scale ||
+                it is MotionEffect.Slide || it is MotionEffect.Rotate
+        }
+        if (hasDrawProp && !hasCollapseEffect && !hasFlip) {
+            animator.withLayer()
+        }
         currentAnimator = animator
 
         // Flip 动画：使用 ValueAnimator + Camera + Matrix 实现 3D 翻转
@@ -242,6 +296,18 @@ class MotionAnimator(
                     }
                 }
             }
+            // 3D 翻转是绘制类变换，动画期间启用硬件层，结束/取消复位
+            va.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    targetView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+                }
+                override fun onAnimationEnd(animation: Animator) {
+                    targetView.setLayerType(View.LAYER_TYPE_NONE, null)
+                }
+                override fun onAnimationCancel(animation: Animator) {
+                    targetView.setLayerType(View.LAYER_TYPE_NONE, null)
+                }
+            })
             flipAnimator = va
             va.start()
         }

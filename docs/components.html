@@ -6,16 +6,16 @@
 <title>KINETIC UI - 跨端动效组件库</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rubik:wght@400;600;700&family=Montserrat:wght@600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--c:#186CE5;--ch:#6AADFF;--bg:#151515;--bg2:#171717;--bg3:#1C1C1C;--t1:#FFFFFF;--t2:rgba(255,255,255,.6);--t3:rgba(255,255,255,.4);--bd:rgba(217,217,217,.12);--r:24px;--hh:68px;--ff:'PingFang SC',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--mono:'Fira Code',monospace;--rubik:'Rubik',var(--ff)}
+:root{--c:#186CE5;--ch:#6AADFF;--bg:#151515;--bg2:#171717;--bg3:#1C1C1C;--t1:#FFFFFF;--t2:rgba(255,255,255,.6);--t3:rgba(255,255,255,.4);--bd:rgba(217,217,217,.12);--r:24px;--hh:52px;--ff:'PingFang SC',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--mono:'Fira Code',monospace;--rubik:'Rubik',var(--ff)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--ff);color:var(--t1);background:var(--bg);line-height:1.6}
 a{color:var(--ch);text-decoration:none}
 code{font-family:var(--mono);font-size:.85em;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:var(--ch)}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#444;border-radius:20px}
 
-.hd{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--hh);background:var(--bg);display:flex;align-items:center;padding:18px 40px;justify-content:space-between}
-.hd-logo{font-family:var(--rubik);font-size:24px;font-weight:700;color:#fff;cursor:pointer;display:flex;align-items:center;gap:12px;line-height:1em}
-.hd-logo-icon{width:32px;height:32px;border-radius:8px;flex-shrink:0;overflow:hidden}
+.hd{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--hh);background:var(--bg);display:flex;align-items:center;padding:12px 40px;justify-content:space-between}
+.hd-logo{font-family:'Montserrat',var(--ff);font-size:22px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:12px;line-height:22px;text-transform:capitalize;background:linear-gradient(90deg,rgba(151,207,248,1) 0%,rgba(220,220,220,1) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.hd-logo-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0;overflow:hidden;-webkit-text-fill-color:initial}
 .hd-r{display:flex;align-items:center;gap:32px}
 .hd-search-wrap{position:relative;width:270px}
 .hd-search{width:100%;height:40px;border-radius:100px;border:none;background:rgba(255,255,255,.12);backdrop-filter:blur(40px);padding:10px 44px 10px 20px;font-size:14px;font-weight:400;outline:none;color:var(--t1);font-family:var(--ff);line-height:1.43}
@@ -39,12 +39,19 @@ code{font-family:var(--mono);font-size:.85em;background:rgba(255,255,255,.06);pa
 .side-sub{display:none}
 
 /* Sidebar — Figma KINETIC UI style */
-.side-inner{background:rgba(255,255,255,.02);border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:24px;height:calc(100vh - var(--hh) - 40px);overflow-y:auto;scrollbar-width:none}
+.side-inner{background:#1C1C1C;border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:24px;height:calc(100vh - var(--hh) - 40px);overflow-y:auto;scrollbar-width:none}
 .side-inner::-webkit-scrollbar{width:6px;background:transparent}
 .side-inner::-webkit-scrollbar-thumb{background:transparent;border-radius:20px;transition:background .3s}
 .side-inner.scrolling::-webkit-scrollbar-thumb{background:#444}
 .side-inner.scrolling{scrollbar-width:thin;scrollbar-color:#444 transparent}
-.sg{padding:12px 24px;font-size:16px;font-weight:600;color:var(--t2);margin-top:0}
+.sg{padding:12px 24px;font-size:16px;font-weight:600;color:var(--t2);margin-top:0;display:flex;align-items:center;justify-content:space-between;border-radius:100px;transition:background .2s ease,color .2s ease;user-select:none}
+.sg:hover{background:rgba(255,255,255,.04);color:var(--t1)}
+.sg-label{cursor:pointer;flex:1}
+.sg-chevron{width:16px;height:16px;transition:transform .25s ease;flex-shrink:0;opacity:.5;cursor:pointer;padding:4px;box-sizing:content-box;border-radius:6px}
+.sg-chevron:hover{opacity:1;background:rgba(255,255,255,.08)}
+.sg.collapsed .sg-chevron{transform:rotate(-90deg)}
+.sg-items{display:flex;flex-direction:column;gap:4px;overflow:hidden;transition:max-height .3s ease,opacity .25s ease;opacity:1}
+.sg-items.collapsed{max-height:0 !important;opacity:0;pointer-events:none}
 .side-group{display:flex;flex-direction:column;gap:4px;border-top:1px solid rgba(217,217,217,.12);padding-top:0}
 .side-group:first-of-type{border-top:none}
 
@@ -58,8 +65,8 @@ code{font-family:var(--mono);font-size:.85em;background:rgba(255,255,255,.06);pa
 .si-ico{display:none}
 .side-ver{padding:12px 24px;font-family:'Montserrat',var(--ff);font-size:12px;font-weight:600;color:var(--t2);background:none;border-radius:12px;margin-top:8px;text-align:center}
 
-.pg-t{font-family:var(--rubik);font-size:32px;font-weight:700;margin-bottom:24px;color:var(--t1);line-height:1.375}
-.pg-d{font-size:14px;font-weight:400;color:var(--t2);margin-bottom:40px;line-height:1.43}
+.pg-t{font-family:var(--rubik);font-size:32px;font-weight:700;margin-bottom:8px;color:var(--t1);line-height:44px}
+.pg-d{font-size:14px;font-weight:400;color:var(--t2);margin-bottom:60px;line-height:20px}
 
 
 /* Inline search in content area */
@@ -73,19 +80,19 @@ code{font-family:var(--mono);font-size:.85em;background:rgba(255,255,255,.06);pa
 .sec p{font-size:13px;color:var(--t2);line-height:1.8;margin-bottom:6px}
 
 /* Category section */
-.cat-sec{margin-bottom:40px;scroll-margin-top:80px}
+.cat-sec{margin-bottom:60px;scroll-margin-top:80px}
 .cat-sec:last-child{margin-bottom:0}
-.cat-sec h3{font-family:var(--rubik);font-size:24px;font-weight:700;color:var(--t1);margin-bottom:24px;display:flex;align-items:center;gap:8px;line-height:1.833}
-.cat-sec h3 span{font-family:var(--rubik);font-size:12px;font-weight:600;color:#fff;background:rgba(255,255,255,.1);padding:4px 8px;border-radius:8px}
+.cat-sec h3{font-family:var(--rubik);font-size:24px;font-weight:700;color:var(--t1);margin-bottom:16px;display:flex;align-items:center;gap:8px;line-height:44px}
+.cat-sec h3 span{font-family:var(--rubik);font-size:12px;font-weight:600;color:#fff;background:rgba(255,255,255,.1);padding:4px 8px;border-radius:8px;line-height:16px}
 
-.cases{display:grid;grid-template-columns:repeat(5,1fr);gap:24px}
+.cases{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .case{display:flex;flex-direction:column;border:none;cursor:pointer;transition:transform .25s ease,box-shadow .25s ease;background:transparent;overflow:hidden;border-radius:var(--r);min-width:0;border:1px solid transparent}
 .case:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.4);border-color:var(--c)}
-.case-preview{height:158px;background:var(--bg2);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;border-radius:var(--r) var(--r) 0 0}
+.case-preview{height:200px;background:var(--bg3);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;border-radius:var(--r) var(--r) 0 0}
 .case-preview .cp-wrap{transform:scale(1.6);display:flex;align-items:center;justify-content:center}
-.case-info{padding:20px 16px;background:var(--bg3);border-radius:0 0 var(--r) var(--r)}
-.case-name{font-size:14px;font-weight:600;color:#fff;line-height:1.43}
-.case-eng{font-size:11px;color:var(--t3);margin-top:2px;font-family:var(--mono)}
+.case-info{padding:16px;background:#242424;border-radius:0 0 var(--r) var(--r);display:flex;flex-direction:column;gap:4px}
+.case-name{font-size:14px;font-weight:600;color:#fff;line-height:20px}
+.case-eng{font-size:12px;font-weight:600;color:var(--t2);line-height:20px;font-family:var(--ff)}
 .case-desc{display:none}
 
 .demo-replay{position:absolute;bottom:8px;right:8px;padding:3px 10px;border-radius:4px;font-size:10px;background:rgba(46,91,255,.15);color:var(--ch);border:1px solid rgba(46,91,255,.2);cursor:pointer;transition:opacity .15s;font-family:var(--ff)}
@@ -189,8 +196,8 @@ code{font-family:var(--mono);font-size:.85em;background:rgba(255,255,255,.06);pa
 @keyframes cShimmerSweep{0%{transform:translateX(-100%) rotate(-25deg)}100%{transform:translateX(300%) rotate(-25deg)}}
 @keyframes cSeqPop{0%{transform:scale(0.3);opacity:0}60%{transform:scale(1.1);opacity:1}100%{transform:scale(1);opacity:1}}
 
-@media(max-width:1200px){.cases{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:900px){.side{display:none}.main{margin-left:0;padding:20px}.mob-nav{display:flex}.hd-search-wrap{width:200px}.hd-search{width:100%}.hd-link{display:none}.cases{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1200px){.cases{grid-template-columns:repeat(3,1fr);gap:16px}}
+@media(max-width:900px){.side{display:none}.main{margin-left:0;padding:20px}.mob-nav{display:flex}.hd-search-wrap{width:200px}.hd-search{width:100%}.hd-link{display:none}.cases{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){.cases{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:480px){.cases{grid-template-columns:1fr}.main{padding:12px}}
 
@@ -222,14 +229,13 @@ code{font-family:var(--mono);font-size:.85em;background:rgba(255,255,255,.06);pa
 <body>
 
 <header class="hd">
-  <div class="hd-logo" onclick="showPage('intro')"><div class="hd-logo-icon"><img src="data:image/png;base64,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" style="width:127%;height:127%;display:block;margin:-13.5% 0 0 -13.5%"></div>Kinetic UI</div>
+  <div class="hd-logo" onclick="showPage('intro')"><div class="hd-logo-icon"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAcCAYAAACdz7SqAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAABxdJREFUeAGlVwtwVNUZ/s+55+7u3SXJ7ua1CSCRxlErDRkU7dQRpSlYqCHVOGOnWgXphAkUO7a2dTo4VdsKg53paIvGxg7KGFsnFEGG2qmtNFagxcgwNgSiG6uEZMmDJGz2ee95+J/NZvJgTZjxJCfJ3nvO//3f/w7ApYvM8fkLLzLjb1K07qch64a121l+oDR+5ugLA02Nr+NzE7dzGfIYbp5Xc3+hKMhb5DXLIX763YHkB2/2ZuXLmaBGaNvhO4tW3dbKzyYUvick3wVJuPDeJ3XlN2bPqtkAKyvXGOS3r4U9eXkL+JgEKRS4Sg3oP3joewNP3fHqTFACFRXuqpb/J+2uqDQMSqXbBSqVVDTfBwN/bbl36MX1f54FlBVdvc4qbT4QFeEoB4OyjFBKAb8lCXl4R43hnjhMs79V8fINdaqPAyGMxs6d2Rs98eY2alhEjKbAuu7GTbMB5l1f6y9rQsCuERSgmJISlBrnJR2BBlfT4mICFHgiQSS+UyaDVG/X3lj7344Ri4EhKLFMn/w8QN/azUXzd7wx6Hw0zCk1mOQEBEfBhKL5pHIF3DT5n8NbpmLRyfsCiCRAUDEmpaWU26Ri3AlS5iTJgmu2hhZu3RVR4VFk6EKGBLik4PUYwFB/b4Gb8L7u57p/sao5J1MhDKSLzucKhETjcAHSRpui1urSuGX5t2+uKNr8bA//cIgrCUzZHGJJgDI/A8skKr+QgYx82Hyq8csTLOUloFIKjYmgEs1DNGFUBHeaIzCfOKZ9YwRWP3RN2aZdH8nwBVRRm1TCcMyGJVeYkOcmKlTqBnau66UTjUsaZgLCTDtrZpopRgH+4GCn5TiwLScCgRbd9/ulJQ3P/I9/jAyBMMUFTzBfYnVF4p2Seab60gIGLNK5p21T1YO5AKeBgjYl5pXSfnQomhdfollJOiXBnFegjwTveW554PYt76vuQbSFwbBccLMwf6xvi8cXPXO8ackig/gunnvlL9+tWv95gNPNm2GqMv4zMo8x1dJpRYtLqDhQf7P/rqYVBd9oPMY/HRSCo0ltwpUXhrrWu4P6/vYf3f2KJ967e2dNxf2zAU4DFbZA/0kgGBBIFQHjoII+Em5ZaUZDG28N1jS0iU970fHKwNzjwnR6Pv5BYRmMl0hz+8NPLtpaveDBuQBhnM74MjB6DUdHro5YSRTxWCM/vqqgsP6FWt/Vt+2zz0UEZp4BSnKRx7rPPlJ8jb4G2Zrc8uITkSlGm3VNMsUvJ40OtXX0SjPx/vP76bea1loVK/Y5kX58SQ2QTCRAnT77aAYQyhreemLh45He0oa2P2ZEjLOec9FJpqgicnHSWn3CrWWNX/Veu/JPcmhAEiENJYiwk9GT/b8ur9LnS3/YeYiV3/RzlVBlZuHSB8of723Psp4TeEpxgEw1AkciMOZ7LB5wsO4SBzURRDp27Pj5Z6+6IQO4pfOQy5r/TTkWx5pHCKRihowa1eWPXR7wZMogqkCHSkxJoa9JQ+o0AgcBU+kjA7sqv6aPFW86/YbpKlnD42NU2Y6uKmhXBi4PNwzFqst+FZkTeBpTidErUZA2tV4yTSCZ5P8abF68Qn8u2XjqdZen6A6ZihOiy5fDRWxg9B/KHGgHanKiMJfSrDq0vX8CmM3OFLLm1RmDvYlSf8AW598Z3nNlTQbwgc59jIXqRDJJdD0WaVvY4O0Ybblu1fmdVcvVPHcPMIp0uWFJs3r+05Hj49IuBZ4MpAxdmdlYvFly6N0jI39YfKt+7L/3dCs1i78teYJQrZQGNKyOoaZQ9fdP2Pbqlu69PY/6FzOv6sLuxoEqg3LvstIdPTmBJ83rJNHEJFMKGUGvDr/Xp58Hv9PR6rFK6sGJEaL0uTR6wtMx0jy/+utP//tnyaRhKitUd/O+0UjiyG+20sIgdjk9MaCpaf6y4ifDR7PAufqpK1PsKVYj4ams1Xr469v3u93+epm6QDBedKPntnB3Du1ZWK0vvP2TW3aeOnhog5xnsdQwlJTcteNtZY8Y2AhAb9TdcFulNwUePvo8TJk8JtEVo2DbmKsOeEJL7w5tdoTLVVAr0jFCsemgybmtPGdGXr1C56mOTB3bcHLHupc/OXhggwjm0WQ0gZ2YYlqLTKOSCguYnaLuxdevzwnKVN9bivkxetGnjkPlSA+VilKC8qWDgNIMX3xt0Vdg+jiaEdT9uztfjrQf3UgDPryjy2BWLKYwUUoadoJDLp/Gwq2D9vmT+7F16DqI0xL2GkWUw6VMcyt8sbXiWsg9/2pg0v/ULbsvHGu7jy0IYF9E7yuK8cGVKg7Ssf/uv2cq1tQpLTMou1e+9Iy7qPYhRnFipIZK9f19d6KtbiPMPXBnhnXflTXF3tWPPAaMVeIVJ9H5z23xw7/8YKplZi6a3RCsXJOf/TszosDlr1z/lkx79hmJr5D7xQ+/2gAAAABJRU5ErkJggg==" style="width:100%;height:100%;display:block;object-fit:cover"></div>Kinetic UI</div>
   <div class="hd-r">
     <div class="hd-search-wrap">
       <span class="hd-search-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span>
       <input class="hd-search" placeholder="输入关键词搜索...">
       <div class="search-drop" id="searchDrop"></div>
     </div>
-    <a class="hd-link" onclick="showPage('overview')">组件库</a>
     <a class="hd-link" href="https://github.com/546060179/jiuzhou" target="_blank" style="display:flex;align-items:center" title="GitHub"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
   </div>
 </header>
@@ -249,7 +255,7 @@ code{font-family:var(--mono);font-size:.85em;background:rgba(255,255,255,.06);pa
 var NAV = [
   {id:'overview', label:'全部动效', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>'},
   {id:'popup', label:'弹窗/浮层', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>', count:8},
-  {id:'transition', label:'页面转场', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>', count:5},
+  {id:'transition', label:'页面转场', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>', count:8},
   {id:'feedback', label:'操作反馈', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', count:5},
   {id:'loading', label:'加载状态', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3v4h4"/><path d="M19 21v-4h-4"/><path d="M5 7a9 9 0 0 1 14.7 3"/><path d="M19 17A9 9 0 0 1 4.3 14"/></svg>', count:5},
   {id:'list', label:'列表/编排', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>', count:6},
@@ -344,14 +350,14 @@ transition: [
    cautions:['时长不超过 500ms','确保元素已完成布局再触发','配合 prefers-reduced-motion'],
    tips:['推荐用 intent="enter" 自动推导参数','列表项淡入用 FadeGroup+stagger']},
   {id:'blur-in', name:'模糊进入', icon:'🌁', desc:'从模糊到清晰的过渡', tags:['blur','fade'],
-   effect:'blur-fade-in', duration:500, easing:'expressive',
+   effect:'blur-fade-in', duration:1000, easing:'expressive',
    scenario:'背景虚化、图片渐进加载、毛玻璃效果过渡。',
    react:'<Motion in={show} effect="blur-fade-in" timing="slow">\n  <Image />\n</Motion>',
    vue:'<Motion :in="show" effect="blur-fade-in" timing="slow">\n  <Image />\n</Motion>',
    swift:'animator.start(entering: true, effects: EffectPresets.blurFadeIn)',
    kotlin:'animator.start(entering = true, effects = EffectPresets.BLUR_FADE_IN)',
    cautions:['blur 是 GPU 密集操作，避免多元素同时使用','Android API 31+ 才支持','模糊半径不超过 12px'],
-   tips:['图片渐进加载: 先缩略图+blur，大图加载完 blur-fade-in','背景虚化用 backdrop-filter']},
+   tips:['图片渐进加载: 先缩略图+blur，大图加载完 blur-fade-in','背景虚化用 backdrop-filter','初始保留 0.6 透明度，让"由糊变清"成为主视觉，与纯淡入区分开']},
   {id:'flip-in', name:'3D 翻转', icon:'🔄', desc:'卡片翻面、翻牌效果', tags:['flip','3D'],
    effect:'flip-y-in', duration:400, easing:'expressive',
    scenario:'会员卡翻转显示二维码、记忆翻牌游戏、优惠券翻转。',
@@ -379,6 +385,33 @@ transition: [
    kotlin:'MotionAnimator(page).start(\n  entering = true,\n  effects = listOf(\n    MotionEffect.Fade(0f, 1f),\n    MotionEffect.Slide(SlideDirection.RIGHT, 30f)\n  )\n)',
    cautions:['slide distance 不要太大(20-40px)','进入和退出方向要一致','配合 fade 避免生硬边缘','路由切换注意新旧页面层叠顺序'],
    tips:['direction 根据导航方向动态切换','distance 30px 是最佳平衡点','Tab 切换用 slide，返回用反向 slide']},
+  {id:'bounce-in', name:'弹性进入', desc:'元素带过冲回弹地缩放出现，活泼有张力', tags:['scale','bounce','delight'],
+   effect:'bounce-in', duration:600, easing:'bounce',
+   scenario:'点赞成功、徽章解锁、新消息气泡等需要活泼强调的入场。scale 0.3→1 配 bounce 缓动过冲到约 1.1 再回落。',
+   react:'<Motion in={show} effect="bounce-in" easing="bounce">\n  <Badge />\n</Motion>',
+   vue:'<Motion :in="show" effect="bounce-in" easing="bounce">\n  <Badge />\n</Motion>',
+   swift:'animator.start(entering: true, effects: EffectPresets.bounceIn,\n  options: FadeOptions(timingFunction: EasingCurves.bounce))',
+   kotlin:'animator.start(entering = true, effects = EffectPresets.BOUNCE_IN,\n  options = FadeOptions(interpolator = EasingCurves.BOUNCE))',
+   cautions:['过冲幅度靠 bounce 缓动实现，不要叠加过大 scale','delight 类动效不宜频繁使用','reduced-motion 下退化为普通缩放'],
+   tips:['bounce 缓动 = cubic-bezier(0.34, 1.56, 0.64, 1)','搭配 scale 0.3→1 张力最佳','时长 500-650ms 弹性最自然']},
+  {id:'zoom-slide-in', name:'缩放上滑', desc:'元素从下方滑近并放大出现，有纵深感', tags:['scale','slide','fade'],
+   effect:'zoom-slide-in', duration:500, easing:'enter',
+   scenario:'卡片从列表底部滑入并放大到详情、底部弹层内容入场。scale 0.9→1 + 上滑 32px + 淡入。',
+   react:'<Motion in={show} effect="zoom-slide-in" intent="enter">\n  <Card />\n</Motion>',
+   vue:'<Motion :in="show" effect="zoom-slide-in" intent="enter">\n  <Card />\n</Motion>',
+   swift:'animator.start(entering: true, effects: EffectPresets.zoomSlideIn,\n  options: FadeOptions(intent: .enter))',
+   kotlin:'animator.start(entering = true, effects = EffectPresets.ZOOM_SLIDE_IN)',
+   cautions:['scale 起点不宜过小(0.85-0.95)','slide 与 scale 方向要协调','大面积内容慎用避免眩晕'],
+   tips:['scale 0.9 + slide 32px 纵深感最佳','配 enter 缓动快速减速','适合卡片/弹层入场']},
+  {id:'spin-in', name:'旋转进入', desc:'元素旋转半圈并淡入出现，趣味十足', tags:['rotate','fade','delight'],
+   effect:'spin-in', duration:600, easing:'expressive',
+   scenario:'刷新完成、勋章/图标趣味入场。rotate -180°→0° + 淡入。',
+   react:'<Motion in={show} effect="spin-in" easing="expressive">\n  <Icon />\n</Motion>',
+   vue:'<Motion :in="show" effect="spin-in" easing="expressive">\n  <Icon />\n</Motion>',
+   swift:'animator.start(entering: true, effects: EffectPresets.spinIn,\n  options: FadeOptions(timingFunction: EasingCurves.expressive))',
+   kotlin:'animator.start(entering = true, effects = EffectPresets.SPIN_IN)',
+   cautions:['旋转与 flip 不能同时使用','大角度旋转配合淡入更柔和','图标类小元素效果最佳'],
+   tips:['-180° 半圈旋入比整圈更克制','配 expressive 缓动有个性','搭配 scale 可做"弹出旋入"']},
 ],
 feedback: [
   {id:'press', name:'按压反馈', icon:'👇', desc:'按钮、卡片的按下效果', tags:['scale','快速'],
@@ -460,8 +493,8 @@ loading: [
    scenario:'语音消息播放时显示波浪条动画。循环动画用 CSS keyframes，交错延迟可用库的 stagger() 计算。',
    react:'import { stagger } from "@fade-animation/core";\n\n// 用 stagger() 生成延迟数组，CSS keyframes 做循环\nconst delays = stagger(4, { interval: 100 });\n\n// CSS:\n// .wave-bar {\n//   animation: wave 600ms ease-in-out infinite alternate;\n//   transform-origin: bottom;\n// }\n// @keyframes wave {\n//   0% { transform: scaleY(1); }\n//   100% { transform: scaleY(1.6); }\n// }\n\n<div className="wave-bars">\n  {delays.map((d, i) => (\n    <div key={i} className="wave-bar" style={{ animationDelay: d + "ms" }} />\n  ))}\n</div>',
    vue:'<script setup>\nimport { stagger } from "@fade-animation/core";\nconst delays = stagger(4, { interval: 100 });\n<\/script>\n<template>\n  <div class="wave-bars">\n    <div v-for="(d, i) in delays" :key="i"\n      class="wave-bar"\n      :style="{ animationDelay: d + \'ms\' }" />\n  </div>\n</template>',
-   swift:'// 循环动画 iOS 用 CABasicAnimation 最稳定，库的 MotionAnimator 不做循环\n// stagger 工具仅在 Web/core 侧提供，iOS 侧手动用下标乘以间隔\nlet staggerInterval: TimeInterval = 0.1\nbars.enumerated().forEach { i, bar in\n  let anim = CABasicAnimation(keyPath: "transform.scale.y")\n  anim.fromValue = 1\n  anim.toValue = 1.6\n  anim.duration = 0.3\n  anim.beginTime = CACurrentMediaTime() + Double(i) * staggerInterval\n  anim.autoreverses = true\n  anim.repeatCount = .infinity\n  anim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)\n  bar.layer.add(anim, forKey: "wave")\n}',
-   kotlin:'// stagger 工具仅在 Web/core 侧提供，Android 侧手动用下标乘以间隔\nval staggerInterval = 100L\nbars.forEachIndexed { i, bar ->\n  ObjectAnimator.ofFloat(bar, "scaleY", 1f, 1.6f).apply {\n    duration = 300L\n    startDelay = i * staggerInterval\n    repeatCount = ValueAnimator.INFINITE\n    repeatMode = ValueAnimator.REVERSE\n    interpolator = AccelerateDecelerateInterpolator()\n  }.start()\n}',
+   swift:'// 循环动画 iOS 用 CABasicAnimation 最稳定，库的 MotionAnimator 不做循环\n// 交错延迟可用库的 stagger()；此处为无限循环 beginTime，直接用下标乘间隔\nlet staggerInterval: TimeInterval = 0.1\nbars.enumerated().forEach { i, bar in\n  let anim = CABasicAnimation(keyPath: "transform.scale.y")\n  anim.fromValue = 1\n  anim.toValue = 1.6\n  anim.duration = 0.3\n  anim.beginTime = CACurrentMediaTime() + Double(i) * staggerInterval\n  anim.autoreverses = true\n  anim.repeatCount = .infinity\n  anim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)\n  bar.layer.add(anim, forKey: "wave")\n}',
+   kotlin:'// 交错延迟可用库的 stagger()；此处为无限循环，直接用下标乘间隔\nval staggerInterval = 100L\nbars.forEachIndexed { i, bar ->\n  ObjectAnimator.ofFloat(bar, "scaleY", 1f, 1.6f).apply {\n    duration = 300L\n    startDelay = i * staggerInterval\n    repeatCount = ValueAnimator.INFINITE\n    repeatMode = ValueAnimator.REVERSE\n    interpolator = AccelerateDecelerateInterpolator()\n  }.start()\n}',
    cautions:['3-7 根条','每根延迟有规律','真实音频应响应数据','reduced-motion 用静态图标'],
    tips:['scaleY 比改 height 性能好','真实可视化需 Web Audio API']},
   {id:'count-up', name:'数字滚动', desc:'数字从 0 滚动到目标值，常用于数据统计展示', tags:['counter','数据'],
@@ -480,8 +513,8 @@ list: [
    scenario:'Feed 流加载完成后卡片从上到下依次淡入。库内置 FadeGroup 组件自动编排（当前只做 fade；需要 scale/slide 组合请手动用 Motion + stagger）。',
    react:'import { FadeGroup, Motion } from "@fade-animation/react";\nimport { stagger } from "@fade-animation/core";\n\n// 方式 A：只做 fade — 直接用 FadeGroup\n<FadeGroup\n  in={loaded}\n  intent="enter"\n  stagger={{ interval: 60 }}\n>\n  {items.map(item => (\n    <Card key={item.id}>{item.content}</Card>\n  ))}\n</FadeGroup>\n\n// 方式 B：scale+fade 组合 — 手动用 stagger + Motion\nconst delays = stagger(items.length, { interval: 60 });\n\n{items.map((item, i) => (\n  <Motion\n    key={item.id}\n    in={loaded}\n    effect="scale-fade-in"\n    intent="enter"\n    delay={delays[i]}\n  >\n    <Card>{item.content}</Card>\n  </Motion>\n))}',
    vue:'<!-- 方式 A：FadeGroup 只做 fade —— Vue 用扁平化 prop -->\n<FadeGroup\n  :in="loaded"\n  intent="enter"\n  :stagger-interval="60"\n>\n  <Card v-for="item in items" :key="item.id">{{ item.content }}</Card>\n</FadeGroup>\n\n<!-- 方式 B：scale+fade 组合 -->\n<script setup>\nimport { stagger } from "@fade-animation/core";\nconst delays = stagger(items.length, { interval: 60 });\n<\/script>\n<template>\n  <Motion\n    v-for="(item, i) in items"\n    :key="item.id"\n    :in="loaded"\n    effect="scale-fade-in"\n    intent="enter"\n    :delay="delays[i]"\n  >\n    <Card>{{ item.content }}</Card>\n  </Motion>\n</template>',
-   swift:'import FadeAnimation\n\n// stagger 工具仅在 core 层提供，iOS 侧用下标乘以间隔\nlet staggerInterval = 60  // 毫秒\n\nitems.enumerated().forEach { i, item in\n  MotionAnimator(\n    targetView: item.view,\n    options: FadeOptions(\n      duration: 300,\n      delay: i * staggerInterval,\n      intent: .enter\n    )\n  ).start(entering: true, effects: EffectPresets.scaleFadeIn)\n}',
-   kotlin:'import com.fadeanimation.*\n\n// stagger 工具仅在 core 层提供，Android 侧用下标乘以间隔\nval staggerInterval = 60L  // 毫秒\n\nitems.forEachIndexed { i, item ->\n  MotionAnimator(\n    item.view,\n    FadeOptions(\n      duration = 300L,\n      delay = i * staggerInterval,\n      intent = MotionIntent.ENTER\n    )\n  ).start(entering = true, effects = EffectPresets.SCALE_FADE_IN)\n}',
+   swift:'import FadeAnimation\n\n// stagger() 现已在原生端提供，数值与 Web 完全一致\nlet delays = stagger(items.count, options: StaggerOptions(interval: 60))\n\nitems.enumerated().forEach { i, item in\n  MotionAnimator(\n    targetView: item.view,\n    options: FadeOptions(\n      duration: 300,\n      delay: delays[i],\n      intent: .enter\n    )\n  ).start(entering: true, effects: EffectPresets.scaleFadeIn)\n}',
+   kotlin:'import com.fadeanimation.*\n\n// stagger() 现已在原生端提供，数值与 Web 完全一致\nval delays = stagger(items.size, StaggerOptions(interval = 60L))\n\nitems.forEachIndexed { i, item ->\n  MotionAnimator(\n    item.view,\n    FadeOptions(\n      duration = 300L,\n      delay = delays[i],\n      intent = MotionIntent.ENTER\n    )\n  ).start(entering = true, effects = EffectPresets.SCALE_FADE_IN)\n}',
    cautions:['元素>20个时缩短间隔','首屏可见才 stagger','避免 infinite scroll 中使用','控制在 10-15 个以内'],
    tips:['interval 50-80ms 最佳','center 方向适合从中间扩散','FadeGroup 已封装好']},
   {id:'reorder', name:'拖拽排序', icon:'↕️', desc:'列表拖拽重新排序', tags:['drag','spring'],
@@ -516,8 +549,8 @@ list: [
    scenario:'奖励弹窗中，遮罩淡入 -> 卡片弹出 -> 礼盒弹入 -> 金币弹入，每步完成后触发下一步。',
    react:'import { planSequence } from "@fade-animation/core";\n\nconst plan = planSequence([\n  { effects: [{type:"fade"}], duration: 350 },\n  { effects: [{type:"scale",from:0.3,to:1},{type:"fade"}], duration: 700, delay: 50 },\n  { effects: [{type:"scale",from:0,to:1}], duration: 500, delay: 70 },\n  { effects: [{type:"scale",from:0,to:1}], duration: 500, delay: 70 },\n]);\n// plan.stepDelays = [0, 400, 1220, 1790]\n// plan.totalDuration = 2360',
    vue:'// 同 React，用 planSequence 计算延迟\nconst plan = planSequence([...]);\n// 用 :delay 绑定每步延迟',
-   swift:'// DispatchQueue 编排\nfunc playSequence() {\n  MotionAnimator(maskView).start(entering: true,\n    effects: [.fade(from:0,to:1)],\n    options: FadeOptions(duration: 0.35))\n  DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {\n    MotionAnimator(cardView).start(entering: true,\n      effects: EffectPresets.scaleFadeIn,\n      options: FadeOptions(duration: 0.7))\n  }\n  DispatchQueue.main.asyncAfter(deadline: .now() + 1.17) {\n    MotionAnimator(trophyView).start(entering: true,\n      effects: [.scale(from:0,to:1)],\n      options: FadeOptions(duration: 0.5))\n  }\n}',
-   kotlin:'// Handler 编排\nfun playSequence() {\n  MotionAnimator(maskView).start(entering = true,\n    effects = listOf(MotionEffect.Fade(0f, 1f)),\n    options = FadeOptions(duration = 350))\n  handler.postDelayed({\n    MotionAnimator(cardView).start(entering = true,\n      effects = EffectPresets.SCALE_FADE_IN,\n      options = FadeOptions(duration = 700))\n  }, 50)\n  handler.postDelayed({\n    MotionAnimator(trophyView).start(entering = true,\n      effects = listOf(MotionEffect.Scale(0f, 1f)),\n      options = FadeOptions(duration = 500))\n  }, 120)\n}',
+   swift:'import FadeAnimation\n\n// planSequence 现已在原生端提供，自动计算每步累计延迟\nfunc playSequence() {\n  let steps = [\n    SequenceStep(effects: [.fade(from:0,to:1)], duration: 350),\n    SequenceStep(effects: EffectPresets.scaleFadeIn, duration: 700, delay: 50),\n    SequenceStep(effects: [.scale(from:0,to:1)], duration: 500, delay: 70),\n  ]\n  let plan = planSequence(steps)\n  for (i, step) in steps.enumerated() {\n    let delay = TimeInterval(plan.stepDelays[i]) / 1000\n    DispatchQueue.main.asyncAfter(deadline: .now() + delay) {\n      MotionAnimator(targetView: views[i],\n        options: FadeOptions(duration: step.duration ?? 300))\n        .start(entering: true, effects: step.effects)\n    }\n  }\n}',
+   kotlin:'import com.fadeanimation.*\n\n// planSequence 现已在原生端提供，自动计算每步累计延迟\nfun playSequence() {\n  val steps = listOf(\n    SequenceStep(effects = listOf(MotionEffect.Fade(0f, 1f)), duration = 350L),\n    SequenceStep(effects = EffectPresets.SCALE_FADE_IN, duration = 700L, delay = 50L),\n    SequenceStep(effects = listOf(MotionEffect.Scale(0f, 1f)), duration = 500L, delay = 70L),\n  )\n  val plan = planSequence(steps)\n  steps.forEachIndexed { i, step ->\n    handler.postDelayed({\n      MotionAnimator(views[i], FadeOptions(duration = step.duration ?: 300L))\n        .start(entering = true, effects = step.effects)\n    }, plan.stepDelays[i])\n  }\n}',
    cautions:['序列要有明确结束状态','每步延迟 50-150ms 为佳','序列中断时取消所有待执行步骤','不要在序列执行中允许重复触发','总时长不超过 2 秒'],
    tips:['用 planSequence() 自动计算累计延迟','iOS 用 DispatchQueue.main.asyncAfter','Android 用 Handler.postDelayed','适合奖励弹窗、引导流程等场景']},
   {id:'marquee', name:'跑马灯', icon:'📜', desc:'公告滚动、标签云、Logo 墙', tags:['marquee','循环'],
@@ -613,6 +646,64 @@ gesture: [
 // ============================================================
 var currentPage = 'intro';
 
+// Track collapsed state of sidebar groups
+var sidebarCollapsed = {};
+
+function toggleSidebarGroup(catId) {
+  sidebarCollapsed[catId] = !sidebarCollapsed[catId];
+  var items = document.getElementById('sg-items-'+catId);
+  var sg = items ? items.previousElementSibling : null;
+  if(sg && items) {
+    if(sidebarCollapsed[catId]) {
+      sg.classList.add('collapsed');
+      items.classList.add('collapsed');
+      items.style.maxHeight = '0';
+    } else {
+      sg.classList.remove('collapsed');
+      items.classList.remove('collapsed');
+      items.style.maxHeight = items.scrollHeight + 'px';
+      setTimeout(function(){ items.style.maxHeight = 'none'; }, 300);
+    }
+  }
+}
+
+function handleGroupTitleClick(catId) {
+  // Click on category title text → go to overview and scroll to that category
+  if(currentPage !== 'overview') {
+    showPage('overview');
+    setTimeout(function(){ scrollToCat(catId); }, 100);
+  } else {
+    scrollToCat(catId);
+  }
+}
+
+function handleSidebarItemClick(catId, caseId) {
+  if(currentPage === 'overview') {
+    // Clear any previous highlight immediately
+    document.querySelectorAll('.case').forEach(function(c){
+      c.style.boxShadow = '';
+      c.style.borderColor = '';
+    });
+    // On overview page, scroll to the corresponding card
+    var card = document.querySelector('.case[data-case="'+caseId+'"]');
+    if(card) {
+      var offset = 80;
+      var top = card.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({top: top, behavior:'smooth'});
+      // Briefly highlight the card
+      card.style.boxShadow = '0 0 0 2px var(--c), 0 12px 32px rgba(0,0,0,.4)';
+      card.style.borderColor = 'var(--c)';
+      setTimeout(function(){
+        card.style.boxShadow = '';
+        card.style.borderColor = '';
+      }, 600);
+    }
+  } else {
+    // On other pages, navigate to detail
+    showPage('detail:'+catId+':'+caseId);
+  }
+}
+
 function buildSidebar() {
   var sb = document.getElementById('sidebar');
   var h = '<div class="side-inner">';
@@ -621,7 +712,7 @@ function buildSidebar() {
   var cautOn = (currentPage === 'cautions') ? ' on' : '';
   h += '<div class="side-group" style="border-top:none">';
   h += '<div class="si si-top'+ovOn+'" onclick="showPage(\'overview\')">组件总览</div>';
-  h += '<div class="si'+cautOn+'" style="display:flex;justify-content:space-between;align-items:center;padding:12px 8px 12px 24px" onclick="showPage(\'cautions\')">更新内容<span style="font-family:Rubik;font-size:12px;font-weight:600;color:rgba(154,239,94,.8);background:rgba(154,239,94,.05);padding:4px 8px;border-radius:8px">NEW</span></div>';
+  h += '<div class="si'+cautOn+'" style="display:flex;justify-content:space-between;align-items:center;padding:12px 8px 12px 24px" onclick="showPage(\'cautions\')">更新内容<span style="font-family:Rubik;font-size:12px;font-weight:600;color:var(--ch);background:rgba(24,108,229,.1);padding:4px 8px;border-radius:8px">NEW</span></div>';
   h += '</div>';
   // Detail page: extract current caseId
   var activeCaseId = '';
@@ -630,15 +721,22 @@ function buildSidebar() {
   Object.keys(CASES).forEach(function(catId){
     var nav = NAV.find(function(n){return n.id===catId;});
     if(!nav) return;
+    var isCollapsed = sidebarCollapsed[catId] === true;
+    var collapsedClass = isCollapsed ? ' collapsed' : '';
     h += '<div class="side-group">';
-    h += '<div class="sg">'+nav.label+'</div>';
+    h += '<div class="sg'+collapsedClass+'">';
+    h += '<span class="sg-label" onclick="handleGroupTitleClick(\''+catId+'\')">'+nav.label+'</span>';
+    h += '<svg class="sg-chevron" onclick="toggleSidebarGroup(\''+catId+'\')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>';
+    h += '</div>';
+    h += '<div class="sg-items'+collapsedClass+'" id="sg-items-'+catId+'">';
     CASES[catId].forEach(function(c){
       var isOn = (c.id === activeCaseId) ? ' on' : '';
-      h += '<div class="si'+isOn+'" data-case="'+c.id+'" data-cat="'+catId+'" onclick="showPage(\'detail:'+catId+':'+c.id+'\')">'+c.name+'</div>';
+      h += '<div class="si'+isOn+'" data-case="'+c.id+'" data-cat="'+catId+'" onclick="handleSidebarItemClick(\''+catId+'\',\''+c.id+'\')">'+c.name+'</div>';
     });
     h += '</div>';
+    h += '</div>';
   });
-  h += '<div class="side-ver">V1.1.0</div>';
+  h += '<div class="side-ver">V1.2.0</div>';
   h += '</div>';
   sb.innerHTML = h;
 }
@@ -703,7 +801,7 @@ function renderIntro() {
   '<li>🎬 <b style="color:var(--t1)">18 种预设</b> — scale-fade-in / slide-up-in / blur-fade-in 等开箱即用</li>'+
   '</ul></div>'+
   '<div class="sec"><h2>安装</h2>'+
-  '<div class="ct"><div class="ct-body"># React\nnpm install @fade-animation/react\n\n# Vue\nnpm install @fade-animation/vue\n\n# Core (框架无关)\nnpm install @fade-animation/core</div></div></div>'+
+  '<div class="ct"><div class="ct-body"># Web — React / Vue\nnpm install @fade-animation/react   # 或 @fade-animation/vue\n# 依赖 @fade-animation/core 会自动带入\n\n# iOS — Swift Package Manager（最低 iOS 13，全 API public）\n// Package.swift\n.package(path: "packages/ios")\n// 或独立仓库：.package(url: "https://github.com/&lt;org&gt;/fade-animation-ios", from: "0.1.0")\n\n# Android — Gradle / Maven（坐标 com.fadeanimation:fade-animation-android:0.1.0）\n// 先发布到本地：./gradlew publishToMavenLocal\nimplementation("com.fadeanimation:fade-animation-android:0.1.0")</div></div></div>'+
   '<div class="sec"><h2>快速开始</h2>'+
   '<div class="ct"><div class="ct-tabs"><div class="ct-tab on" onclick="switchTab(this,\'intro-code\',0)">React</div><div class="ct-tab" onclick="switchTab(this,\'intro-code\',1)">Vue</div><div class="ct-tab" onclick="switchTab(this,\'intro-code\',2)">iOS</div><div class="ct-tab" onclick="switchTab(this,\'intro-code\',3)">Android</div></div>'+
   '<div class="ct-body" id="intro-code">import { Fade, Motion } from \'@fade-animation/react\';\n\n// 淡入\n<Fade in={show} intent="enter">\n  <Content />\n</Fade>\n\n// 缩放淡入\n<Motion in={show} effect="scale-fade-in" intent="enter">\n  <Modal />\n</Motion></div></div></div>'+
@@ -728,6 +826,16 @@ function switchTab(tab, bodyId, idx) {
 
 function renderCautions() {
   return '<h1 class="pg-t">更新内容</h1><p class="pg-d">KINETIC UI 动效组件库版本更新记录。</p>'+
+  '<div class="dt-section"><h2>V1.2.0 <span style="font-size:12px;color:var(--t3);font-weight:400;margin-left:8px">2026-07-20</span></h2>'+
+  '<div class="tip" style="margin-bottom:16px"><b>🎯 双端对齐 + 性能优化</b></div>'+
+  '<p style="font-size:14px;color:var(--t2);line-height:2;margin-bottom:16px">'+
+  '• <b style="color:var(--t1)">缓动逐帧对齐</b>：iOS 改用 <code>UIViewPropertyAnimator</code> + 精确 cubic-bezier，四端默认曲线统一为 <code>ease</code>，与 Web 逐帧一致<br>'+
+  '• <b style="color:var(--t1)">弹簧四端同源</b>：iOS <code>SpringAnimator</code> / Android <code>SpringAnimator</code> 移植 core 的阻尼谐振子求解器，配固定步长累加器，与刷新率无关<br>'+
+  '• <b style="color:var(--t1)">编排双端补齐</b>：<code>stagger()</code> / <code>planSequence()</code> 现已在 iOS / Android 提供，数值与 Web 完全一致<br>'+
+  '• <b style="color:var(--t1)">性能</b>：Web 动画期 <code>will-change</code> GPU 提示；Android <code>withLayer()</code> 硬件层；iOS 解锁 ProMotion 120Hz<br>'+
+  '• <b style="color:var(--t1)">可用性</b>：iOS 全 API <code>public</code> 化（SPM 可依赖），Android 支持 <code>maven-publish</code> 发布<br>'+
+  '• 修复 React/Vue <code>useSpring</code> 帧率不独立、<code>FadeGroup</code> key、iOS reduced-motion 等问题'+
+  '</p></div>'+
   '<div class="dt-section"><h2>V1.1.0 <span style="font-size:12px;color:var(--t3);font-weight:400;margin-left:8px">2026-05-08</span></h2>'+
   '<div class="tip" style="margin-bottom:16px"><b>🧬 生命周期管理能力</b></div>'+
   '<p style="font-size:14px;color:var(--t2);line-height:2;margin-bottom:16px">'+
@@ -740,7 +848,7 @@ function renderCautions() {
   '<div class="tip" style="margin-bottom:16px"><b>🎉 首个正式版本发布</b></div>'+
   '<p style="font-size:14px;color:var(--t2);line-height:2;margin-bottom:16px">'+
   '• 新增 7 大动效分类：弹窗/浮层、页面转场、操作反馈、加载状态、列表/编排、强调/引导、手势交互<br>'+
-  '• 新增 37 个动效预设，覆盖常见交互场景<br>'+
+  '• 新增 40 个动效预设，覆盖常见交互场景<br>'+
   '• 支持 React、Vue、iOS Swift、Android Kotlin 四端统一 API<br>'+
   '• 内置 Design Tokens 体系：时长、缓动、距离、意图四维参数<br>'+
   '• 弹簧物理引擎：snappy / bouncy / gentle 等 5 种预设<br>'+
@@ -1522,6 +1630,9 @@ function getCasePreviewHTML(id) {
     'sequence': '<div class="cp-el" style="display:flex;flex-direction:column;gap:3px"><div style="width:44px;height:6px;border-radius:3px;background:rgba(255,255,255,.1)"></div><div style="width:44px;height:14px;border-radius:4px;background:var(--c);opacity:0;transform:scale(0.3)"></div><div style="width:20px;height:6px;border-radius:3px;background:var(--c);opacity:0"></div></div>',
     'vip-flip': '<div class="cp-el" style="width:52px;height:38px;border-radius:6px;background:var(--c);display:flex;align-items:center;justify-content:center;perspective:200px"><div style="font-size:9px;color:#fff;font-weight:700">VIP</div></div>',
     'slide-in': '<div class="cp-el" style="width:48px;height:32px;border-radius:6px;background:var(--c);display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;opacity:.8">页面</div>',
+    'bounce-in': '<div class="cp-el" style="width:36px;height:36px;border-radius:50%;background:var(--c);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700">★</div>',
+    'zoom-slide-in': '<div class="cp-el" style="width:48px;height:32px;border-radius:6px;background:var(--c);display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px">卡片</div>',
+    'spin-in': '<div class="cp-el" style="width:36px;height:36px;border-radius:8px;background:var(--c);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700">↻</div>',
     'count-up': '<div class="cp-el" style="font-size:20px;font-weight:700;color:var(--ch);font-family:var(--mono)">0</div>',
     'zoom-in': '<div class="cp-el" style="width:40px;height:40px;border-radius:6px;background:var(--c);display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>',
   };
@@ -1596,7 +1707,7 @@ function playCardAnim(card, caseId) {
     },
     'ripple': function(){el.style.animation='none';raf(function(){el.style.animation='cRipple 1.2s ease infinite';});},
     'fade-in': function(){el.style.transition='none';el.style.opacity='0';raf(function(){el.style.transition='opacity 0.8s ease';el.style.opacity='1';});},
-    'blur-in': function(){el.style.transition='none';el.style.filter='blur(10px)';el.style.opacity='0';raf(function(){el.style.transition='all 1s ease';el.style.filter='blur(0)';el.style.opacity='1';});},
+    'blur-in': function(){el.style.transition='none';el.style.filter='blur(12px)';el.style.opacity='0.6';raf(function(){el.style.transition='all 1s ease';el.style.filter='blur(0)';el.style.opacity='1';});},
     'flip-in': function(){el.style.transition='none';el.style.transform='perspective(200px) rotateY(90deg)';el.style.opacity='0';raf(function(){el.style.transition='all 0.9s ease';el.style.transform='perspective(200px) rotateY(0)';el.style.opacity='1';});},
     'collapse': function(){el.style.transition='none';el.style.transform='scaleY(0)';el.style.opacity='0';raf(function(){el.style.transition='all 0.7s ease';el.style.transform='scaleY(1)';el.style.opacity='1';});},
     'spinner': function(){el.style.animation='none';raf(function(){el.style.animation='cSpin 1.2s linear infinite';});},
@@ -1664,6 +1775,9 @@ function playCardAnim(card, caseId) {
     'long-press': function(){el.style.transition='none';el.style.transform='scale(1)';raf(function(){el.style.transition='all 0.8s ease';el.style.transform='scale(1.15)';});},
     'vip-flip': function(){el.style.transition='none';el.style.transform='perspective(200px) rotateX(90deg) scale(0.85)';el.style.opacity='0';raf(function(){el.style.transition='all 0.7s cubic-bezier(.4,.14,.3,1)';el.style.transform='perspective(200px) rotateX(0) scale(1)';el.style.opacity='1';});},
     'slide-in': function(){el.style.transition='none';el.style.transform='translateX(20px)';el.style.opacity='0';raf(function(){el.style.transition='all 0.5s cubic-bezier(0,0,.3,1)';el.style.transform='translateX(0)';el.style.opacity='1';});},
+    'bounce-in': function(){el.style.transition='none';el.style.transform='scale(0.3)';el.style.opacity='0';raf(function(){el.style.transition='all 0.6s cubic-bezier(0.34,1.56,0.64,1)';el.style.transform='scale(1)';el.style.opacity='1';});},
+    'zoom-slide-in': function(){el.style.transition='none';el.style.transform='scale(0.9) translateY(32px)';el.style.opacity='0';raf(function(){el.style.transition='all 0.5s cubic-bezier(0,0,.3,1)';el.style.transform='scale(1) translateY(0)';el.style.opacity='1';});},
+    'spin-in': function(){el.style.transition='none';el.style.transform='rotate(-180deg)';el.style.opacity='0';raf(function(){el.style.transition='all 0.6s cubic-bezier(.4,.14,.3,1)';el.style.transform='rotate(0)';el.style.opacity='1';});},
     'count-up': function(){var target=8642,dur=1500,t0=0;el.textContent='0';function tick(now){if(!el.isConnected)return;if(!t0)t0=now;var t=Math.min((now-t0)/dur,1);var e=1-Math.pow(1-t,3);el.textContent=Math.round(target*e).toLocaleString();if(t<1)requestAnimationFrame(tick);}requestAnimationFrame(tick);},
     'zoom-in': function(){el.style.transition='none';el.style.transform='scale(0.5)';el.style.opacity='0';raf(function(){el.style.transition='all 0.6s cubic-bezier(.4,.14,.3,1)';el.style.transform='scale(1)';el.style.opacity='1';});},
   };
@@ -1825,6 +1939,14 @@ var _origShowPage = showPage;
 showPage = function(pageId) {
   _origShowPage(pageId);
   buildMobNav();
+  // Sync URL hash
+if (pageId === 'overview') {
+    history.replaceState(null, '', window.location.pathname);
+  } else {
+    history.pushState(null, '', '#' + pageId);
+  }
+  // Scroll to top when navigating
+  window.scrollTo(0, 0);
   // Add copy buttons to code blocks
   document.querySelectorAll('.ct').forEach(function(ct){
     if(!ct.querySelector('.ct-copy')){
@@ -1900,7 +2022,42 @@ showPage = function(pageId) {
 
 // Init
 buildSidebar();
-showPage('overview');
+
+// Handle URL hash navigation (e.g., #detail:popup:modal)
+var initHash = window.location.hash.replace('#', '');
+if (initHash && initHash.indexOf('detail:') === 0) {
+  showPage(initHash);
+} else if (initHash && CASES[initHash]) {
+  showPage(initHash);
+} else {
+  showPage('overview');
+}
+
+// Listen for hash changes (direct URL navigation)
+window.addEventListener('hashchange', function() {
+  var hash = window.location.hash.replace('#', '');
+  if (hash && hash.indexOf('detail:') === 0) {
+    showPage(hash);
+  } else if (hash && CASES[hash]) {
+    showPage(hash);
+  }
+});
+
+// Listen for browser back/forward
+window.addEventListener('popstate', function() {
+  var hash = window.location.hash.replace('#', '');
+  if (hash && hash.indexOf('detail:') === 0) {
+    _origShowPage(hash);
+    buildMobNav();
+  } else if (hash && CASES[hash]) {
+    _origShowPage(hash);
+    buildMobNav();
+  } else {
+    _origShowPage('overview');
+    buildMobNav();
+  }
+});
+
 buildMobNav();
 </script>
 

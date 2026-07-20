@@ -20,6 +20,8 @@ const props = withDefaults(
 );
 
 const opacity = ref(props.in ? 0 : 1);
+// 动画进行中标记，用于开启/复位 will-change GPU 提示
+const isAnimating = ref(false);
 const rootRef = ref<HTMLDivElement | null>(null);
 
 let callbackFired = false;
@@ -60,6 +62,7 @@ watch(
 
     if (resolved.reducedMotion || resolved.duration === 0) {
       opacity.value = targetOpacity;
+      isAnimating.value = false;
       if (props.onAnimationEnd && !callbackFired) {
         callbackFired = true;
         props.onAnimationEnd();
@@ -68,8 +71,12 @@ watch(
     }
 
     opacity.value = fadeIn ? 0 : 1;
+    // 动画开始：开启 will-change
+    isAnimating.value = true;
 
     const fireCallback = () => {
+      // 动画结束：复位 will-change
+      isAnimating.value = false;
       if (props.onAnimationEnd && !callbackFired) {
         callbackFired = true;
         props.onAnimationEnd();
@@ -111,6 +118,7 @@ const inlineStyle = computed(() => {
       config.reducedMotion || config.duration === 0
         ? 'none'
         : `opacity ${config.duration}ms ${config.easing} ${config.delay}ms`,
+    willChange: isAnimating.value ? 'opacity' : 'auto',
   };
 });
 </script>

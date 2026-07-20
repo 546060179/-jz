@@ -25,6 +25,67 @@ packages/
 └── ios/      # iOS Swift Package（FadeAnimator、MotionAnimator）
 ```
 
+## 安装 / 接入
+
+### Web（React / Vue）
+
+```bash
+npm install @fade-animation/react   # 或 @fade-animation/vue
+# 依赖 @fade-animation/core 会被自动带入
+```
+
+### iOS（Swift Package Manager）
+
+`packages/ios` 是一个独立的 Swift Package（`FadeAnimation`，最低 iOS 13），全部 API 已 `public`，可直接依赖。
+
+- Xcode：File → Add Package Dependencies… 填入仓库地址，选择 `FadeAnimation` 库。
+- 或在 `Package.swift` 中：
+
+```swift
+dependencies: [
+    // 本地路径依赖（monorepo 内）
+    .package(path: "packages/ios")
+    // 或独立仓库：.package(url: "https://github.com/<org>/fade-animation-ios", from: "0.1.0")
+]
+```
+
+```swift
+import FadeAnimation
+
+view.fadeIn(options: FadeOptions(intent: .enter))
+MotionAnimator(targetView: card).start(entering: true, effects: EffectPresets.scaleFadeIn)
+```
+
+### Android（Gradle / Maven）
+
+`packages/android` 通过 `maven-publish` 发布，坐标 `com.fadeanimation:fade-animation-android:0.1.0`。
+
+```bash
+# 发到本地 ~/.m2 便于验证
+cd packages/android && ./gradlew publishToMavenLocal
+```
+
+```kotlin
+// settings.gradle.kts 里确保有 mavenLocal()（或你的私有仓库）
+dependencyResolutionManagement {
+    repositories { mavenLocal(); google(); mavenCentral() }
+}
+
+// app/build.gradle.kts
+dependencies {
+    implementation("com.fadeanimation:fade-animation-android:0.1.0")
+}
+```
+
+```kotlin
+import com.fadeanimation.*
+
+view.fadeIn(options = FadeOptions(intent = MotionIntent.ENTER))
+MotionAnimator(card).start(entering = true, effects = EffectPresets.SCALE_FADE_IN)
+```
+
+> 说明：Android 端为 `kotlin("jvm")` 库，Android framework 依赖为 `compileOnly`，由宿主 App 在运行时提供（兼容 API 21+）。
+
 ## 快速开始
 
 ### React
@@ -256,6 +317,10 @@ animator.start(entering: true, effects: [
 | flip-y-out | fade + flip Y轴(0→90) | Y轴翻转退出 |
 | collapse-in | fade + collapse(0→auto) | 折叠展开 |
 | collapse-out | fade + collapse(auto→0) | 折叠收起 |
+| bounce-in | fade + scale(0.3→1) | 弹性缩放进入（配 easing="bounce"） |
+| zoom-in | fade + scale(0.5→1) | 缩放进入（图片/卡片聚焦） |
+| zoom-slide-in | fade + scale(0.9→1) + slide↑ | 缩放上滑进入 |
+| spin-in | fade + rotate(-180→0) | 旋转进入 |
 
 ## Motion Design Tokens
 
@@ -278,6 +343,7 @@ animator.start(entering: true, effects: [
 | enter | cubic-bezier(0, 0, 0.3, 1) | 元素进入 |
 | exit | cubic-bezier(0.4, 0, 1, 1) | 元素离开 |
 | linear | linear | 循环动画 |
+| bounce | cubic-bezier(0.34, 1.56, 0.64, 1) | 过冲回落，弹性入场 |
 
 ### Motion Intent（动效意图）
 
@@ -325,6 +391,54 @@ stagger(5, { interval: 50, direction: 'center' })     // → [100, 50, 0, 50, 10
 stagger(5, { interval: 50, direction: 'reverse' })    // → [200, 150, 100, 50, 0]
 ```
 
+原生端同名 API（数值与 Web 完全一致）：
+
+```swift
+// iOS
+let delays = stagger(items.count, options: StaggerOptions(interval: 60))
+```
+
+```kotlin
+// Android
+val delays = stagger(items.size, StaggerOptions(interval = 60L))
+```
+
+### planSequence — 序列编排
+
+按顺序累计每步的 delay + duration，返回每步应使用的累计延迟。四端一致：
+
+```ts
+import { planSequence } from '@fade-animation/core';
+
+const plan = planSequence([
+  { effects: [{ type: 'fade' }], duration: 350 },
+  { effects: [{ type: 'scale', from: 0.3, to: 1 }], delay: 50, duration: 700 },
+]);
+// plan.stepDelays / plan.stepDurations / plan.totalDuration
+```
+
+### spring — 弹簧物理
+
+基于阻尼谐振子模型（stiffness / damping / mass），四端共用同一套数值积分，手感一致。预设：`gentle` / `snappy` / `bouncy` / `slow` / `noWobble`。
+
+```tsx
+// React：useSpring 返回 0→1 进度，帧率无关（120Hz / 60Hz 一致）
+const progress = useSpring(show, { config: 'bouncy' });
+<div style={{ transform: `scale(${0.9 + 0.1 * progress})` }} />
+```
+
+```swift
+// iOS：SpringAnimator 用 CADisplayLink 驱动，回调 0→1 进度
+let anim = SpringAnimator(config: SpringPresets.bouncy)
+anim.start(onUpdate: { p in view.transform = CGAffineTransform(scaleX: 0.9 + 0.1 * p, y: 0.9 + 0.1 * p) })
+```
+
+```kotlin
+// Android：SpringAnimator 用 Choreographer 驱动
+val anim = SpringAnimator(SpringPresets.BOUNCY)
+anim.start(onUpdate = { p -> view.scaleX = 0.9f + 0.1f * p; view.scaleY = 0.9f + 0.1f * p })
+```
+
 ### CSS Token 输出
 
 ```ts
@@ -360,10 +474,30 @@ easing 解析：`easing` > `intent` > 默认值 ('ease')
 ## 开发
 
 ```bash
-pnpm install    # 安装依赖
-pnpm build      # 构建所有 Web 包
-pnpm test       # 运行全部 162 个测试
+# Web（core + react + vue，共 203 个测试）
+pnpm install
+pnpm build
+pnpm test
+
+# iOS（62 个测试，含 public API 黑盒冒烟测试与跨端契约测试）
+cd packages/ios && xcodebuild -scheme FadeAnimation -sdk iphonesimulator \
+  -destination 'platform=iOS Simulator,name=iPhone 17' test
+
+# Android（57 个测试；已固定 Gradle daemon 使用 JDK 17）
+cd packages/android && ./gradlew test
 ```
+
+> 注：Android 使用 `gradle/gradle-daemon-jvm.properties` 将 Gradle 守护进程固定到 JDK 17（当前 Kotlin 2.1.10 工具链无法在 JDK 25 下运行）。
+
+## 跨端一致性契约
+
+`contract/motion-contract.json` 是动效设计令牌的**单一事实源**（timing / distance / easing 控制点 / intent 默认 / spring 预设）。三端各有一份契约测试读取同一份 JSON 并断言各自实现与之一致：
+
+- Web：`packages/core/src/contract.test.ts`
+- iOS：`packages/ios/Tests/FadeAnimationTests/ContractTests.swift`
+- Android：`packages/android/src/test/kotlin/com/fadeanimation/ContractTest.kt`
+
+这样当某个令牌（如新增 `bounce` 缓动）只改了部分端时，对应端的契约测试会立即失败，避免"端上表现和 Web 不一致"的回归。`.github/workflows/ci.yml` 在每次 push / PR 时并行跑三端测试。
 
 ## License
 

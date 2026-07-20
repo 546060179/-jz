@@ -16,15 +16,15 @@ extension UIView {
         }
     }
 
-    func fadeIn(options: FadeOptions = FadeOptions(), onEnd: (() -> Void)? = nil) {
+    public func fadeIn(options: FadeOptions = FadeOptions(), onEnd: (() -> Void)? = nil) {
         fade(fadeIn: true, options: options, onEnd: onEnd)
     }
 
-    func fadeOut(options: FadeOptions = FadeOptions(), onEnd: (() -> Void)? = nil) {
+    public func fadeOut(options: FadeOptions = FadeOptions(), onEnd: (() -> Void)? = nil) {
         fade(fadeIn: false, options: options, onEnd: onEnd)
     }
 
-    func fade(fadeIn: Bool = true, options: FadeOptions = FadeOptions(), onEnd: (() -> Void)? = nil) {
+    public func fade(fadeIn: Bool = true, options: FadeOptions = FadeOptions(), onEnd: (() -> Void)? = nil) {
         let animator = FadeAnimator(targetView: self, options: options)
         // 通过 associated object 持有 animator，防止 ARC 立即释放
         self.currentFadeAnimator = animator

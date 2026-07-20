@@ -28,11 +28,17 @@ export const FadeGroup: React.FC<FadeGroupProps> = ({
 
   return (
     <>
-      {childArray.map((child, index) => (
-        <Fade key={index} {...fadeProps} delay={delays[index]}>
-          {child}
-        </Fade>
-      ))}
+      {childArray.map((child, index) => {
+        // 优先复用子元素自身的 key，避免用数组下标做 key 导致列表
+        // 增删/重排时 React 复用错误的 DOM 节点、动画错乱。
+        const childKey =
+          React.isValidElement(child) && child.key != null ? child.key : index;
+        return (
+          <Fade key={childKey} {...fadeProps} delay={delays[index]}>
+            {child}
+          </Fade>
+        );
+      })}
     </>
   );
 };

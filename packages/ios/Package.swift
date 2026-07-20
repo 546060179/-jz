@@ -12,9 +12,6 @@ let package = Package(
             targets: ["FadeAnimation"]
         )
     ],
-    dependencies: [
-        .package(url: "https://github.com/typelift/SwiftCheck", from: "0.12.0")
-    ],
     targets: [
         .target(
             name: "FadeAnimation",
@@ -23,8 +20,7 @@ let package = Package(
         .testTarget(
             name: "FadeAnimationTests",
             dependencies: [
-                "FadeAnimation",
-                "SwiftCheck"
+                "FadeAnimation"
             ],
             path: "Tests/FadeAnimationTests"
         )

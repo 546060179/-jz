@@ -98,8 +98,21 @@ h2:first-child { margin-top: 0; }
 .stagger-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
 
 /* ---- Spring Canvas ---- */
-.spring-canvas-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
-canvas#springCanvas { width: 100%; height: 200px; display: block; border-radius: 8px; }
+.spring-editor { display: grid; grid-template-columns: 1fr 260px; gap: 16px; }
+.spring-editor-main { display: flex; flex-direction: column; gap: 12px; }
+.spring-canvas-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; position: relative; }
+.spring-canvas-labels { position: absolute; left: 8px; top: 20px; bottom: 40px; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
+.spring-label-top, .spring-label-bot { font-size: 10px; color: var(--text3); font-variant-numeric: tabular-nums; }
+.spring-canvas-info { text-align: right; font-size: 11px; color: var(--text3); margin-top: 8px; font-variant-numeric: tabular-nums; }
+canvas#springCanvas { width: 100%; height: 160px; display: block; border-radius: 8px; }
+.spring-preview-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.spring-editor-panel {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px;
+  display: flex; flex-direction: column; gap: 18px; align-self: start;
+}
+@media (max-width: 768px) {
+  .spring-editor { grid-template-columns: 1fr; }
+}
 
 /* ---- Token Table ---- */
 .token-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
@@ -186,18 +199,25 @@ canvas#springCanvas { width: 100%; height: 200px; display: block; border-radius:
 <!-- ==================== Page 4: Spring ==================== -->
 <div class="page" id="page-spring">
   <h2>Spring Physics 弹簧动画</h2>
-  <div class="playground">
-    <div class="spring-canvas-wrap">
-      <canvas id="springCanvas"></canvas>
-      <div style="display:flex;gap:12px;margin-top:16px;">
-        <div class="playground-stage" style="flex:1;min-height:120px;">
-          <div class="demo-box" id="spring-box" style="width:60px;height:60px;border-radius:12px;font-size:12px;">Spring</div>
+  <div class="spring-editor">
+    <div class="spring-editor-main">
+      <div class="spring-canvas-wrap">
+        <div class="spring-canvas-labels">
+          <span class="spring-label-top">1.0</span>
+          <span class="spring-label-bot">0.0</span>
+        </div>
+        <canvas id="springCanvas"></canvas>
+        <div class="spring-canvas-info" id="spring-info">0 frames (0ms)</div>
+      </div>
+      <div class="spring-preview-wrap">
+        <div class="playground-stage" style="min-height:120px;">
+          <div class="demo-box" id="spring-box" style="width:60px;height:60px;border-radius:14px;font-size:11px;font-weight:700;">Spring</div>
         </div>
       </div>
     </div>
-    <div class="playground-controls" id="spring-controls"></div>
+    <div class="spring-editor-panel" id="spring-controls"></div>
   </div>
-  <div class="btn-row">
+  <div class="btn-row" style="margin-top:16px;">
     <button class="btn" id="spring-play">▶ 播放</button>
     <button class="btn btn-outline" id="spring-reset">↺ 重置</button>
   </div>
@@ -463,7 +483,10 @@ function getEasingCSS(name) { return EASINGS.find(e => e.name === name)?.css || 
     card.addEventListener('click', () => {
       const box = card.querySelector('.box');
       const isEnter = name.includes('in') || name.includes('collapse-in');
+      // State feedback: brief highlight on card border during animation
+      card.style.borderColor = 'var(--accent)';
       applyAnimation(box, effects, 400, 'cubic-bezier(0.4, 0.14, 0.3, 1)', isEnter, 0);
+      setTimeout(() => { card.style.borderColor = ''; }, 450);
     });
     grid.appendChild(card);
   });
@@ -480,7 +503,9 @@ function getEasingCSS(name) { return EASINGS.find(e => e.name === name)?.css || 
       const eff = isEnter
         ? [{type:'fade',from:0,to:1},{type:'scale',from:0.95,to:1}]
         : [{type:'fade',from:1,to:0},{type:'scale',from:1,to:0.95}];
+      card.style.borderColor = 'var(--accent)';
       applyAnimation(box, eff, getTimingMs(timing), getEasingCSS(easing), isEnter, 0);
+      setTimeout(() => { card.style.borderColor = ''; }, getTimingMs(timing) + 50);
     });
     igrid.appendChild(card);
   });
@@ -642,10 +667,21 @@ function updatePlaygroundCode() {
 }
 
 document.getElementById('pg-play').addEventListener('click', () => {
+  const btn = document.getElementById('pg-play');
   const box = document.getElementById('pg-box');
   const effs = getPlaygroundEffects();
+  // State feedback: disable button during animation
+  btn.textContent = '⏵ 播放中...';
+  btn.disabled = true;
+  btn.style.opacity = '0.6';
   applyAnimation(box, effs, pgState.duration, getEasingCSS(pgState.easing), pgState.entering, pgState.delay);
   updatePlaygroundCode();
+  // Restore after animation completes (duration + delay + buffer)
+  setTimeout(() => {
+    btn.textContent = '▶ 播放';
+    btn.disabled = false;
+    btn.style.opacity = '';
+  }, pgState.duration + pgState.delay + 50);
 });
 
 document.getElementById('pg-reset').addEventListener('click', () => {
@@ -848,9 +884,11 @@ function drawSpringCurve() {
 
   // Labels
   ctx.fillStyle = '#444'; ctx.font = '10px monospace';
-  ctx.fillText('1.0', 4, h*0.1 + 12);
-  ctx.fillText('0.0', 4, h/2 + 12);
   ctx.fillText(`${frames} frames (${Math.round(frames/60*1000)}ms)`, w - 140, h - 8);
+
+  // Update info element
+  const infoEl = document.getElementById('spring-info');
+  if (infoEl) infoEl.textContent = `${frames} frames (${Math.round(frames/60*1000)}ms)`;
 
   // Curve
   ctx.beginPath(); ctx.strokeStyle = '#667eea'; ctx.lineWidth = 2;
@@ -884,7 +922,21 @@ function runSpringAnimation() {
   requestAnimationFrame(tick);
 }
 
-document.getElementById('spring-play').addEventListener('click', () => { drawSpringCurve(); runSpringAnimation(); });
+document.getElementById('spring-play').addEventListener('click', () => {
+  const btn = document.getElementById('spring-play');
+  btn.textContent = '⏵ 播放中...';
+  btn.disabled = true;
+  btn.style.opacity = '0.6';
+  drawSpringCurve();
+  runSpringAnimation();
+  // Spring animations settle within ~2s max
+  const estimatedDuration = Math.min(2000, springState.mass * 800 / (springState.damping * 0.5));
+  setTimeout(() => {
+    btn.textContent = '▶ 播放';
+    btn.disabled = false;
+    btn.style.opacity = '';
+  }, Math.max(estimatedDuration, 500));
+});
 document.getElementById('spring-reset').addEventListener('click', () => {
   const box = document.getElementById('spring-box');
   box.style.transform = 'scale(1)'; box.style.opacity = '1';
@@ -1061,6 +1113,8 @@ window.addEventListener('resize', () => drawSpringCurve());
 (function initFigma() {
   const tokenInput = document.getElementById('figma-token');
   const toggleBtn = document.getElementById('figma-token-toggle');
+  const urlInput = document.getElementById('figma-url');
+  const fetchBtn = document.getElementById('figma-fetch');
 
   // Restore saved token
   const saved = localStorage.getItem('figma-pat');
@@ -1075,6 +1129,28 @@ window.addEventListener('resize', () => drawSpringCurve());
   // Save token on change
   tokenInput.addEventListener('change', () => {
     localStorage.setItem('figma-pat', tokenInput.value);
+  });
+
+  // Real-time URL validation
+  urlInput.addEventListener('input', () => {
+    const val = urlInput.value.trim();
+    if (!val) {
+      urlInput.style.borderColor = 'var(--border)';
+      return;
+    }
+    const isValid = /figma\.com\/(?:design|file)\/[a-zA-Z0-9]+/.test(val);
+    urlInput.style.borderColor = isValid ? '#4caf50' : '#f44336';
+  });
+
+  // Token format validation
+  tokenInput.addEventListener('input', () => {
+    const val = tokenInput.value.trim();
+    if (!val) {
+      tokenInput.style.borderColor = 'var(--border)';
+      return;
+    }
+    const isValid = /^figd_[a-zA-Z0-9_-]{20,}$/.test(val);
+    tokenInput.style.borderColor = isValid ? '#4caf50' : (val.length > 5 ? '#f44336' : 'var(--border)');
   });
 
   document.getElementById('figma-fetch').addEventListener('click', fetchFigmaData);
@@ -1223,13 +1299,34 @@ async function fetchFigmaData() {
   const url = document.getElementById('figma-url').value.trim();
   const token = document.getElementById('figma-token').value.trim();
   const status = document.getElementById('figma-status');
+  const fetchBtn = document.getElementById('figma-fetch');
 
-  if (!url) { status.innerHTML = '<span style="color:#f44;">请输入 Figma 链接</span>'; return; }
-  if (!token) { status.innerHTML = '<span style="color:#f44;">请输入 Figma Personal Access Token</span>'; return; }
+  // Validation with actionable messages
+  if (!url) {
+    status.innerHTML = '<span style="color:#f44;">⚠️ 请输入 Figma 链接</span><br><span style="color:var(--text3);font-size:12px;">格式：https://www.figma.com/design/FILEKEY/FileName?node-id=1-2</span>';
+    return;
+  }
 
   const parsed = parseFigmaUrl(url);
-  if (!parsed) { status.innerHTML = '<span style="color:#f44;">无法解析 Figma 链接，请检查格式</span>'; return; }
+  if (!parsed) {
+    status.innerHTML = `<span style="color:#f44;">⚠️ Figma 链接格式不正确</span><br><span style="color:var(--text3);font-size:12px;">请确保链接包含 figma.com/design/... 或 figma.com/file/...<br>示例：https://www.figma.com/design/ABC123/MyFile?node-id=1-2</span>`;
+    return;
+  }
 
+  if (!token) {
+    status.innerHTML = '<span style="color:#f44;">⚠️ 请输入 Figma Personal Access Token</span><br><span style="color:var(--text3);font-size:12px;">在 Figma → Settings → Personal access tokens 中创建。<a href="https://www.figma.com/developers/api#access-tokens" target="_blank" style="color:var(--accent);">查看指南 →</a></span>';
+    return;
+  }
+
+  if (!token.startsWith('figd_')) {
+    status.innerHTML = '<span style="color:#f44;">⚠️ Token 格式可能不正确</span><br><span style="color:var(--text3);font-size:12px;">Figma Personal Access Token 通常以 <code style="color:var(--accent);">figd_</code> 开头。请检查是否复制完整。</span>';
+    return;
+  }
+
+  // State feedback: button loading state
+  fetchBtn.textContent = '⏳ 解析中...';
+  fetchBtn.disabled = true;
+  fetchBtn.style.opacity = '0.6';
   status.innerHTML = '<span style="color:var(--accent);">⏳ 正在获取 Figma 数据...</span>';
 
   try {
@@ -1244,9 +1341,12 @@ async function fetchFigmaData() {
       nodeData = data.document;
     }
 
-    if (!nodeData) { status.innerHTML = '<span style="color:#f44;">未找到节点数据</span>'; return; }
+    if (!nodeData) {
+      status.innerHTML = '<span style="color:#f44;">⚠️ 未找到节点数据</span><br><span style="color:var(--text3);font-size:12px;">请检查 node-id 参数是否正确，或尝试直接使用文件链接（不带 node-id）。</span>';
+      return;
+    }
 
-    status.innerHTML = '<span style="color:#4f4;">✅ 数据获取成功</span>';
+    status.innerHTML = '<span style="color:#4caf50;">✅ 数据获取成功</span>';
 
     // Get screenshot
     const preview = document.getElementById('figma-preview');
@@ -1404,16 +1504,47 @@ import { Motion } from '@fade-animation/react';
     }
 
   } catch (err) {
-    status.innerHTML = `<span style="color:#f44;">❌ 错误: ${err.message}</span>`;
-    console.error(err);
+    // Actionable error recovery
+    let recovery = '';
+    const msg = err.message || '';
+    if (msg.includes('403')) {
+      recovery = '权限不足。请确保 Token 有权访问该文件，或文件已共享给你。';
+    } else if (msg.includes('404')) {
+      recovery = '文件或节点不存在。请检查链接中的 file key 和 node-id 是否正确。';
+    } else if (msg.includes('429')) {
+      recovery = 'API 请求过于频繁，请稍等 30 秒后重试。';
+    } else if (msg.includes('401')) {
+      recovery = 'Token 无效或已过期。请重新生成 <a href="https://www.figma.com/developers/api#access-tokens" target="_blank" style="color:var(--accent);">Personal Access Token</a>。';
+    } else if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
+      recovery = '网络连接失败。请检查网络状态，确认能访问 api.figma.com。';
+    } else {
+      recovery = '请检查链接和 Token 后重试。如问题持续，尝试刷新页面。';
+    }
+    status.innerHTML = `<span style="color:#f44;">❌ ${msg}</span><br><span style="color:var(--text3);font-size:12px;">${recovery}</span><br><button onclick="fetchFigmaData()" style="margin-top:8px;padding:6px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:12px;">🔄 重试</button>`;
+    console.error('Figma fetch error:', err);
+  } finally {
+    // Always restore button state
+    const fetchBtn = document.getElementById('figma-fetch');
+    fetchBtn.textContent = '🔍 解析';
+    fetchBtn.disabled = false;
+    fetchBtn.style.opacity = '';
   }
 }
 
 // Figma preview play/replay
 document.getElementById('figma-play')?.addEventListener('click', () => {
+  const btn = document.getElementById('figma-play');
   const box = document.getElementById('figma-demo-box');
   if (figmaCurrentEffects.length > 0) {
+    btn.textContent = '⏵ 播放中...';
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
     applyAnimation(box, figmaCurrentEffects, figmaCurrentDuration, figmaCurrentEasing, true, 0);
+    setTimeout(() => {
+      btn.textContent = '▶ 播放动效';
+      btn.disabled = false;
+      btn.style.opacity = '';
+    }, figmaCurrentDuration + 50);
   }
 });
 

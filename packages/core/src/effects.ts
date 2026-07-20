@@ -151,6 +151,27 @@ export const EFFECT_PRESETS = {
     { type: 'fade', from: 1, to: 0 },
     { type: 'collapse', collapsedHeight: 0 },
   ] as MotionEffect[],
+  /** 弹性缩放进入（scale 0.3→1，建议配 easing="bounce" 出过冲弹入） */
+  'bounce-in': [
+    { type: 'fade', from: 0, to: 1 },
+    { type: 'scale', from: 0.3, to: 1 },
+  ] as MotionEffect[],
+  /** 缩放进入（scale 0.5→1，比 scale-fade-in 幅度更大，图片/卡片聚焦入场） */
+  'zoom-in': [
+    { type: 'fade', from: 0, to: 1 },
+    { type: 'scale', from: 0.5, to: 1 },
+  ] as MotionEffect[],
+  /** 缩放上滑进入（卡片从下方滑近并放大：scale 0.9→1 + slide up 32） */
+  'zoom-slide-in': [
+    { type: 'fade', from: 0, to: 1 },
+    { type: 'scale', from: 0.9, to: 1 },
+    { type: 'slide', direction: 'up', distance: 32 },
+  ] as MotionEffect[],
+  /** 旋转进入（rotate -180→0 + 淡入，趣味旋入，建议配 easing="expressive"） */
+  'spin-in': [
+    { type: 'fade', from: 0, to: 1 },
+    { type: 'rotate', from: -180, to: 0 },
+  ] as MotionEffect[],
 } as const;
 
 export type EffectPresetName = keyof typeof EFFECT_PRESETS;

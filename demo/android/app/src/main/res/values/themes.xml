@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.KineticUI" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/indigo</item>
+        <item name="colorPrimaryContainer">@color/indigo_light</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+    </style>
+</resources>

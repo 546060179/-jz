@@ -68,6 +68,9 @@ let isExpanded = props.in && hasCollapse.value;
 // Content height measured via scrollHeight (Req 11.1)
 const contentHeight = ref(0);
 
+// 动画进行中标记，用于开启/复位 will-change GPU 提示
+const isAnimating = ref(false);
+
 // Compute effect styles, passing contentHeight for Collapse
 const effectStyles = computed(() =>
   resolveEffectStyles(effects.value, props.in, hasCollapse.value ? contentHeight.value : undefined)
@@ -191,6 +194,7 @@ watch(
 
     // Reduced motion: skip animation
     if (resolved.reducedMotion && resolved.duration === 0) {
+      isAnimating.value = false;
       if (resolvedHasCollapse) {
         if (entering) {
           currentStyles.value = { ...target, 'max-height': 'none' };
@@ -216,6 +220,7 @@ watch(
       const snapStyles = { ...styles.to, 'max-height': currentScrollHeight + 'px', overflow: 'hidden' };
       currentStyles.value = snapStyles;
       isExpanded = false;
+      isAnimating.value = true;
 
       // Use rAF to ensure the snap is painted, then transition to collapsedHeight
       rafId = requestAnimationFrame(() => {
@@ -223,6 +228,7 @@ watch(
       });
 
       const fireCallback = () => {
+        isAnimating.value = false;
         if (props.onAnimationEnd && !callbackFired) {
           callbackFired = true;
           handleCollapseTransitionEnd(entering);
@@ -249,8 +255,10 @@ watch(
 
     // Standard animation path (also handles Collapse expand)
     currentStyles.value = entering ? styles.from : styles.to;
+    isAnimating.value = true;
 
     const fireCallback = () => {
+      isAnimating.value = false;
       if (props.onAnimationEnd && !callbackFired) {
         callbackFired = true;
         if (resolvedHasCollapse) {
@@ -321,9 +329,15 @@ const inlineStyle = computed(() => {
       .join(', ');
   }
 
+  const willChangeValue =
+    isAnimating.value && !(config.reducedMotion && config.duration === 0)
+      ? styles.transitionProperties.join(', ')
+      : 'auto';
+
   return {
     ...currentStyles.value,
     transition: transitionValue,
+    willChange: willChangeValue,
   };
 });
 </script>

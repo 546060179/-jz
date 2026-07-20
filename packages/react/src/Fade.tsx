@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import React, { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { resolveConfig, type FadeProps } from '@fade-animation/core';
 
 export interface FadeComponentProps extends FadeProps {
@@ -23,10 +23,15 @@ export const Fade: React.FC<FadeComponentProps> = ({
   className,
   children,
 }) => {
-  const config = resolveConfig({ duration, delay, easing, preset, timing, intent });
+  const config = useMemo(
+    () => resolveConfig({ duration, delay, easing, preset, timing, intent }),
+    [duration, delay, easing, preset, timing, intent],
+  );
 
   // Current opacity state drives the inline style
   const [opacity, setOpacity] = useState(fadeIn ? 0 : 1);
+  // 动画进行中标记，用于开启/复位 will-change GPU 提示
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const divRef = useRef<HTMLDivElement>(null);
   const callbackFiredRef = useRef(false);
@@ -48,6 +53,7 @@ export const Fade: React.FC<FadeComponentProps> = ({
     // If reducedMotion (duration=0), set opacity immediately and fire callback
     if (resolved.reducedMotion || resolved.duration === 0) {
       setOpacity(targetOpacity);
+      setIsAnimating(false);
       if (onAnimationEndRef.current && !callbackFiredRef.current) {
         callbackFiredRef.current = true;
         onAnimationEndRef.current();
@@ -58,6 +64,8 @@ export const Fade: React.FC<FadeComponentProps> = ({
     // Set initial opacity (opposite of target) then transition to target
     const initialOpacity = fadeIn ? 0 : 1;
     setOpacity(initialOpacity);
+    // 动画开始：开启 will-change 提示浏览器提升合成层
+    setIsAnimating(true);
 
     // Use requestAnimationFrame to ensure the initial opacity is painted
     // before transitioning to the target
@@ -66,6 +74,8 @@ export const Fade: React.FC<FadeComponentProps> = ({
     });
 
     const fireCallback = () => {
+      // 动画结束：复位 will-change，避免常驻合成层浪费显存
+      setIsAnimating(false);
       if (onAnimationEndRef.current && !callbackFiredRef.current) {
         callbackFiredRef.current = true;
         onAnimationEndRef.current();
@@ -107,6 +117,7 @@ export const Fade: React.FC<FadeComponentProps> = ({
       config.reducedMotion || config.duration === 0
         ? 'none'
         : `opacity ${config.duration}ms ${config.easing} ${config.delay}ms`,
+    willChange: isAnimating ? 'opacity' : 'auto',
   };
 
   return (

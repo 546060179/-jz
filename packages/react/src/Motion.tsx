@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef, useState, type ReactNode, type CSSProperties } from 'react';
+import React, { useEffect, useCallback, useMemo, useRef, useState, type ReactNode, type CSSProperties } from 'react';
 import {
   resolveConfig,
   resolveEffectStyles,
@@ -50,9 +50,18 @@ export const Motion: React.FC<MotionProps> = ({
   className,
   children,
 }) => {
-  const effects = typeof effect === 'string' ? [...EFFECT_PRESETS[effect]] : effect;
   const effectKey = typeof effect === 'string' ? effect : JSON.stringify(effect);
-  const config = resolveConfig({ duration, delay, easing, preset, timing, intent });
+  // 缓存 effects 数组：仅当 effectKey 变化时重建，避免每次渲染新建数组
+  const effects = useMemo(
+    () => (typeof effect === 'string' ? [...EFFECT_PRESETS[effect]] : effect),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [effectKey],
+  );
+  // 缓存解析后的配置
+  const config = useMemo(
+    () => resolveConfig({ duration, delay, easing, preset, timing, intent }),
+    [duration, delay, easing, preset, timing, intent],
+  );
 
   // Detect if effects contain a CollapseEffect
   const collapseEffect = effects.find(e => e.type === 'collapse') as
@@ -66,8 +75,15 @@ export const Motion: React.FC<MotionProps> = ({
 
   // Track measured content height for Collapse
   const [contentHeight, setContentHeight] = useState(0);
+  // 动画进行中标记，用于开启/复位 will-change GPU 提示
+  const [isAnimating, setIsAnimating] = useState(false);
 
-  const effectStyles = resolveEffectStyles(effects, entering, hasCollapse ? contentHeight : undefined);
+  // 缓存效果样式：依赖 effects / entering / contentHeight
+  const effectStyles = useMemo(
+    () => resolveEffectStyles(effects, entering, hasCollapse ? contentHeight : undefined),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [effectKey, entering, contentHeight, hasCollapse],
+  );
 
   const [currentStyles, setCurrentStyles] = useState<Record<string, string>>(() => {
     if (hasCollapse && isFirstRenderRef.current) {
@@ -172,6 +188,7 @@ export const Motion: React.FC<MotionProps> = ({
     }
 
     if (resolved.reducedMotion && resolved.duration === 0) {
+      setIsAnimating(false);
       if (resolvedHasCollapse) {
         if (entering) {
           setCurrentStyles({ ...target, 'max-height': 'none' });
@@ -198,6 +215,7 @@ export const Motion: React.FC<MotionProps> = ({
       const snapStyles = { ...styles.to, 'max-height': currentScrollHeight + 'px', overflow: 'hidden' };
       setCurrentStyles(snapStyles);
       isExpandedRef.current = false;
+      setIsAnimating(true);
 
       // Use rAF to ensure the snap is painted, then transition to collapsedHeight
       const rafId = requestAnimationFrame(() => {
@@ -205,6 +223,7 @@ export const Motion: React.FC<MotionProps> = ({
       });
 
       const fireCallback = () => {
+        setIsAnimating(false);
         if (onAnimationEndRef.current && !callbackFiredRef.current) {
           callbackFiredRef.current = true;
           handleCollapseTransitionEnd();
@@ -240,12 +259,14 @@ export const Motion: React.FC<MotionProps> = ({
 
     // Standard animation path (also handles Collapse expand)
     setCurrentStyles(entering ? styles.from : styles.to);
+    setIsAnimating(true);
 
     const rafId = requestAnimationFrame(() => {
       setCurrentStyles(target);
     });
 
     const fireCallback = () => {
+      setIsAnimating(false);
       if (onAnimationEndRef.current && !callbackFiredRef.current) {
         callbackFiredRef.current = true;
         if (resolvedHasCollapse) {
@@ -295,9 +316,16 @@ export const Motion: React.FC<MotionProps> = ({
       .join(', ');
   })();
 
+  // 动画进行中开启 will-change（列出正在过渡的属性），空闲时复位为 auto
+  const willChangeValue =
+    isAnimating && !(config.reducedMotion && config.duration === 0)
+      ? effectStyles.transitionProperties.join(', ')
+      : 'auto';
+
   const style: CSSProperties = {
     ...currentStyles,
     transition: transitionValue,
+    willChange: willChangeValue,
   } as CSSProperties;
 
   return (

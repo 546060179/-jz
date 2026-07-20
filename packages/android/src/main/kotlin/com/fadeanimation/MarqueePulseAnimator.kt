@@ -3,7 +3,6 @@ package com.fadeanimation
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.View
-import android.view.animation.PathInterpolator
 
 /**
  * 跑马灯脉冲动画配置
@@ -43,8 +42,8 @@ class MarqueePulseAnimator(
 ) {
     private var animatorSet: AnimatorSet? = null
 
-    // expressive 缓动曲线 — 对齐 EASING_CURVES.expressive
-    private val expressiveInterpolator = PathInterpolator(0.4f, 0.14f, 0.3f, 1.0f)
+    // expressive 缓动曲线 — 对齐 EASING_CURVES.expressive（纯 Kotlin，无 native 依赖）
+    private val expressiveInterpolator = CubicBezierInterpolator(0.4f, 0.14f, 0.3f, 1.0f)
 
     /**
      * 给一组 View 添加跑马灯脉冲动画

@@ -52,10 +52,29 @@ export function useSpring(active: boolean, options: UseSpringOptions = {}): numb
     }
 
     springRef.current = createSpring(springConfig);
-    const dt = 1 / 60;
 
-    const animate = () => {
-      const state = springRef.current.step(dt);
+    // 固定步长累加器：物理步长恒定 1/60s（保证数值稳定与确定性），
+    // 每帧执行的步数按真实经过时间自适应，从而与屏幕刷新率无关
+    // （120Hz ProMotion / 60Hz / 低刷设备表现一致，也对齐原生按时间积分的弹簧）。
+    const FIXED_STEP = 1 / 60;
+    let lastTime: number | null = null;
+    let accumulator = 0;
+
+    const animate = (now: number) => {
+      if (lastTime === null) lastTime = now;
+      let frameTime = (now - lastTime) / 1000;
+      lastTime = now;
+      // 防止后台标签页恢复时的巨大时间跳变导致积分器发散
+      if (frameTime > 0.25) frameTime = 0.25;
+      accumulator += frameTime;
+
+      let state = springRef.current.current();
+      while (accumulator >= FIXED_STEP) {
+        state = springRef.current.step(FIXED_STEP);
+        accumulator -= FIXED_STEP;
+        if (state.atRest) break;
+      }
+
       setProgress(state.position);
 
       if (state.atRest) {

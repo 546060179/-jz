@@ -1,0 +1,57 @@
+name: CI
+
+# 跨端一致性守护：Web / iOS / Android 三端测试在每次 push 与 PR 自动运行。
+# 契约测试（contract/motion-contract.json）确保三端设计令牌不漂移。
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  web:
+    name: Web (core + react + vue)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - name: Install
+        run: pnpm install --no-frozen-lockfile
+      - name: Build
+        run: pnpm build
+      - name: Test
+        run: pnpm test
+
+  ios:
+    name: iOS (FadeAnimation)
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select a simulator and run tests
+        working-directory: packages/ios
+        run: |
+          set -eo pipefail
+          UDID=$(xcrun simctl list devices available | grep -oE '\(([0-9A-F-]{36})\)' | tr -d '()' | head -1)
+          echo "Using simulator UDID: $UDID"
+          xcodebuild -scheme FadeAnimation -sdk iphonesimulator \
+            -destination "id=$UDID" test
+
+  android:
+    name: Android (fade-animation-android)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Test
+        working-directory: packages/android
+        run: ./gradlew test --no-daemon

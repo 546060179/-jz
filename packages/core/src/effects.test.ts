@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { resolveEffectStyles } from './resolveEffectStyles';
 import { EFFECT_PRESETS } from './effects';
 import type { MotionEffect } from './effects';
+import { EASING_CURVES } from './tokens';
 
 describe('resolveEffectStyles', () => {
   it('resolves fade effect for entering', () => {
@@ -110,5 +111,42 @@ describe('resolveEffectStyles - combined rotate + blur + fade', () => {
     expect(result.from.transform).toContain('rotate(-15deg)');
     expect(result.from.filter).toBe('blur(10px)');
     expect(result.transitionProperties).toEqual(['opacity', 'transform', 'filter']);
+  });
+});
+
+describe('EFFECT_PRESETS - 新增预设', () => {
+  it('bounce-in: fade 0→1 + scale 0.3→1', () => {
+    const result = resolveEffectStyles([...EFFECT_PRESETS['bounce-in']], true);
+    expect(result.from.opacity).toBe('0');
+    expect(result.to.opacity).toBe('1');
+    expect(result.from.transform).toContain('scale(0.3)');
+    expect(result.to.transform).toContain('scale(1)');
+    expect(result.transitionProperties).toEqual(['opacity', 'transform']);
+  });
+
+  it('zoom-in: fade 0→1 + scale 0.5→1', () => {
+    const result = resolveEffectStyles([...EFFECT_PRESETS['zoom-in']], true);
+    expect(result.from.transform).toContain('scale(0.5)');
+    expect(result.to.transform).toContain('scale(1)');
+  });
+
+  it('zoom-slide-in: fade + scale 0.9→1 + slide up 32', () => {
+    const result = resolveEffectStyles([...EFFECT_PRESETS['zoom-slide-in']], true);
+    expect(result.from.transform).toContain('scale(0.9)');
+    expect(result.from.transform).toContain('translateY(32px)');
+    expect(result.to.transform).toContain('scale(1)');
+    expect(result.transitionProperties).toEqual(['opacity', 'transform']);
+  });
+
+  it('spin-in: fade + rotate -180→0', () => {
+    const result = resolveEffectStyles([...EFFECT_PRESETS['spin-in']], true);
+    expect(result.from.transform).toContain('rotate(-180deg)');
+    expect(result.to.transform).toContain('rotate(0deg)');
+  });
+});
+
+describe('EASING_CURVES - bounce', () => {
+  it('bounce 缓动为过冲回落曲线（y1 > 1）', () => {
+    expect(EASING_CURVES.bounce).toBe('cubic-bezier(0.34, 1.56, 0.64, 1)');
   });
 });

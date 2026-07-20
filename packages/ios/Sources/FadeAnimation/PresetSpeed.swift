@@ -1,10 +1,10 @@
 import UIKit
 
 /// 时间刻度枚举 — 对齐 Web 端 @fade-animation/core tokens
-enum TimingScale: String {
+public enum TimingScale: String {
     case t1, t2, t3, t4, t5
 
-    var durationMs: Int {
+    public var durationMs: Int {
         switch self {
         case .t1: return 100
         case .t2: return 150
@@ -17,12 +17,12 @@ enum TimingScale: String {
 
 /// 预设速度枚举（向后兼容）
 /// 新代码建议使用 TimingScale 替代
-enum PresetSpeed: String {
+public enum PresetSpeed: String {
     case fast
     case normal
     case slow
 
-    var durationMs: Int {
+    public var durationMs: Int {
         switch self {
         case .fast: return TimingScale.t2.durationMs    // 150ms
         case .normal: return TimingScale.t3.durationMs  // 300ms
@@ -32,14 +32,14 @@ enum PresetSpeed: String {
 }
 
 /// 动效意图枚举 — 对齐 Web 端 @fade-animation/core tokens
-enum MotionIntent: String {
+public enum MotionIntent: String {
     case enter
     case exit
     case focus
     case feedback
     case delight
 
-    var timing: TimingScale {
+    public var timing: TimingScale {
         switch self {
         case .enter: return .t3
         case .exit: return .t2
@@ -49,13 +49,24 @@ enum MotionIntent: String {
         }
     }
 
-    var curve: UIView.AnimationCurve {
+    public var curve: UIView.AnimationCurve {
         switch self {
         case .enter: return .easeOut
         case .exit: return .easeIn
         case .focus: return .easeInOut
         case .feedback: return .easeInOut
         case .delight: return .easeOut
+        }
+    }
+
+    /// 精确的 CAMediaTimingFunction，对齐 Web 端 cubic-bezier
+    var timingFunction: CAMediaTimingFunction {
+        switch self {
+        case .enter: return EasingCurves.enter
+        case .exit: return EasingCurves.exit
+        case .focus: return EasingCurves.expressive
+        case .feedback: return EasingCurves.productive
+        case .delight: return EasingCurves.expressive
         }
     }
 }

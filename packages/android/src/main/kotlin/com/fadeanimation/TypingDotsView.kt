@@ -9,7 +9,6 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.PathInterpolator
 
 /**
  * TypingDotsView — 聊天"正在输入"跑马灯动效视图
@@ -52,8 +51,8 @@ class TypingDotsView @JvmOverloads constructor(
     private var animatorSet: AnimatorSet? = null
     private var isAnimating = false
 
-    // expressive 缓动曲线 — 对齐 Web 端 EASING_CURVES.expressive
-    private val expressiveInterpolator = PathInterpolator(0.4f, 0.14f, 0.3f, 1.0f)
+    // expressive 缓动曲线 — 对齐 Web 端 EASING_CURVES.expressive（纯 Kotlin，无 native 依赖）
+    private val expressiveInterpolator = CubicBezierInterpolator(0.4f, 0.14f, 0.3f, 1.0f)
 
     private val bgRect = RectF()
     private val cornerRadii = floatArrayOf(

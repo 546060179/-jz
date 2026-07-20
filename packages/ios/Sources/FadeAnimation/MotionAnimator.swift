@@ -4,7 +4,7 @@ import UIKit
 ///
 /// 支持 fade、scale、slide、flip、collapse 及其任意组合，使用 UIView.animate 驱动。
 /// FadeAnimator 保留作为向后兼容的特化版本。
-class MotionAnimator {
+public class MotionAnimator {
 
     private let targetView: UIView
     private let options: FadeOptions
@@ -21,9 +21,9 @@ class MotionAnimator {
     private var flipAxis: FlipAxis = .y
     private var flipPerspective: CGFloat = 800
     private var flipBackfaceHidden: Bool = true
-    private var flipInterpolator: UIView.AnimationCurve = .easeInOut
+    private var flipBezier: CubicBezierCurve = CubicBezierCurve(0.42, 0, 0.58, 1)
 
-    init(targetView: UIView, options: FadeOptions = FadeOptions()) {
+    public init(targetView: UIView, options: FadeOptions = FadeOptions()) {
         self.targetView = targetView
         self.options = options
     }
@@ -32,9 +32,9 @@ class MotionAnimator {
     ///
     /// - Parameters:
     ///   - entering: true 为进入动画，false 为退出动画
-    ///   - effects: 效果列表，支持 fade、scale、slide、flip、collapse 的任意组合
+    ///   - effects: 效果列表，支持 fade、scale、slide、flip、collapse、blur 的任意组合
     ///   - onEnd: 动画结束回调，保证仅调用一次
-    func start(
+    public func start(
         entering: Bool = true,
         effects: [MotionEffect] = EffectPresets.fadeIn,
         onEnd: (() -> Void)? = nil
@@ -121,6 +121,9 @@ class MotionAnimator {
             switch effect {
             case .fade(let from, _):
                 view.alpha = from ?? (entering ? 0 : 1)
+            case .blur(let from, _):
+                let blurFrom = from ?? (entering ? 8 : 0)
+                applyBlur(radius: blurFrom)
             case .flip(let axis, let from, let to, let perspective, let backfaceVisibility):
                 let startAngle = entering ? from : to
                 applyFlipTransform(angle: startAngle, axis: axis, perspective: perspective)
@@ -136,7 +139,11 @@ class MotionAnimator {
             }
         }
 
-        let curveOption = animationOptions(from: config.curve)
+        // 解析精确 cubic-bezier 曲线，供主动画、collapse、flip 共用，逐帧对齐 Web 端
+        let bezier = CubicBezierCurve(
+            timingFunction: config.timingFunction
+                ?? CubicBezierCurve(animationCurve: config.curve).timingFunction
+        )
 
         // 启动 flip 动画（使用 CATransform3D，独立于 UIView.animate 的 2D transform）
         let flipEffect = resolvedEffects.compactMap { effect -> (FlipAxis, CGFloat, CGFloat, CGFloat, String)? in
@@ -157,7 +164,7 @@ class MotionAnimator {
                 backfaceHidden: backfaceVisibility == "hidden",
                 duration: config.duration,
                 delay: config.delay,
-                curve: config.curve
+                bezier: bezier
             )
         }
 
@@ -178,29 +185,42 @@ class MotionAnimator {
                 entering: entering,
                 duration: config.duration,
                 delay: config.delay,
-                curve: config.curve,
+                bezier: bezier,
                 onEnd: nil // completion handled by main animation
             )
         }
 
-        UIView.animate(
-            withDuration: config.duration,
-            delay: config.delay,
-            options: curveOption,
-            animations: {
-                for effect in resolvedEffects {
-                    switch effect {
-                    case .fade(_, let to):
-                        view.alpha = to ?? (entering ? 1 : 0)
-                    case .scale, .slide, .rotate, .blur, .flip, .collapse:
-                        break
-                    }
+        // 主动画：fade / blur / scale / slide / rotate 的目标态
+        let mainAnimations = {
+            for effect in resolvedEffects {
+                switch effect {
+                case .fade(_, let to):
+                    view.alpha = to ?? (entering ? 1 : 0)
+                case .blur(_, let to):
+                    let blurTo = to ?? (entering ? 0 : 8)
+                    self.applyBlur(radius: blurTo)
+                case .scale, .slide, .rotate, .flip, .collapse:
+                    break
                 }
-                // 设置目标 transform
-                view.transform = targetTransform
-            },
-            completion: { _ in invokeOnEnd() }
-        )
+            }
+            // 设置目标 transform
+            view.transform = targetTransform
+        }
+
+        if config.duration <= 0 {
+            // reduced/none 或零时长：直接落到终态
+            mainAnimations()
+            invokeOnEnd()
+        } else {
+            let propertyAnimator = UIViewPropertyAnimator(
+                duration: config.duration,
+                controlPoint1: bezier.c1,
+                controlPoint2: bezier.c2,
+                animations: mainAnimations
+            )
+            propertyAnimator.addCompletion { _ in invokeOnEnd() }
+            propertyAnimator.startAnimation(afterDelay: config.delay)
+        }
 
         // 安全网定时器
         if combinedOnEnd != nil {
@@ -216,9 +236,39 @@ class MotionAnimator {
         }
     }
 
-    func cancel() { cancelInternal() }
+    /// 当前模糊效果 view
+    private var blurEffectView: UIVisualEffectView?
+
+    public func cancel() { cancelInternal() }
 
     deinit { cancelInternal() }
+
+    // MARK: - Blur Animation
+
+    /// 应用模糊效果。radius > 0 时添加/更新模糊，radius == 0 时移除模糊。
+    private func applyBlur(radius: CGFloat) {
+        let view = targetView
+        if radius <= 0 {
+            // Remove blur
+            blurEffectView?.removeFromSuperview()
+            blurEffectView = nil
+            return
+        }
+
+        if blurEffectView == nil {
+            let blurEffect = UIBlurEffect(style: .regular)
+            let effectView = UIVisualEffectView(effect: blurEffect)
+            effectView.frame = view.bounds
+            effectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            effectView.isUserInteractionEnabled = false
+            view.addSubview(effectView)
+            blurEffectView = effectView
+        }
+
+        // Map radius to alpha (0-8px → 0-1 opacity)
+        let normalizedAlpha = min(radius / 8.0, 1.0)
+        blurEffectView?.alpha = normalizedAlpha
+    }
 
     // MARK: - Flip Animation (CATransform3D)
 
@@ -250,7 +300,7 @@ class MotionAnimator {
         backfaceHidden: Bool,
         duration: TimeInterval,
         delay: TimeInterval,
-        curve: UIView.AnimationCurve
+        bezier: CubicBezierCurve
     ) {
         stopFlipDisplayLink()
 
@@ -260,7 +310,7 @@ class MotionAnimator {
         flipPerspective = perspective
         flipBackfaceHidden = backfaceHidden
         flipDuration = duration
-        flipInterpolator = curve
+        flipBezier = bezier
         flipStartTime = 0 // will be set on first tick
 
         if delay > 0 {
@@ -274,6 +324,10 @@ class MotionAnimator {
 
     private func createAndStartFlipDisplayLink() {
         let displayLink = CADisplayLink(target: self, selector: #selector(flipDisplayLinkTick(_:)))
+        // 解锁 ProMotion 高刷（iOS 15+），让 3D 翻转在 120Hz 设备上更顺滑
+        if #available(iOS 15.0, *) {
+            displayLink.preferredFrameRateRange = CAFrameRateRange(minimum: 30, maximum: 120, preferred: 120)
+        }
         displayLink.add(to: .main, forMode: .common)
         flipDisplayLink = displayLink
     }
@@ -287,8 +341,8 @@ class MotionAnimator {
         var progress = flipDuration > 0 ? CGFloat(elapsed / flipDuration) : 1.0
         progress = min(max(progress, 0), 1)
 
-        // Apply easing curve
-        let easedProgress = applyEasing(progress, curve: flipInterpolator)
+        // Apply easing curve（与 Web 端 cubic-bezier 逐帧一致）
+        let easedProgress = flipBezier.value(at: progress)
 
         let currentAngle = flipFromAngle + (flipToAngle - flipFromAngle) * easedProgress
         applyFlipTransform(angle: currentAngle, axis: flipAxis, perspective: flipPerspective)
@@ -309,22 +363,6 @@ class MotionAnimator {
                     .truncatingRemainder(dividingBy: 360)
                 targetView.isHidden = (normalizedAngle > 90 && normalizedAngle < 270)
             }
-        }
-    }
-
-    /// 简单的缓动函数近似
-    private func applyEasing(_ t: CGFloat, curve: UIView.AnimationCurve) -> CGFloat {
-        switch curve {
-        case .linear:
-            return t
-        case .easeIn:
-            return t * t
-        case .easeOut:
-            return 1 - (1 - t) * (1 - t)
-        case .easeInOut:
-            return t < 0.5 ? 2 * t * t : 1 - pow(-2 * t + 2, 2) / 2
-        @unknown default:
-            return t
         }
     }
 
@@ -479,11 +517,24 @@ class MotionAnimator {
         entering: Bool,
         duration: TimeInterval,
         delay: TimeInterval,
-        curve: UIView.AnimationCurve,
+        bezier: CubicBezierCurve,
         onEnd: (() -> Void)?
     ) {
         let view = targetView
         view.clipsToBounds = true
+
+        // 零时长：直接落到终态
+        guard duration > 0 else {
+            applyHeightConstraint(height: endHeight)
+            if entering, isUsingAutoLayout, let dynamicConstraint = dynamicHeightConstraint {
+                view.removeConstraint(dynamicConstraint)
+                dynamicHeightConstraint = nil
+            } else if entering {
+                view.sizeToFit()
+            }
+            onEnd?()
+            return
+        }
 
         if isUsingAutoLayout {
             // Auto Layout: animate height constraint
@@ -491,49 +542,51 @@ class MotionAnimator {
             constraint.constant = startHeight
             view.superview?.layoutIfNeeded()
 
-            UIView.animate(
-                withDuration: duration,
-                delay: delay,
-                options: animationOptions(from: curve),
+            let animator = UIViewPropertyAnimator(
+                duration: duration,
+                controlPoint1: bezier.c1,
+                controlPoint2: bezier.c2,
                 animations: {
                     constraint.constant = endHeight
                     view.superview?.layoutIfNeeded()
-                },
-                completion: { [weak self] _ in
-                    if entering {
-                        // Expand complete: remove dynamic constraint to allow free sizing
-                        if let dynamicConstraint = self?.dynamicHeightConstraint {
-                            view.removeConstraint(dynamicConstraint)
-                            self?.dynamicHeightConstraint = nil
-                        }
-                    }
-                    // Collapse complete: keep constraint to maintain collapsed state
-                    onEnd?()
                 }
             )
+            animator.addCompletion { [weak self] _ in
+                if entering {
+                    // Expand complete: remove dynamic constraint to allow free sizing
+                    if let dynamicConstraint = self?.dynamicHeightConstraint {
+                        view.removeConstraint(dynamicConstraint)
+                        self?.dynamicHeightConstraint = nil
+                    }
+                }
+                // Collapse complete: keep constraint to maintain collapsed state
+                onEnd?()
+            }
+            animator.startAnimation(afterDelay: delay)
         } else {
             // 纯 Frame-based: animate frame height
             var frame = view.frame
             frame.size.height = startHeight
             view.frame = frame
 
-            UIView.animate(
-                withDuration: duration,
-                delay: delay,
-                options: animationOptions(from: curve),
+            let animator = UIViewPropertyAnimator(
+                duration: duration,
+                controlPoint1: bezier.c1,
+                controlPoint2: bezier.c2,
                 animations: {
                     var frame = view.frame
                     frame.size.height = endHeight
                     view.frame = frame
-                },
-                completion: { _ in
-                    if entering {
-                        // Expand complete: restore natural size
-                        view.sizeToFit()
-                    }
-                    onEnd?()
                 }
             )
+            animator.addCompletion { _ in
+                if entering {
+                    // Expand complete: restore natural size
+                    view.sizeToFit()
+                }
+                onEnd?()
+            }
+            animator.startAnimation(afterDelay: delay)
         }
     }
 
@@ -543,6 +596,9 @@ class MotionAnimator {
         callbackInvoked = true
         targetView.layer.removeAllAnimations()
         stopFlipDisplayLink()
+        // Clean up blur effect view
+        blurEffectView?.removeFromSuperview()
+        blurEffectView = nil
         // Clean up dynamic height constraint if collapse animation was in progress
         if let constraint = dynamicHeightConstraint {
             targetView.removeConstraint(constraint)
@@ -554,15 +610,5 @@ class MotionAnimator {
     private func cleanupSafetyTimer() {
         safetyTimer?.cancel()
         safetyTimer = nil
-    }
-
-    private func animationOptions(from curve: UIView.AnimationCurve) -> UIView.AnimationOptions {
-        switch curve {
-        case .easeInOut: return .curveEaseInOut
-        case .easeIn:    return .curveEaseIn
-        case .easeOut:   return .curveEaseOut
-        case .linear:    return .curveLinear
-        @unknown default: return .curveEaseInOut
-        }
     }
 }

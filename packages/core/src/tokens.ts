@@ -85,7 +85,8 @@ export type EasingName =
   | 'expressive'
   | 'enter'
   | 'exit'
-  | 'linear';
+  | 'linear'
+  | 'bounce';
 
 /**
  * 缓动曲线映射（CSS cubic-bezier）
@@ -95,6 +96,7 @@ export type EasingName =
  * - enter: 元素进入画面（ease-out 风格，快速减速）
  * - exit: 元素离开画面（ease-in 风格，快速加速）
  * - linear: 匀速，适合循环动画或进度条
+ * - bounce: 过冲回落（back-out），弹性入场，适合 bounce-in / pop / delight
  */
 export const EASING_CURVES: Record<EasingName, string> = {
   productive: 'cubic-bezier(0.2, 0, 0.38, 0.9)',
@@ -102,6 +104,7 @@ export const EASING_CURVES: Record<EasingName, string> = {
   enter: 'cubic-bezier(0, 0, 0.3, 1)',
   exit: 'cubic-bezier(0.4, 0, 1, 1)',
   linear: 'linear',
+  bounce: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
 } as const;
 
 // ============================================================

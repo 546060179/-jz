@@ -3,17 +3,17 @@ import UIKit
 /// 动效效果类型 — 对齐 Web 端 @fade-animation/core effects.ts
 
 /// 滑动方向
-enum SlideDirection {
+public enum SlideDirection {
     case up, down, left, right
 }
 
 /// 翻转轴方向
-enum FlipAxis {
+public enum FlipAxis {
     case x, y
 }
 
 /// 折叠目标高度
-enum CollapseHeight {
+public enum CollapseHeight {
     /// 固定高度值
     case fixed(CGFloat)
     /// 自动测量当前高度
@@ -21,7 +21,7 @@ enum CollapseHeight {
 }
 
 /// 效果枚举
-enum MotionEffect {
+public enum MotionEffect {
     /// 淡入淡出效果
     case fade(from: CGFloat? = nil, to: CGFloat? = nil)
     /// 缩放效果
@@ -39,59 +39,102 @@ enum MotionEffect {
 }
 
 /// 效果预设 — 对齐 Web 端 EFFECT_PRESETS
-enum EffectPresets {
-    static let fadeIn: [MotionEffect] = [.fade(from: 0, to: 1)]
-    static let fadeOut: [MotionEffect] = [.fade(from: 1, to: 0)]
+public enum EffectPresets {
+    public static let fadeIn: [MotionEffect] = [.fade(from: 0, to: 1)]
+    public static let fadeOut: [MotionEffect] = [.fade(from: 1, to: 0)]
 
-    static let scaleFadeIn: [MotionEffect] = [
+    public static let scaleFadeIn: [MotionEffect] = [
         .fade(from: 0, to: 1),
         .scale(from: 0.95, to: 1)
     ]
-    static let scaleFadeOut: [MotionEffect] = [
+    public static let scaleFadeOut: [MotionEffect] = [
         .fade(from: 1, to: 0),
         .scale(from: 1, to: 0.95)
     ]
 
-    static let slideUpIn: [MotionEffect] = [
+    public static let slideUpIn: [MotionEffect] = [
         .fade(from: 0, to: 1),
         .slide(direction: .up, distance: 16)
     ]
-    static let slideDownOut: [MotionEffect] = [
+    public static let slideDownOut: [MotionEffect] = [
         .fade(from: 1, to: 0),
         .slide(direction: .down, distance: 16)
     ]
-    static let slideLeftIn: [MotionEffect] = [
+    public static let slideLeftIn: [MotionEffect] = [
         .fade(from: 0, to: 1),
         .slide(direction: .left, distance: 16)
     ]
-    static let slideRightIn: [MotionEffect] = [
+    public static let slideRightIn: [MotionEffect] = [
         .fade(from: 0, to: 1),
         .slide(direction: .right, distance: 16)
     ]
 
-    static let flipXIn: [MotionEffect] = [
+    public static let flipXIn: [MotionEffect] = [
         .fade(from: 0, to: 1),
         .flip(axis: .x, from: 90, to: 0)
     ]
-    static let flipXOut: [MotionEffect] = [
+    public static let flipXOut: [MotionEffect] = [
         .fade(from: 1, to: 0),
         .flip(axis: .x, from: 0, to: 90)
     ]
-    static let flipYIn: [MotionEffect] = [
+    public static let flipYIn: [MotionEffect] = [
         .fade(from: 0, to: 1),
         .flip(axis: .y, from: 90, to: 0)
     ]
-    static let flipYOut: [MotionEffect] = [
+    public static let flipYOut: [MotionEffect] = [
         .fade(from: 1, to: 0),
         .flip(axis: .y, from: 0, to: 90)
     ]
 
-    static let collapseIn: [MotionEffect] = [
+    public static let collapseIn: [MotionEffect] = [
         .fade(from: 0, to: 1),
         .collapse(collapsedHeight: .fixed(0))
     ]
-    static let collapseOut: [MotionEffect] = [
+    public static let collapseOut: [MotionEffect] = [
         .fade(from: 1, to: 0),
         .collapse(collapsedHeight: .fixed(0))
+    ]
+
+    // --- Rotate + Fade presets ---
+    public static let rotateFadeIn: [MotionEffect] = [
+        .fade(from: 0, to: 1),
+        .rotate(from: -10, to: 0)
+    ]
+    public static let rotateFadeOut: [MotionEffect] = [
+        .fade(from: 1, to: 0),
+        .rotate(from: 0, to: 10)
+    ]
+
+    // --- Blur + Fade presets ---
+    public static let blurFadeIn: [MotionEffect] = [
+        .fade(from: 0, to: 1),
+        .blur(from: 8, to: 0)
+    ]
+    public static let blurFadeOut: [MotionEffect] = [
+        .fade(from: 1, to: 0),
+        .blur(from: 0, to: 8)
+    ]
+
+    // --- 新增：弹性/缩放/旋转进入（对齐 Web EFFECT_PRESETS）---
+    /// 弹性缩放进入（scale 0.3→1，建议配 EasingCurves.bounce 出过冲弹入）
+    public static let bounceIn: [MotionEffect] = [
+        .fade(from: 0, to: 1),
+        .scale(from: 0.3, to: 1)
+    ]
+    /// 缩放进入（scale 0.5→1，图片/卡片聚焦入场）
+    public static let zoomIn: [MotionEffect] = [
+        .fade(from: 0, to: 1),
+        .scale(from: 0.5, to: 1)
+    ]
+    /// 缩放上滑进入（scale 0.9→1 + 上滑 32）
+    public static let zoomSlideIn: [MotionEffect] = [
+        .fade(from: 0, to: 1),
+        .scale(from: 0.9, to: 1),
+        .slide(direction: .up, distance: 32)
+    ]
+    /// 旋转进入（rotate -180→0 + 淡入）
+    public static let spinIn: [MotionEffect] = [
+        .fade(from: 0, to: 1),
+        .rotate(from: -180, to: 0)
     ]
 }

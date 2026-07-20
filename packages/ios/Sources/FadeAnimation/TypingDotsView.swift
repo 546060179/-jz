@@ -1,31 +1,59 @@
 import UIKit
 
 /// TypingDots 配置
-struct TypingDotsConfig {
+public struct TypingDotsConfig {
     /// 圆点数量，默认 3
-    var count: Int = 3
+    public var count: Int = 3
     /// 圆点直径（pt），默认 8
-    var dotSize: CGFloat = 8
+    public var dotSize: CGFloat = 8
     /// 圆点间距（pt），默认 6
-    var gap: CGFloat = 6
+    public var gap: CGFloat = 6
     /// 暗态颜色，默认 Neutral/T-b31 (#4C4B50)
-    var dimColor: UIColor = UIColor(red: 0x4C/255, green: 0x4B/255, blue: 0x50/255, alpha: 1)
+    public var dimColor: UIColor = UIColor(red: 0x4C/255, green: 0x4B/255, blue: 0x50/255, alpha: 1)
     /// 亮态颜色（脉冲峰值），默认 Neutral/T-b53 (#828386)
-    var brightColor: UIColor = UIColor(red: 0x82/255, green: 0x83/255, blue: 0x86/255, alpha: 1)
+    public var brightColor: UIColor = UIColor(red: 0x82/255, green: 0x83/255, blue: 0x86/255, alpha: 1)
     /// 容器背景色，默认 Neutral/T-b16 (#23252A)
-    var backgroundColor: UIColor = UIColor(red: 0x23/255, green: 0x25/255, blue: 0x2A/255, alpha: 1)
+    public var backgroundColor: UIColor = UIColor(red: 0x23/255, green: 0x25/255, blue: 0x2A/255, alpha: 1)
     /// 单个圆点动画周期（ms），默认 TimingScale.t4 (500)
-    var cycleDuration: Int = TimingScale.t4.durationMs
+    public var cycleDuration: Int = TimingScale.t4.durationMs
     /// 圆点间交错延迟（ms），默认 150
-    var staggerInterval: Int = 150
+    public var staggerInterval: Int = 150
     /// 容器圆角
-    var cornerRadii: UIRectCorner = [.topRight, .bottomLeft, .bottomRight]
+    public var cornerRadii: UIRectCorner = [.topRight, .bottomLeft, .bottomRight]
     /// 容器圆角半径，默认 12
-    var cornerRadius: CGFloat = 12
+    public var cornerRadius: CGFloat = 12
     /// 容器内边距，默认 12
-    var padding: CGFloat = 12
+    public var padding: CGFloat = 12
     /// 容器高度，默认 44
-    var height: CGFloat = 44
+    public var height: CGFloat = 44
+
+    public init(
+        count: Int = 3,
+        dotSize: CGFloat = 8,
+        gap: CGFloat = 6,
+        dimColor: UIColor = UIColor(red: 0x4C/255, green: 0x4B/255, blue: 0x50/255, alpha: 1),
+        brightColor: UIColor = UIColor(red: 0x82/255, green: 0x83/255, blue: 0x86/255, alpha: 1),
+        backgroundColor: UIColor = UIColor(red: 0x23/255, green: 0x25/255, blue: 0x2A/255, alpha: 1),
+        cycleDuration: Int = TimingScale.t4.durationMs,
+        staggerInterval: Int = 150,
+        cornerRadii: UIRectCorner = [.topRight, .bottomLeft, .bottomRight],
+        cornerRadius: CGFloat = 12,
+        padding: CGFloat = 12,
+        height: CGFloat = 44
+    ) {
+        self.count = count
+        self.dotSize = dotSize
+        self.gap = gap
+        self.dimColor = dimColor
+        self.brightColor = brightColor
+        self.backgroundColor = backgroundColor
+        self.cycleDuration = cycleDuration
+        self.staggerInterval = staggerInterval
+        self.cornerRadii = cornerRadii
+        self.cornerRadius = cornerRadius
+        self.padding = padding
+        self.height = height
+    }
 }
 
 /// TypingDotsView — 聊天"正在输入"跑马灯动效视图
@@ -42,7 +70,7 @@ struct TypingDotsConfig {
 /// view.addSubview(dots)
 /// dots.startAnimating()
 /// ```
-class TypingDotsView: UIView {
+public class TypingDotsView: UIView {
 
     private let config: TypingDotsConfig
     private var dotLayers: [CAShapeLayer] = []
@@ -50,13 +78,13 @@ class TypingDotsView: UIView {
 
     // MARK: - Init
 
-    init(config: TypingDotsConfig = TypingDotsConfig()) {
+    public init(config: TypingDotsConfig = TypingDotsConfig()) {
         self.config = config
         super.init(frame: .zero)
         setupView()
     }
 
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         self.config = TypingDotsConfig()
         super.init(coder: coder)
         setupView()
@@ -84,13 +112,13 @@ class TypingDotsView: UIView {
 
     // MARK: - Layout
 
-    override var intrinsicContentSize: CGSize {
+    public override var intrinsicContentSize: CGSize {
         let dotsWidth = CGFloat(config.count) * config.dotSize + CGFloat(config.count - 1) * config.gap
         let totalWidth = dotsWidth + config.padding * 2
         return CGSize(width: totalWidth, height: config.height)
     }
 
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
 
         // 应用圆角蒙版
@@ -118,7 +146,7 @@ class TypingDotsView: UIView {
     // MARK: - Animation
 
     /// 启动跑马灯脉冲动画
-    func startAnimating() {
+    public func startAnimating() {
         guard !isAnimating else { return }
         isAnimating = true
 
@@ -132,7 +160,7 @@ class TypingDotsView: UIView {
     }
 
     /// 停止动画
-    func stopAnimating() {
+    public func stopAnimating() {
         guard isAnimating else { return }
         isAnimating = false
         for dot in dotLayers {
@@ -186,7 +214,7 @@ class TypingDotsView: UIView {
 
     // MARK: - Lifecycle
 
-    override func didMoveToWindow() {
+    public override func didMoveToWindow() {
         super.didMoveToWindow()
         if window != nil && isAnimating {
             // 从后台恢复时 CAAnimation 会被系统移除，需要重新添加

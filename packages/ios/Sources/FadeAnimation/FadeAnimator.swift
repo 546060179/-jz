@@ -12,7 +12,7 @@ import UIKit
 ///
 /// - Note: targetView 使用 strong 引用，FadeAnimator 不会被 view 反向持有，
 ///   因此不会产生循环引用。调用方释放 animator 时 deinit 自动清理。
-class FadeAnimator {
+public class FadeAnimator {
 
     /// 动画目标视图。
     /// 使用 strong 引用确保动画执行期间视图不会被意外释放。
@@ -34,7 +34,7 @@ class FadeAnimator {
     /// - Parameters:
     ///   - targetView: 动画目标 UIView
     ///   - options: 动画配置选项，默认使用 FadeOptions 默认值
-    init(targetView: UIView, options: FadeOptions = FadeOptions()) {
+    public init(targetView: UIView, options: FadeOptions = FadeOptions()) {
         self.targetView = targetView
         self.options = options
     }
@@ -46,7 +46,7 @@ class FadeAnimator {
     /// - Parameters:
     ///   - fadeIn: true 执行淡入（alpha 0→1），false 执行淡出（alpha 1→0）。默认 true。
     ///   - onEnd: 动画结束时的回调，保证仅调用一次；nil 表示不需要回调。
-    func start(fadeIn: Bool = true, onEnd: (() -> Void)? = nil) {
+    public func start(fadeIn: Bool = true, onEnd: (() -> Void)? = nil) {
         // 取消之前的动画（不触发旧回调）
         cancelInternal()
 
@@ -87,21 +87,29 @@ class FadeAnimator {
             combinedOnEnd?()
         }
 
-        // 将 UIView.AnimationCurve 转换为 UIView.AnimationOptions
-        let curveOption = self.animationOptions(from: config.curve)
-
-        // 启动 UIView.animate
-        UIView.animate(
-            withDuration: config.duration,
-            delay: config.delay,
-            options: curveOption,
-            animations: {
-                view.alpha = targetAlpha
-            },
-            completion: { _ in
+        // 使用精确的 cubic-bezier 控制点驱动动画，逐帧对齐 Web 端缓动。
+        // 若 duration 为 0（reduced/none 或用户显式设置），直接跳到终态并回调。
+        if config.duration <= 0 {
+            view.alpha = targetAlpha
+            invokeOnEnd()
+        } else {
+            let bezier = CubicBezierCurve(
+                timingFunction: config.timingFunction
+                    ?? CubicBezierCurve(animationCurve: config.curve).timingFunction
+            )
+            let propertyAnimator = UIViewPropertyAnimator(
+                duration: config.duration,
+                controlPoint1: bezier.c1,
+                controlPoint2: bezier.c2,
+                animations: {
+                    view.alpha = targetAlpha
+                }
+            )
+            propertyAnimator.addCompletion { _ in
                 invokeOnEnd()
             }
-        )
+            propertyAnimator.startAnimation(afterDelay: config.delay)
+        }
 
         // 设置安全网定时器：duration + delay + 0.05s
         if combinedOnEnd != nil {
@@ -118,7 +126,7 @@ class FadeAnimator {
     /// 取消当前正在进行的动画并清理所有资源。
     ///
     /// 取消后不会触发 onEnd 回调。
-    func cancel() {
+    public func cancel() {
         cancelInternal()
     }
 
@@ -144,19 +152,5 @@ class FadeAnimator {
     private func cleanupSafetyTimer() {
         safetyTimer?.cancel()
         safetyTimer = nil
-    }
-
-    /// 将 UIView.AnimationCurve 转换为对应的 UIView.AnimationOptions。
-    ///
-    /// - Parameter curve: 动画曲线
-    /// - Returns: 对应的 UIView.AnimationOptions
-    private func animationOptions(from curve: UIView.AnimationCurve) -> UIView.AnimationOptions {
-        switch curve {
-        case .easeInOut: return .curveEaseInOut
-        case .easeIn:    return .curveEaseIn
-        case .easeOut:   return .curveEaseOut
-        case .linear:    return .curveLinear
-        @unknown default: return .curveEaseInOut
-        }
     }
 }

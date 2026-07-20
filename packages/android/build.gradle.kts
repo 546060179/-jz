@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.1.10"
+    `maven-publish`
 }
 
 group = "com.fadeanimation"
@@ -30,5 +31,39 @@ tasks.test {
     useJUnitPlatform()
     testLogging {
         events("passed", "skipped", "failed")
+    }
+}
+
+// 生成 sources jar，便于消费方查看/调试源码
+java {
+    withSourcesJar()
+}
+
+// 发布配置：`./gradlew publishToMavenLocal` 发到本地 ~/.m2，
+// 或配置远程仓库后 `./gradlew publish` 发到私有 Maven。
+// 产物坐标：com.fadeanimation:fade-animation-android:0.1.0
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+            artifactId = "fade-animation-android"
+
+            pom {
+                name.set("Fade Animation (Android)")
+                description.set("跨端动效组件库 Android 端 —— 与 iOS/Web 共享同一套缓动、弹簧、编排模型")
+                licenses {
+                    license {
+                        name.set("MIT")
+                    }
+                }
+            }
+        }
+    }
+    // 示例：发到本地目录仓库，便于验证/离线分发
+    repositories {
+        maven {
+            name = "localDir"
+            url = uri(layout.buildDirectory.dir("maven-repo"))
+        }
     }
 }

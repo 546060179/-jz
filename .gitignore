@@ -40,6 +40,15 @@ Music/
 Pictures/
 Public/
 
+# System apps
+Applications/
+iCloud云盘（归档）/
+
 # Misc
 *.log
 *.tsbuildinfo
+tmp/
+
+# Xcode 用户状态（不应提交）
+*.xcuserstate
+xcuserdata/

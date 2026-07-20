@@ -104,11 +104,14 @@ class FadeAnimator(
         targetView.addOnAttachStateChangeListener(listener)
 
         // 启动 ViewPropertyAnimator
+        // withLayer(): 动画期间自动将 view 提升为 LAYER_TYPE_HARDWARE、结束后复位，
+        // 相当于 Web 端 will-change，可显著减少 alpha 动画的逐帧重绘。
         val animator = targetView.animate()
             .alpha(targetAlpha)
             .setDuration(config.duration)
             .setStartDelay(config.delay)
             .setInterpolator(config.interpolator)
+            .withLayer()
             .withEndAction {
                 invokeOnEnd()
             }
