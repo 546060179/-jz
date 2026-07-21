@@ -106,13 +106,15 @@ public enum EffectPresets {
     ]
 
     // --- Blur + Fade presets ---
+    // blur-in 刻意从 0.6 透明度起步(而非 0)：纯淡入是 0→1，若 blur-in 也从 0 淡入会与之难以区分。
+    // 保留初始 0.6 透明度 + 较大初始模糊，让"由糊变清"成为主视觉。五端同款参数。
     public static let blurFadeIn: [MotionEffect] = [
-        .fade(from: 0, to: 1),
-        .blur(from: 8, to: 0)
+        .fade(from: 0.6, to: 1),
+        .blur(from: 14, to: 0)
     ]
     public static let blurFadeOut: [MotionEffect] = [
         .fade(from: 1, to: 0),
-        .blur(from: 0, to: 8)
+        .blur(from: 0, to: 14)
     ]
 
     // --- 新增：弹性/缩放/旋转进入（对齐 Web EFFECT_PRESETS）---

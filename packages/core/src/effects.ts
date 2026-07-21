@@ -111,15 +111,20 @@ export const EFFECT_PRESETS = {
     { type: 'fade', from: 1, to: 0 },
     { type: 'rotate', from: 0, to: 10 },
   ] as MotionEffect[],
-  /** 模糊淡入 */
+  /**
+   * 模糊淡入 — "由糊变清"聚焦入场。
+   * 刻意从较高透明度(0.6)起步而非 0：纯淡入是 opacity 0→1，若 blur-in 也从 0 淡入
+   * 就会与纯淡入难以区分。保留初始 0.6 透明度 + 较大初始模糊(14px)，让"去模糊"成为主视觉，
+   * 与 fade-in 清晰区分。五端(Web/iOS/Android)同款参数。
+   */
   'blur-fade-in': [
-    { type: 'fade', from: 0, to: 1 },
-    { type: 'blur', from: 8, to: 0 },
+    { type: 'fade', from: 0.6, to: 1 },
+    { type: 'blur', from: 14, to: 0 },
   ] as MotionEffect[],
-  /** 模糊淡出 */
+  /** 模糊淡出 — 去焦离场（透明度归零 + 逐渐模糊） */
   'blur-fade-out': [
     { type: 'fade', from: 1, to: 0 },
-    { type: 'blur', from: 0, to: 8 },
+    { type: 'blur', from: 0, to: 14 },
   ] as MotionEffect[],
   /** 绕 X 轴翻转淡入（90deg→0deg） */
   'flip-x-in': [

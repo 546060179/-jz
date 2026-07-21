@@ -265,8 +265,9 @@ public class MotionAnimator {
             blurEffectView = effectView
         }
 
-        // Map radius to alpha (0-8px → 0-1 opacity)
-        let normalizedAlpha = min(radius / 8.0, 1.0)
+        // Map radius to alpha (0-14px → 0-1 opacity)。分母与 blurFadeIn 预设的初始模糊(14)对齐，
+        // 使 14→0 的去模糊过程在整段动画内平滑呈现，而非前段卡在满模糊。
+        let normalizedAlpha = min(radius / 14.0, 1.0)
         blurEffectView?.alpha = normalizedAlpha
     }
 

@@ -94,6 +94,26 @@ class ContractTest {
     }
 
     @Test
+    fun `blur-fade-in preset matches contract`() {
+        val bp = loadContract().getJSONObject("effectPresets").getJSONObject("blurFadeIn")
+        var opFrom: Float? = null
+        var opTo: Float? = null
+        var blFrom: Float? = null
+        var blTo: Float? = null
+        for (e in EffectPresets.BLUR_FADE_IN) {
+            when (e) {
+                is MotionEffect.Fade -> { opFrom = e.from; opTo = e.to }
+                is MotionEffect.Blur -> { blFrom = e.from; blTo = e.to }
+                else -> {}
+            }
+        }
+        assertEquals(bp.getDouble("opacityFrom"), opFrom!!.toDouble(), 1e-6, "blur-in opacityFrom")
+        assertEquals(bp.getDouble("opacityTo"), opTo!!.toDouble(), 1e-6, "blur-in opacityTo")
+        assertEquals(bp.getDouble("blurFrom"), blFrom!!.toDouble(), 1e-6, "blur-in blurFrom")
+        assertEquals(bp.getDouble("blurTo"), blTo!!.toDouble(), 1e-6, "blur-in blurTo")
+    }
+
+    @Test
     fun `intent defaults match contract`() {
         val contract = loadContract()
         val intents = contract.getJSONObject("intentDefaults")

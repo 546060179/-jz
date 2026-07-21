@@ -309,8 +309,8 @@ animator.start(entering: true, effects: [
 | slide-right-in | fade + slide→ | 从右侧滑入 |
 | rotate-fade-in | fade + rotate(-10→0) | 旋转淡入 |
 | rotate-fade-out | fade + rotate(0→10) | 旋转淡出 |
-| blur-fade-in | fade + blur(8→0) | 模糊淡入 |
-| blur-fade-out | fade + blur(0→8) | 模糊淡出 |
+| blur-fade-in | fade(0.6→1) + blur(14→0) | 模糊淡入（"由糊变清"，刻意留 0.6 初始透明度以区别于纯淡入） |
+| blur-fade-out | fade(1→0) + blur(0→14) | 模糊淡出 |
 | flip-x-in | fade + flip X轴(90→0) | X轴翻转进入 |
 | flip-x-out | fade + flip X轴(0→90) | X轴翻转退出 |
 | flip-y-in | fade + flip Y轴(90→0) | Y轴翻转进入 |

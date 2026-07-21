@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import contract from '../../../contract/motion-contract.json';
 import { TIMING_SCALES, DISTANCE_SCALES, EASING_CURVES, INTENT_DEFAULTS } from './tokens';
 import { SPRING_PRESETS } from './spring';
+import { EFFECT_PRESETS } from './effects';
+import { resolveEffectStyles } from './resolveEffectStyles';
 
 /**
  * 跨端一致性契约测试（core 侧）。
@@ -62,4 +64,15 @@ describe('跨端契约 - Spring Presets', () => {
       expect(actual.mass).toBe((cfg as any).mass);
     });
   }
+});
+
+describe('跨端契约 - Effect Presets（blur-fade-in 参数五端一致）', () => {
+  it('blur-fade-in: opacity 0.6→1, blur 14→0', () => {
+    const bp = (contract as any).effectPresets.blurFadeIn;
+    const styles = resolveEffectStyles([...EFFECT_PRESETS['blur-fade-in']], true);
+    expect(styles.from.opacity).toBe(String(bp.opacityFrom));
+    expect(styles.to.opacity).toBe(String(bp.opacityTo));
+    expect(styles.from.filter).toBe(`blur(${bp.blurFrom}px)`);
+    expect(styles.to.filter).toBe(`blur(${bp.blurTo}px)`);
+  });
 });

@@ -22,5 +22,9 @@
     "bouncy": { "stiffness": 200, "damping": 10, "mass": 1 },
     "slow": { "stiffness": 80, "damping": 12, "mass": 1.5 },
     "noWobble": { "stiffness": 170, "damping": 26, "mass": 1 }
+  },
+  "effectPresets": {
+    "$comment": "blur-in 刻意从 0.6 透明度起步(而非 0)以区别于纯淡入；初始模糊 14px。五端同款。",
+    "blurFadeIn": { "opacityFrom": 0.6, "opacityTo": 1, "blurFrom": 14, "blurTo": 0 }
   }
 }

@@ -1717,11 +1717,12 @@ function playCardAnim(card, caseId) {
     'ripple': function(){el.style.animation='none';raf(function(){el.style.animation='cRipple 1.2s ease infinite';});},
     'fade-in': function(){el.style.transition='none';el.style.opacity='0';raf(function(){el.style.transition='opacity 0.8s ease';el.style.opacity='1';});},
     'blur-in': function(){
-      // 区别于纯淡入：透明度快速到位(0.45s)，模糊单独慢慢消散(1.3s)+轻微缩放，做出"对焦"感
-      el.style.transition='none';el.style.filter='blur(18px)';el.style.opacity='0';el.style.transform='scale(1.06)';
+      // 与库 blur-fade-in 预设一致：刻意从 0.6 透明度起步(而非 0)，纯淡入是 opacity 0→1，
+      // blur-in 保留初始 0.6 透明度 + 大初始模糊(14px)，让"由糊变清"成为主视觉，与纯淡入区分。
+      el.style.transition='none';el.style.filter='blur(14px)';el.style.opacity='0.6';
       raf(function(){
-        el.style.transition='filter 1.3s cubic-bezier(.2,.55,.25,1), opacity 0.45s ease, transform 1.3s cubic-bezier(.2,.55,.25,1)';
-        el.style.filter='blur(0)';el.style.opacity='1';el.style.transform='scale(1)';
+        el.style.transition='filter 0.9s cubic-bezier(0,0,.3,1), opacity 0.9s cubic-bezier(0,0,.3,1)';
+        el.style.filter='blur(0)';el.style.opacity='1';
       });
     },
     'flip-in': function(){el.style.transition='none';el.style.transform='perspective(200px) rotateY(90deg)';el.style.opacity='0';raf(function(){el.style.transition='all 0.9s ease';el.style.transform='perspective(200px) rotateY(0)';el.style.opacity='1';});},

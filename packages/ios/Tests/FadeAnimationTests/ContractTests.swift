@@ -15,9 +15,14 @@ final class ContractTests: XCTestCase {
         let easings: [String: [Double]]
         let intentDefaults: [String: IntentDef]
         let springs: [String: SpringDef]
+        let effectPresets: EffectPresetsDef?
     }
     struct IntentDef: Codable { let timing: String; let easing: String }
     struct SpringDef: Codable { let stiffness: Double; let damping: Double; let mass: Double }
+    struct EffectPresetsDef: Codable { let blurFadeIn: BlurPresetDef }
+    struct BlurPresetDef: Codable {
+        let opacityFrom: Double; let opacityTo: Double; let blurFrom: Double; let blurTo: Double
+    }
 
     // MARK: - 加载 JSON（用 #filePath 定位仓库根，三端共用同一文件）
 
@@ -97,6 +102,25 @@ final class ContractTests: XCTestCase {
             XCTAssertEqual(Double(cfg.damping), def.damping, accuracy: 1e-6, "\(name) damping")
             XCTAssertEqual(Double(cfg.mass), def.mass, accuracy: 1e-6, "\(name) mass")
         }
+    }
+
+    func testBlurFadeInPreset() throws {
+        let contract = try loadContract()
+        guard let bp = contract.effectPresets?.blurFadeIn else {
+            XCTFail("契约缺少 effectPresets.blurFadeIn"); return
+        }
+        var opFrom: Double?, opTo: Double?, blFrom: Double?, blTo: Double?
+        for e in EffectPresets.blurFadeIn {
+            switch e {
+            case .fade(let f, let t): opFrom = f.map(Double.init); opTo = t.map(Double.init)
+            case .blur(let f, let t): blFrom = f.map(Double.init); blTo = t.map(Double.init)
+            default: break
+            }
+        }
+        XCTAssertEqual(try XCTUnwrap(opFrom), bp.opacityFrom, accuracy: 1e-6, "blur-in opacityFrom")
+        XCTAssertEqual(try XCTUnwrap(opTo), bp.opacityTo, accuracy: 1e-6, "blur-in opacityTo")
+        XCTAssertEqual(try XCTUnwrap(blFrom), bp.blurFrom, accuracy: 1e-6, "blur-in blurFrom")
+        XCTAssertEqual(try XCTUnwrap(blTo), bp.blurTo, accuracy: 1e-6, "blur-in blurTo")
     }
 
     func testIntentDefaults() throws {

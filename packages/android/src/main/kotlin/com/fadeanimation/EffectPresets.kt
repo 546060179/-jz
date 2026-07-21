@@ -70,13 +70,15 @@ object EffectPresets {
     )
 
     // --- Blur + Fade presets ---
+    // blur-in 刻意从 0.6 透明度起步(而非 0)：纯淡入是 0→1，若 blur-in 也从 0 淡入会与之难以区分。
+    // 保留初始 0.6 透明度 + 较大初始模糊(14px)，让"由糊变清"成为主视觉。五端同款参数。
     val BLUR_FADE_IN = listOf(
-        MotionEffect.Fade(from = 0f, to = 1f),
-        MotionEffect.Blur(from = 8f, to = 0f)
+        MotionEffect.Fade(from = 0.6f, to = 1f),
+        MotionEffect.Blur(from = 14f, to = 0f)
     )
     val BLUR_FADE_OUT = listOf(
         MotionEffect.Fade(from = 1f, to = 0f),
-        MotionEffect.Blur(from = 0f, to = 8f)
+        MotionEffect.Blur(from = 0f, to = 14f)
     )
 
     // --- 新增：弹性/缩放/旋转进入（对齐 Web EFFECT_PRESETS）---

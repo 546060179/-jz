@@ -94,8 +94,11 @@ describe('resolveEffectStyles - blur', () => {
 
   it('resolves blur-fade-in preset', () => {
     const result = resolveEffectStyles([...EFFECT_PRESETS['blur-fade-in']], true);
-    expect(result.from.opacity).toBe('0');
-    expect(result.from.filter).toBe('blur(8px)');
+    // 刻意从 0.6 透明度起步(而非 0)，让"由糊变清"区别于纯淡入；初始模糊加大到 14px
+    expect(result.from.opacity).toBe('0.6');
+    expect(result.to.opacity).toBe('1');
+    expect(result.from.filter).toBe('blur(14px)');
+    expect(result.to.filter).toBe('blur(0px)');
     expect(result.transitionProperties).toEqual(['opacity', 'filter']);
   });
 });
