@@ -322,6 +322,36 @@ animator.start(entering: true, effects: [
 | zoom-slide-in | fade + scale(0.9→1) + slide↑ | 缩放上滑进入 |
 | spin-in | fade + rotate(-180→0) | 旋转进入 |
 
+## 预置动效组件（业务组件）
+
+除通用效果预设外，库还内置了一批开箱即用的业务动效组件。这些组件封装了完整的视图 + 动画逻辑，对应 `docs/components.html` 里 native/custom 类效果。**当前 iOS 已提供，Android 计划中。**
+
+| 组件（iOS） | 对应效果 | 说明 |
+|------------|---------|------|
+| `TypingDotsView` | 打字点点 | 聊天"正在输入"跑马灯脉冲 |
+| `MarqueePulseAnimator` | 跑马灯/脉冲 | 元素循环流光/脉冲 |
+| `BubbleExpandView` | 气泡展开 | 阻尼谐振子弹性展开 + 文字后段淡入 |
+| `ToastView` | Toast 提示 | pill 消息条（配合 MotionAnimator 滑入） |
+| `NotificationBanner` | 通知横幅 | 应用内通知卡片（图标 + 标题） |
+| `SpotlightOverlayView` | 聚光灯引导 | 半透明遮罩挖空高亮 + 提示 |
+| `ContinueWatchingView` | 最近播放浮层 | 5 阶段序列：滑入→停留→详情淡出→收缩→变形小浮窗 |
+
+```swift
+// 气泡展开
+let bubble = BubbleExpandView()
+bubble.text = "限时免费"
+bubble.expandDuration = 0.65
+bubble.arrowDirection = .right
+view.addSubview(bubble)
+bubble.play()
+
+// 最近播放浮层
+let bar = ContinueWatchingView()
+bar.configure(cover: UIImage(named: "cover"), title: "剧名", subtitle: "EP.1 / EP.100")
+view.addSubview(bar)
+bar.show()
+```
+
 ## Motion Design Tokens
 
 ### Timing Scales（时间刻度）
@@ -479,7 +509,7 @@ pnpm install
 pnpm build
 pnpm test
 
-# iOS（62 个测试，含 public API 黑盒冒烟测试与跨端契约测试）
+# iOS（67 个测试，含 public API 黑盒冒烟测试、预置组件冒烟测试与跨端契约测试）
 cd packages/ios && xcodebuild -scheme FadeAnimation -sdk iphonesimulator \
   -destination 'platform=iOS Simulator,name=iPhone 17' test
 
