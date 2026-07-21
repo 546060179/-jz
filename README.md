@@ -324,9 +324,9 @@ animator.start(entering: true, effects: [
 
 ## 预置动效组件（业务组件）
 
-除通用效果预设外，库还内置了一批开箱即用的业务动效组件。这些组件封装了完整的视图 + 动画逻辑，对应 `docs/components.html` 里 native/custom 类效果。**当前 iOS 已提供，Android 计划中。**
+除通用效果预设外，库还内置了一批开箱即用的业务动效组件。这些组件封装了完整的视图 + 动画逻辑，对应 `docs/components.html` 里 native/custom 类效果。**iOS（Swift）与 Android（Kotlin）均已提供，类名一致。**
 
-| 组件（iOS） | 对应效果 | 说明 |
+| 组件（iOS / Android 同名） | 对应效果 | 说明 |
 |------------|---------|------|
 | `TypingDotsView` | 打字点点 | 聊天"正在输入"跑马灯脉冲 |
 | `MarqueePulseAnimator` | 跑马灯/脉冲 | 元素循环流光/脉冲 |
@@ -351,6 +351,26 @@ bar.configure(cover: UIImage(named: "cover"), title: "剧名", subtitle: "EP.1 /
 view.addSubview(bar)
 bar.show()
 ```
+
+```kotlin
+// Android — 类名与参数和 iOS 对齐
+// 气泡展开
+val bubble = BubbleExpandView(context)
+bubble.text = "限时免费"
+bubble.expandDurationMs = 650L
+bubble.arrowDirection = BubbleExpandView.ArrowDirection.RIGHT
+container.addView(bubble)
+bubble.play()
+
+// 最近播放浮层：滑入→停留→详情淡出→收缩→变形小浮窗
+val bar = ContinueWatchingView(context)
+bar.timing = CWTiming(collapseDelay = 3000L)
+bar.configure(cover = drawable, title = "剧名", subtitle = "EP.1 / EP.100")
+container.addView(bar)
+bar.show()
+```
+
+> Android 端组件为 `kotlin("jvm")` 库中的 `View` 子类，Android framework 依赖为 `compileOnly`，由宿主 App 在运行时提供。逻辑层（Spring/Stagger/契约等）由 57 个 JVM 单测覆盖；`View` 组件为编译级验证（运行时表现需在真机/模拟器上确认）。
 
 ## Motion Design Tokens
 
