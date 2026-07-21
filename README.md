@@ -336,6 +336,8 @@ animator.start(entering: true, effects: [
 | `SpotlightOverlayView` | 聚光灯引导 | 半透明遮罩挖空高亮 + 提示 |
 | `ContinueWatchingView` | 最近播放浮层 | 5 阶段序列：滑入→停留→详情淡出→收缩→变形小浮窗 |
 
+> **Web（React / Vue）** 也导出了对应的业务组件：`TypingDots`、`BubbleExpand`、`ContinueWatching`（`@fade-animation/react` 与 `@fade-animation/vue` 同名，用 scaleX 弹簧展开 / CSS transition 分阶段驱动，尊重 `prefers-reduced-motion`）。
+
 ```swift
 // 气泡展开
 let bubble = BubbleExpandView()

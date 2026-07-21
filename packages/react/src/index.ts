@@ -24,6 +24,12 @@ export type { FadeGroupProps } from './FadeGroup';
 export { TypingDots } from './TypingDots';
 export type { TypingDotsProps } from './TypingDots';
 
+// Business components (对齐 iOS/Android 预置组件)
+export { BubbleExpand } from './BubbleExpand';
+export type { BubbleExpandProps, BubbleExpandHandle, BubbleArrowDirection } from './BubbleExpand';
+export { ContinueWatching } from './ContinueWatching';
+export type { ContinueWatchingProps, ContinueWatchingHandle, CWPhase } from './ContinueWatching';
+
 // Spring hook
 export { useSpring } from './useSpring';
 export type { UseSpringOptions } from './useSpring';
