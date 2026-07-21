@@ -38,7 +38,7 @@ jobs:
         working-directory: packages/ios
         run: |
           set -eo pipefail
-          UDID=$(xcrun simctl list devices available | grep -oE '\(([0-9A-F-]{36})\)' | tr -d '()' | head -1)
+          UDID=$(xcrun simctl list devices available | grep -i iphone | grep -oE '[0-9A-F-]{36}' | head -1)
           echo "Using simulator UDID: $UDID"
           xcodebuild -scheme FadeAnimation -sdk iphonesimulator \
             -destination "id=$UDID" test
@@ -54,4 +54,8 @@ jobs:
           java-version: '17'
       - name: Test
         working-directory: packages/android
-        run: ./gradlew test --no-daemon
+        run: |
+          # CI 已由 setup-java 提供 JDK 17；移除仅为本地 JDK 25 环境准备的 daemon JVM 固定文件，
+          # 让 Gradle 直接使用 JAVA_HOME(17) 启动，避免 daemon toolchain 自动发现失败。
+          rm -f gradle/gradle-daemon-jvm.properties
+          ./gradlew test --stacktrace
