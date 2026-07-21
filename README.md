@@ -370,7 +370,7 @@ container.addView(bar)
 bar.show()
 ```
 
-> Android 端组件为 `kotlin("jvm")` 库中的 `View` 子类，Android framework 依赖为 `compileOnly`，由宿主 App 在运行时提供。逻辑层（Spring/Stagger/契约等）由 57 个 JVM 单测覆盖；`View` 组件为编译级验证（运行时表现需在真机/模拟器上确认）。
+> Android 端组件为 `kotlin("jvm")` 库中的 `View` 子类，Android framework 依赖为 `compileOnly`，由宿主 App 在运行时提供。逻辑层（Spring/Stagger/契约等）由 JVM 单测覆盖；`View` 组件由 Robolectric 冒烟测试在纯 JVM 下验证可实例化/绘制/触发动画不崩（`NativeComponentsSmokeTest`）。像素级真机表现仍建议在模拟器/真机上确认。
 
 ## Motion Design Tokens
 
@@ -533,7 +533,7 @@ pnpm test
 cd packages/ios && xcodebuild -scheme FadeAnimation -sdk iphonesimulator \
   -destination 'platform=iOS Simulator,name=iPhone 17' test
 
-# Android（57 个测试；已固定 Gradle daemon 使用 JDK 17）
+# Android（62 个测试：57 逻辑 + 5 Robolectric View 冒烟；已固定 Gradle daemon 使用 JDK 17）
 cd packages/android && ./gradlew test
 ```
 
