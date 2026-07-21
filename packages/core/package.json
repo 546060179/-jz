@@ -1,6 +1,6 @@
 {
   "name": "@fade-animation/core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Framework-agnostic core logic for fade animation library",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

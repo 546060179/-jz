@@ -45,7 +45,7 @@ npm install @fade-animation/react   # 或 @fade-animation/vue
 dependencies: [
     // 本地路径依赖（monorepo 内）
     .package(path: "packages/ios")
-    // 或独立仓库：.package(url: "https://github.com/<org>/fade-animation-ios", from: "0.1.0")
+    // 或独立仓库：.package(url: "https://github.com/<org>/fade-animation-ios", from: "0.3.0")
 ]
 ```
 
@@ -58,7 +58,7 @@ MotionAnimator(targetView: card).start(entering: true, effects: EffectPresets.sc
 
 ### Android（Gradle / Maven）
 
-`packages/android` 通过 `maven-publish` 发布，坐标 `com.fadeanimation:fade-animation-android:0.1.0`。
+`packages/android` 通过 `maven-publish` 发布，坐标 `com.fadeanimation:fade-animation-android:0.3.0`。
 
 ```bash
 # 发到本地 ~/.m2 便于验证
@@ -73,7 +73,7 @@ dependencyResolutionManagement {
 
 // app/build.gradle.kts
 dependencies {
-    implementation("com.fadeanimation:fade-animation-android:0.1.0")
+    implementation("com.fadeanimation:fade-animation-android:0.3.0")
 }
 ```
 

@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "com.fadeanimation"
-version = "0.1.0"
+version = "0.3.0"
 
 // 本模块是 kotlin("jvm") 库，没有 Android Gradle Plugin，默认无法消费 AAR。
 // Robolectric 运行时依赖 androidx.test:monitor 等 AAR，注册一个 aar→classes.jar 的
@@ -99,7 +99,7 @@ java {
 
 // 发布配置：`./gradlew publishToMavenLocal` 发到本地 ~/.m2，
 // 或配置远程仓库后 `./gradlew publish` 发到私有 Maven。
-// 产物坐标：com.fadeanimation:fade-animation-android:0.1.0
+// 产物坐标：com.fadeanimation:fade-animation-android:0.3.0
 publishing {
     publications {
         create<MavenPublication>("maven") {
