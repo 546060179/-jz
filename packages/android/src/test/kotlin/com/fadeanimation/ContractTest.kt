@@ -94,6 +94,24 @@ class ContractTest {
     }
 
     @Test
+    fun `component defaults match contract`() {
+        val comp = loadContract().getJSONObject("components")
+        val b = comp.getJSONObject("bubbleExpand")
+        assertEquals(b.getDouble("zeta"), BubbleExpandView.DEFAULT_ZETA, 1e-6, "bubble zeta")
+        assertEquals(b.getDouble("omega"), BubbleExpandView.DEFAULT_OMEGA, 1e-6, "bubble omega")
+        assertEquals(b.getLong("expandDuration"), BubbleExpandView.DEFAULT_EXPAND_DURATION_MS, "bubble expandDuration")
+        assertEquals(b.getLong("textFadeDuration"), BubbleExpandView.DEFAULT_TEXT_FADE_DURATION_MS, "bubble textFadeDuration")
+
+        val cw = comp.getJSONObject("continueWatching")
+        val t = CWTiming()
+        assertEquals(cw.getLong("slideUpDuration"), t.slideUpDuration, "cw slideUp")
+        assertEquals(cw.getLong("collapseDelay"), t.collapseDelay, "cw collapseDelay")
+        assertEquals(cw.getLong("fadeOutDuration"), t.fadeOutDuration, "cw fadeOut")
+        assertEquals(cw.getLong("shrinkDuration"), t.shrinkDuration, "cw shrink")
+        assertEquals(cw.getLong("morphDuration"), t.morphDuration, "cw morph")
+    }
+
+    @Test
     fun `blur-fade-in preset matches contract`() {
         val bp = loadContract().getJSONObject("effectPresets").getJSONObject("blurFadeIn")
         var opFrom: Float? = null

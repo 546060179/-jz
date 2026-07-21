@@ -10,7 +10,7 @@
 - **业务组件三端补齐**：`BubbleExpand`、`ContinueWatching`、`ToastView`、`NotificationBanner`、`SpotlightOverlayView` 五个组件在 iOS(Swift)与 Android(Kotlin)均已提供，类名一致。
 - **Web 业务组件**：React/Vue 新增 `BubbleExpand`、`ContinueWatching`；Vue 补齐 `TypingDots`（此前仅 React 有），实现框架间对等。
 - **缓动与预设**：新增 `bounce` 缓动与 `bounce-in`/`zoom-in`/`zoom-slide-in`/`spin-in` 预设（五端）。
-- **契约扩展**：`contract/motion-contract.json` 新增 `effectPresets.blurFadeIn`，三端契约测试各加断言。
+- **契约扩展**：`contract/motion-contract.json` 新增 `effectPresets.blurFadeIn` 与 `components`(BubbleExpand 的 zeta/omega/时长、ContinueWatching 5 段时长)，三端契约测试各加断言。Web 组件默认值统一取自 core `componentDefaults`。
 - **Android 运行时测试**：新增 5 个 View 组件的 Robolectric 冒烟测试（`kotlin("jvm")` 模块经 aar→classes.jar transform 消费 androidx.test）。
 
 ### Changed

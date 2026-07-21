@@ -36,9 +36,9 @@ class BubbleExpandView constructor(
     var text: String = ""
         set(value) { field = value; requestLayout(); invalidate() }
     /** 展开时长(ms),默认 650 */
-    var expandDurationMs: Long = 650L
+    var expandDurationMs: Long = DEFAULT_EXPAND_DURATION_MS
     /** 文字淡入时长(ms),默认 300 */
-    var textFadeDurationMs: Long = 300L
+    var textFadeDurationMs: Long = DEFAULT_TEXT_FADE_DURATION_MS
     /** 展开方向锚点,默认 RIGHT(右对齐向左展开) */
     var arrowDirection: ArrowDirection = ArrowDirection.RIGHT
     /** 是否显示箭头(预留) */
@@ -50,9 +50,17 @@ class BubbleExpandView constructor(
     /** 填充色,默认品牌蓝 #186CE5 */
     var fillColor: Int = 0xFF186CE5.toInt()
     /** 阻尼比 zeta,默认 0.5 */
-    var zeta: Double = 0.5
+    var zeta: Double = DEFAULT_ZETA
     /** 角频率 omega,默认 9.0 */
-    var omega: Double = 9.0
+    var omega: Double = DEFAULT_OMEGA
+
+    companion object {
+        // 默认参数（单一事实源，跨端契约 contract/motion-contract.json 保护）
+        const val DEFAULT_ZETA: Double = 0.5
+        const val DEFAULT_OMEGA: Double = 9.0
+        const val DEFAULT_EXPAND_DURATION_MS: Long = 650L
+        const val DEFAULT_TEXT_FADE_DURATION_MS: Long = 300L
+    }
 
     private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {

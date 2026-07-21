@@ -26,5 +26,10 @@
   "effectPresets": {
     "$comment": "blur-in 刻意从 0.6 透明度起步(而非 0)以区别于纯淡入；初始模糊 14px。五端同款。",
     "blurFadeIn": { "opacityFrom": 0.6, "opacityTo": 1, "blurFrom": 14, "blurTo": 0 }
+  },
+  "components": {
+    "$comment": "业务组件默认参数（时长单位 ms）。三端默认值须与此一致。",
+    "bubbleExpand": { "zeta": 0.5, "omega": 9.0, "expandDuration": 650, "textFadeDuration": 300 },
+    "continueWatching": { "slideUpDuration": 450, "collapseDelay": 3000, "fadeOutDuration": 300, "shrinkDuration": 400, "morphDuration": 550 }
   }
 }

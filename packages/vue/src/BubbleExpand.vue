@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, type CSSProperties } from 'vue';
-import { resolveMotionLevel } from '@fade-animation/core';
+import { resolveMotionLevel, BUBBLE_EXPAND_DEFAULTS } from '@fade-animation/core';
 
 type BubbleArrowDirection = 'left' | 'right';
 
@@ -37,16 +37,16 @@ const props = withDefaults(
   {
     background: '#186CE5',
     textColor: '#ffffff',
-    expandDuration: 650,
-    textFadeDuration: 300,
+    expandDuration: BUBBLE_EXPAND_DEFAULTS.expandDuration,
+    textFadeDuration: BUBBLE_EXPAND_DEFAULTS.textFadeDuration,
     showArrow: false,
     arrowDirection: 'right',
     height: 22,
     fontSize: 12,
     autoPlay: true,
     autoPlayDelay: 300,
-    zeta: 0.5,
-    omega: 9.0,
+    zeta: BUBBLE_EXPAND_DEFAULTS.zeta,
+    omega: BUBBLE_EXPAND_DEFAULTS.omega,
   },
 );
 

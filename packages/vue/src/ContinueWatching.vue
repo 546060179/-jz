@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, type CSSProperties } from 'vue';
-import { resolveMotionLevel } from '@fade-animation/core';
+import { resolveMotionLevel, CONTINUE_WATCHING_TIMING } from '@fade-animation/core';
 
 type CWPhase =
   | 'hidden'
@@ -29,11 +29,11 @@ const props = withDefaults(
   {
     autoShow: true,
     autoShowDelay: 500,
-    collapseDelay: 3000,
-    slideUpDuration: 450,
-    fadeOutDuration: 300,
-    shrinkDuration: 400,
-    morphDuration: 550,
+    collapseDelay: CONTINUE_WATCHING_TIMING.collapseDelay,
+    slideUpDuration: CONTINUE_WATCHING_TIMING.slideUpDuration,
+    fadeOutDuration: CONTINUE_WATCHING_TIMING.fadeOutDuration,
+    shrinkDuration: CONTINUE_WATCHING_TIMING.shrinkDuration,
+    morphDuration: CONTINUE_WATCHING_TIMING.morphDuration,
     height: 68,
   },
 );

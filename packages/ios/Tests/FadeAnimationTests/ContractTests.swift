@@ -16,12 +16,21 @@ final class ContractTests: XCTestCase {
         let intentDefaults: [String: IntentDef]
         let springs: [String: SpringDef]
         let effectPresets: EffectPresetsDef?
+        let components: ComponentsDef?
     }
     struct IntentDef: Codable { let timing: String; let easing: String }
     struct SpringDef: Codable { let stiffness: Double; let damping: Double; let mass: Double }
     struct EffectPresetsDef: Codable { let blurFadeIn: BlurPresetDef }
     struct BlurPresetDef: Codable {
         let opacityFrom: Double; let opacityTo: Double; let blurFrom: Double; let blurTo: Double
+    }
+    struct ComponentsDef: Codable { let bubbleExpand: BubbleDef; let continueWatching: CWDef }
+    struct BubbleDef: Codable {
+        let zeta: Double; let omega: Double; let expandDuration: Double; let textFadeDuration: Double
+    }
+    struct CWDef: Codable {
+        let slideUpDuration: Double; let collapseDelay: Double; let fadeOutDuration: Double
+        let shrinkDuration: Double; let morphDuration: Double
     }
 
     // MARK: - 加载 JSON（用 #filePath 定位仓库根，三端共用同一文件）
@@ -121,6 +130,26 @@ final class ContractTests: XCTestCase {
         XCTAssertEqual(try XCTUnwrap(opTo), bp.opacityTo, accuracy: 1e-6, "blur-in opacityTo")
         XCTAssertEqual(try XCTUnwrap(blFrom), bp.blurFrom, accuracy: 1e-6, "blur-in blurFrom")
         XCTAssertEqual(try XCTUnwrap(blTo), bp.blurTo, accuracy: 1e-6, "blur-in blurTo")
+    }
+
+    func testComponentDefaults() throws {
+        let contract = try loadContract()
+        guard let comp = contract.components else {
+            XCTFail("契约缺少 components"); return
+        }
+        // BubbleExpandView 默认值（iOS 时长单位为秒 → 契约为毫秒）
+        let b = BubbleExpandView()
+        XCTAssertEqual(Double(b.zeta), comp.bubbleExpand.zeta, accuracy: 1e-6, "bubble zeta")
+        XCTAssertEqual(Double(b.omega), comp.bubbleExpand.omega, accuracy: 1e-6, "bubble omega")
+        XCTAssertEqual(b.expandDuration * 1000, comp.bubbleExpand.expandDuration, accuracy: 1e-6, "bubble expandDuration")
+        XCTAssertEqual(b.textFadeDuration * 1000, comp.bubbleExpand.textFadeDuration, accuracy: 1e-6, "bubble textFadeDuration")
+        // CWTiming 默认值
+        let t = CWTiming()
+        XCTAssertEqual(t.slideUpDuration * 1000, comp.continueWatching.slideUpDuration, accuracy: 1e-6, "cw slideUp")
+        XCTAssertEqual(t.collapseDelay * 1000, comp.continueWatching.collapseDelay, accuracy: 1e-6, "cw collapseDelay")
+        XCTAssertEqual(t.fadeOutDuration * 1000, comp.continueWatching.fadeOutDuration, accuracy: 1e-6, "cw fadeOut")
+        XCTAssertEqual(t.shrinkDuration * 1000, comp.continueWatching.shrinkDuration, accuracy: 1e-6, "cw shrink")
+        XCTAssertEqual(t.morphDuration * 1000, comp.continueWatching.morphDuration, accuracy: 1e-6, "cw morph")
     }
 
     func testIntentDefaults() throws {

@@ -4,6 +4,7 @@ import { TIMING_SCALES, DISTANCE_SCALES, EASING_CURVES, INTENT_DEFAULTS } from '
 import { SPRING_PRESETS } from './spring';
 import { EFFECT_PRESETS } from './effects';
 import { resolveEffectStyles } from './resolveEffectStyles';
+import { BUBBLE_EXPAND_DEFAULTS, CONTINUE_WATCHING_TIMING } from './componentDefaults';
 
 /**
  * 跨端一致性契约测试（core 侧）。
@@ -74,5 +75,24 @@ describe('跨端契约 - Effect Presets（blur-fade-in 参数五端一致）', (
     expect(styles.to.opacity).toBe(String(bp.opacityTo));
     expect(styles.from.filter).toBe(`blur(${bp.blurFrom}px)`);
     expect(styles.to.filter).toBe(`blur(${bp.blurTo}px)`);
+  });
+});
+
+describe('跨端契约 - 业务组件默认参数', () => {
+  it('BubbleExpand: zeta/omega/expandDuration/textFadeDuration', () => {
+    const c = (contract as any).components.bubbleExpand;
+    expect(BUBBLE_EXPAND_DEFAULTS.zeta).toBe(c.zeta);
+    expect(BUBBLE_EXPAND_DEFAULTS.omega).toBe(c.omega);
+    expect(BUBBLE_EXPAND_DEFAULTS.expandDuration).toBe(c.expandDuration);
+    expect(BUBBLE_EXPAND_DEFAULTS.textFadeDuration).toBe(c.textFadeDuration);
+  });
+
+  it('ContinueWatching: 5 阶段时长', () => {
+    const c = (contract as any).components.continueWatching;
+    expect(CONTINUE_WATCHING_TIMING.slideUpDuration).toBe(c.slideUpDuration);
+    expect(CONTINUE_WATCHING_TIMING.collapseDelay).toBe(c.collapseDelay);
+    expect(CONTINUE_WATCHING_TIMING.fadeOutDuration).toBe(c.fadeOutDuration);
+    expect(CONTINUE_WATCHING_TIMING.shrinkDuration).toBe(c.shrinkDuration);
+    expect(CONTINUE_WATCHING_TIMING.morphDuration).toBe(c.morphDuration);
   });
 });

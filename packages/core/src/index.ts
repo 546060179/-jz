@@ -37,3 +37,6 @@ export { planSequence } from './sequence';
 // Spring physics
 export type { SpringConfig, SpringState, SpringPresetName } from './spring';
 export { createSpring, estimateSpringDuration, SPRING_PRESETS } from './spring';
+
+// Business component defaults (单一事实源，跨端契约保护)
+export { BUBBLE_EXPAND_DEFAULTS, CONTINUE_WATCHING_TIMING } from './componentDefaults';
