@@ -18,8 +18,9 @@ build/
 
 # Gradle
 .gradle/
-packages/android/gradle/
 packages/android/.gradle/
+# 本地 JDK 25 环境专用（CI 由 setup-java 提供 JDK 17，无需此文件）
+packages/android/gradle/gradle-daemon-jvm.properties
 packages/android/build/
 
 # Swift
