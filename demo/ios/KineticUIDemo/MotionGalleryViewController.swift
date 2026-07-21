@@ -505,7 +505,7 @@ enum EffectPreview {
             icon.tintColor = .white; icon.contentMode = .scaleAspectFit
             icon.frame = CGRect(x: v.bounds.midX - 10, y: v.bounds.midY - 8, width: 20, height: 16)
             v.addSubview(icon)
-            lib(v, [.fade(from: 0.6, to: 1), .blur(from: 8, to: 0)], 1.2)
+            lib(v, [.fade(from: 0.6, to: 1), .blur(from: 14, to: 0)], 1.2)
 
         case "flip-in":
             // 库 flipYIn：rotateY 90°→0° + 淡入（真实 MotionAnimator 引擎）

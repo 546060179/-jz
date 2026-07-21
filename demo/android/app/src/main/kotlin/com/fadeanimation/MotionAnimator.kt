@@ -27,6 +27,7 @@ class MotionAnimator(
     private var currentAnimator: ViewPropertyAnimator? = null
     private var flipAnimator: ValueAnimator? = null
     private var collapseAnimator: ValueAnimator? = null
+    private var blurAnimator: ValueAnimator? = null
     private val handler = Handler(Looper.getMainLooper())
     private var safetyRunnable: Runnable? = null
     private var callbackInvoked = false
@@ -226,7 +227,7 @@ class MotionAnimator(
                             startDelay = config.delay
                             interpolator = config.interpolator
                             addUpdateListener { animation ->
-                                val radius = (animation.animatedValue as Float).coerceAtLeast(0.01f)
+                                val radius = animation.animatedValue as Float
                                 if (radius < 0.1f) {
                                     targetView.setRenderEffect(null)
                                 } else {
@@ -239,13 +240,14 @@ class MotionAnimator(
                                 }
                             }
                             addListener(object : AnimatorListenerAdapter() {
+                                // 结束时总是复位 renderEffect：进入方向终态本就清晰；
+                                // 退出方向终态 alpha≈0(不可见)，复位可避免控件复用时残留模糊。
                                 override fun onAnimationEnd(animation: Animator) {
-                                    if (blurTo < 0.1f) {
-                                        targetView.setRenderEffect(null)
-                                    }
+                                    targetView.setRenderEffect(null)
                                 }
                             })
                         }
+                        blurAnimator = blurVa
                         blurVa.start()
                     }
                 }
@@ -385,6 +387,11 @@ class MotionAnimator(
         flipAnimator = null
         collapseAnimator?.cancel()
         collapseAnimator = null
+        blurAnimator?.cancel()
+        blurAnimator = null
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            targetView.setRenderEffect(null)
+        }
         cleanupSafetyTimer()
         cleanupAttachListener()
     }

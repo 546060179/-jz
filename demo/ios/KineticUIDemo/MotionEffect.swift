@@ -42,8 +42,8 @@ enum EffectPresets {
     static let rotateFadeIn: [MotionEffect] = [.fade(from: 0, to: 1), .rotate(from: -10, to: 0)]
     static let rotateFadeOut: [MotionEffect] = [.fade(from: 1, to: 0), .rotate(from: 0, to: 10)]
 
-    static let blurFadeIn: [MotionEffect] = [.fade(from: 0, to: 1), .blur(from: 8, to: 0)]
-    static let blurFadeOut: [MotionEffect] = [.fade(from: 1, to: 0), .blur(from: 0, to: 8)]
+    static let blurFadeIn: [MotionEffect] = [.fade(from: 0.6, to: 1), .blur(from: 14, to: 0)]
+    static let blurFadeOut: [MotionEffect] = [.fade(from: 1, to: 0), .blur(from: 0, to: 14)]
 
     static let flipXIn: [MotionEffect] = [.fade(from: 0, to: 1), .flip(axis: .x, from: 90, to: 0)]
     static let flipXOut: [MotionEffect] = [.fade(from: 1, to: 0), .flip(axis: .x, from: 0, to: 90)]

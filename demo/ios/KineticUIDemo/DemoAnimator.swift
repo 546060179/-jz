@@ -1,5 +1,6 @@
 import UIKit
 import QuartzCore
+import CoreImage
 
 // ============================================================================
 // 本文件把真实动效库 FadeAnimation 的引擎整体内联进 Demo target，
@@ -290,7 +291,7 @@ class MotionAnimator {
     private var flipPerspective: CGFloat = 800
     private var flipBackfaceHidden: Bool = true
     private var flipBezier: CubicBezierCurve = CubicBezierCurve(0.42, 0, 0.58, 1)
-    private var blurEffectView: UIVisualEffectView?
+    private var blurOverlay: UIImageView?
 
     init(targetView: UIView, options: FadeOptions = FadeOptions()) {
         self.targetView = targetView
@@ -373,9 +374,10 @@ class MotionAnimator {
             switch effect {
             case .fade(let from, _):
                 view.alpha = from ?? (entering ? 0 : 1)
-            case .blur(let from, _):
+            case .blur(let from, let to):
                 let blurFrom = from ?? (entering ? 8 : 0)
-                applyBlur(radius: blurFrom)
+                let blurTo = to ?? (entering ? 0 : 8)
+                installBlurOverlay(fromRadius: blurFrom, toRadius: blurTo, entering: entering)
             case .flip(let axis, let from, let to, let perspective, let backfaceVisibility):
                 let startAngle = entering ? from : to
                 applyFlipTransform(angle: startAngle, axis: axis, perspective: perspective)
@@ -431,9 +433,8 @@ class MotionAnimator {
                 switch effect {
                 case .fade(_, let to):
                     view.alpha = to ?? (entering ? 1 : 0)
-                case .blur(_, let to):
-                    let blurTo = to ?? (entering ? 0 : 8)
-                    self.applyBlur(radius: blurTo)
+                case .blur:
+                    self.blurOverlay?.alpha = entering ? 0 : 1
                 case .scale, .slide, .rotate, .flip, .collapse:
                     break
                 }
@@ -443,13 +444,17 @@ class MotionAnimator {
 
         if config.duration <= 0 {
             mainAnimations()
+            removeBlurOverlay()
             invokeOnEnd()
         } else {
             let propertyAnimator = UIViewPropertyAnimator(
                 duration: config.duration, controlPoint1: bezier.c1, controlPoint2: bezier.c2,
                 animations: mainAnimations
             )
-            propertyAnimator.addCompletion { _ in invokeOnEnd() }
+            propertyAnimator.addCompletion { [weak self] _ in
+                self?.removeBlurOverlay()
+                invokeOnEnd()
+            }
             propertyAnimator.startAnimation(afterDelay: config.delay)
         }
 
@@ -466,22 +471,44 @@ class MotionAnimator {
     func cancel() { cancelInternal() }
     deinit { cancelInternal() }
 
-    private func applyBlur(radius: CGFloat) {
+    // 截图 + CIGaussianBlur 交叉淡化（与发布库一致）：模糊控件自身内容，而非背景
+    private func installBlurOverlay(fromRadius: CGFloat, toRadius: CGFloat, entering: Bool) {
         let view = targetView
-        if radius <= 0 {
-            blurEffectView?.removeFromSuperview()
-            blurEffectView = nil
-            return
-        }
-        if blurEffectView == nil {
-            let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
-            effectView.frame = view.bounds
-            effectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            effectView.isUserInteractionEnabled = false
-            view.addSubview(effectView)
-            blurEffectView = effectView
-        }
-        blurEffectView?.alpha = min(radius / 8.0, 1.0)
+        guard view.bounds.width > 1, view.bounds.height > 1 else { return }
+        let maxRadius = max(fromRadius, toRadius)
+        guard maxRadius > 0 else { return }
+        let savedOpacity = view.layer.opacity
+        view.layer.opacity = 1
+        let format = UIGraphicsImageRendererFormat.default()
+        format.opaque = false
+        let renderer = UIGraphicsImageRenderer(bounds: view.bounds, format: format)
+        let snapshot = renderer.image { ctx in view.layer.render(in: ctx.cgContext) }
+        view.layer.opacity = savedOpacity
+        guard let blurred = gaussianBlur(snapshot, radius: maxRadius) else { return }
+        let iv = UIImageView(image: blurred)
+        iv.frame = view.bounds
+        iv.contentMode = .scaleToFill
+        iv.isUserInteractionEnabled = false
+        iv.alpha = entering ? 1 : 0
+        view.addSubview(iv)
+        blurOverlay = iv
+    }
+
+    private func gaussianBlur(_ image: UIImage, radius: CGFloat) -> UIImage? {
+        guard radius > 0, let cg = image.cgImage else { return image }
+        let ci = CIImage(cgImage: cg)
+        guard let filter = CIFilter(name: "CIGaussianBlur") else { return image }
+        filter.setValue(ci.clampedToExtent(), forKey: kCIInputImageKey)
+        filter.setValue(radius, forKey: kCIInputRadiusKey)
+        guard let output = filter.outputImage else { return image }
+        let ctx = CIContext(options: nil)
+        guard let out = ctx.createCGImage(output, from: ci.extent) else { return image }
+        return UIImage(cgImage: out, scale: image.scale, orientation: .up)
+    }
+
+    private func removeBlurOverlay() {
+        blurOverlay?.removeFromSuperview()
+        blurOverlay = nil
     }
 
     private func applyFlipTransform(angle: CGFloat, axis: FlipAxis, perspective: CGFloat) {
@@ -679,8 +706,8 @@ class MotionAnimator {
         callbackInvoked = true
         targetView.layer.removeAllAnimations()
         stopFlipDisplayLink()
-        blurEffectView?.removeFromSuperview()
-        blurEffectView = nil
+        blurOverlay?.removeFromSuperview()
+        blurOverlay = nil
         if let constraint = dynamicHeightConstraint {
             targetView.removeConstraint(constraint)
             dynamicHeightConstraint = nil
