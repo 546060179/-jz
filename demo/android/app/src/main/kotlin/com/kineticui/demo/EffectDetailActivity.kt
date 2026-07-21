@@ -3,6 +3,7 @@ package com.kineticui.demo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -80,12 +81,15 @@ class EffectDetailActivity : AppCompatActivity() {
 
         when (key) {
             "bubble" -> {
+                // 加高到 36dp 让全屏详情页里更显眼；居中
                 val bubble = BubbleExpandView(this).apply {
                     text = "限时免费"
                     arrowDirection = BubbleExpandView.ArrowDirection.RIGHT
+                    heightDp = 36f
                 }
                 componentHost.addView(bubble, FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT, 22.dp))
+                    FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT
+                ).apply { gravity = Gravity.CENTER })
                 playComponent = { bubble.play() }
                 bubble.post { bubble.play() }
             }
@@ -94,30 +98,30 @@ class EffectDetailActivity : AppCompatActivity() {
                     timing = CWTiming()
                     configure(cover = null, title = "Genius Baby", subtitle = "EP.1 / EP.100")
                 }
-                componentHost.addView(bar, FrameLayout.LayoutParams(320.dp, 68.dp))
+                componentHost.addView(bar, FrameLayout.LayoutParams(320.dp, 68.dp)
+                    .apply { gravity = Gravity.CENTER })
                 playComponent = { bar.show() }
                 bar.post { bar.show() }
             }
             "toast" -> {
                 val toast = ToastView(this, "操作成功")
                 componentHost.addView(toast, FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT))
+                    FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT
+                ).apply { gravity = Gravity.CENTER })
+                // 只播放进入(不自动退出，避免详情页里 toast 滑走消失)；点「播放」可重播
                 playComponent = {
                     MotionAnimator(toast).start(
                         entering = true,
                         effects = EffectPresets.SLIDE_UP_IN,
                         options = FadeOptions(intent = MotionIntent.ENTER)
                     )
-                    handler.postDelayed({
-                        MotionAnimator(toast).start(entering = false, effects = EffectPresets.SLIDE_DOWN_OUT)
-                    }, 2500)
                 }
                 toast.post { playComponent?.invoke() }
             }
             "notification" -> {
                 val banner = NotificationBanner(this, "你有一条新消息")
                 componentHost.addView(banner, FrameLayout.LayoutParams(300.dp,
-                    FrameLayout.LayoutParams.WRAP_CONTENT))
+                    FrameLayout.LayoutParams.WRAP_CONTENT).apply { gravity = Gravity.CENTER })
                 playComponent = {
                     MotionAnimator(banner).start(
                         entering = true,
@@ -143,7 +147,8 @@ class EffectDetailActivity : AppCompatActivity() {
                         (60f + 44f) * resources.displayMetrics.density)
                 }
                 host.addView(overlay, FrameLayout.LayoutParams(280.dp, 200.dp))
-                componentHost.addView(host, FrameLayout.LayoutParams(280.dp, 200.dp))
+                componentHost.addView(host, FrameLayout.LayoutParams(280.dp, 200.dp)
+                    .apply { gravity = Gravity.CENTER })
                 playComponent = {
                     MotionAnimator(overlay).start(
                         entering = true,

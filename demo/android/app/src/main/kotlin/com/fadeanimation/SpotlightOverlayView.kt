@@ -8,6 +8,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.RectF
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * SpotlightOverlayView — 聚光灯引导遮罩
@@ -55,12 +56,12 @@ class SpotlightOverlayView @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        // 铺满父视图
-        (parent as? View)?.let { p ->
-            layoutParams = layoutParams?.apply {
-                width = p.width
-                height = p.height
-            }
+        // 铺满父视图：用 MATCH_PARENT，避免在 attach 时父视图尺寸尚为 0 导致本视图变成 0×0 而不可见。
+        layoutParams = (layoutParams ?: ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+        )).apply {
+            width = ViewGroup.LayoutParams.MATCH_PARENT
+            height = ViewGroup.LayoutParams.MATCH_PARENT
         }
         resolveTargetRect()
     }
