@@ -48,20 +48,22 @@ struct FadeConfig {
     let reducedMotion: Bool
 }
 
-/// 对齐 Web 端缓动曲线的精确 CAMediaTimingFunction
-enum EasingCurves {
+/// 对齐 Web 端缓动曲线的精确 CAMediaTimingFunction。
+/// public：与 Android `EasingCurves` 对齐，供使用者直接传入 `FadeOptions(timingFunction:)`
+/// （如 `EasingCurves.bounce`，bounce 无法通过 MotionIntent 获得）。
+public enum EasingCurves {
     /// productive: cubic-bezier(0.2, 0, 0.38, 0.9)
-    static let productive = CAMediaTimingFunction(controlPoints: 0.2, 0, 0.38, 0.9)
+    public static let productive = CAMediaTimingFunction(controlPoints: 0.2, 0, 0.38, 0.9)
     /// expressive: cubic-bezier(0.4, 0.14, 0.3, 1)
-    static let expressive = CAMediaTimingFunction(controlPoints: 0.4, 0.14, 0.3, 1)
+    public static let expressive = CAMediaTimingFunction(controlPoints: 0.4, 0.14, 0.3, 1)
     /// enter: cubic-bezier(0, 0, 0.3, 1)
-    static let enter = CAMediaTimingFunction(controlPoints: 0, 0, 0.3, 1)
+    public static let enter = CAMediaTimingFunction(controlPoints: 0, 0, 0.3, 1)
     /// exit: cubic-bezier(0.4, 0, 1, 1)
-    static let exit = CAMediaTimingFunction(controlPoints: 0.4, 0, 1, 1)
+    public static let exit = CAMediaTimingFunction(controlPoints: 0.4, 0, 1, 1)
     /// linear
-    static let linear = CAMediaTimingFunction(name: .linear)
+    public static let linear = CAMediaTimingFunction(name: .linear)
     /// 默认 ease: cubic-bezier(0.25, 0.1, 0.25, 1)（对齐 Web 端 DEFAULTS.easing）
-    static let ease = CAMediaTimingFunction(controlPoints: 0.25, 0.1, 0.25, 1)
+    public static let ease = CAMediaTimingFunction(controlPoints: 0.25, 0.1, 0.25, 1)
     /// bounce: cubic-bezier(0.34, 1.56, 0.64, 1) 过冲回落，弹性入场（对齐 Web EASING_CURVES.bounce）
-    static let bounce = CAMediaTimingFunction(controlPoints: 0.34, 1.56, 0.64, 1)
+    public static let bounce = CAMediaTimingFunction(controlPoints: 0.34, 1.56, 0.64, 1)
 }
