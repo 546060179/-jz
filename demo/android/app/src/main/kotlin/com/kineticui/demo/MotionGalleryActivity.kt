@@ -14,7 +14,7 @@ import com.google.android.material.appbar.MaterialToolbar
 /**
  * Kinetic UI 动效画廊主页
  *
- * 展示所有 18 种预设动效的列表，点击进入详情页播放。
+ * 展示 22 种预设动效 + 5 个预置业务组件的列表，点击进入详情页播放。
  */
 class MotionGalleryActivity : AppCompatActivity() {
 

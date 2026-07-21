@@ -30,15 +30,7 @@ android {
         jvmTarget = "17"
     }
 
-    // 将动效库源码纳入编译（避免 JVM/Android 插件冲突）
-    sourceSets {
-        getByName("main") {
-            kotlin.srcDirs(
-                "src/main/kotlin",
-                "../../packages/android/src/main/kotlin"
-            )
-        }
-    }
+    // 动效库源码已内置于 app/src/main/kotlin/com/fadeanimation（自包含，无需外部路径）
 }
 
 dependencies {

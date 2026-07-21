@@ -1,6 +1,7 @@
 package com.kineticui.demo
 
 import com.fadeanimation.EffectPresets
+import com.fadeanimation.EasingCurves
 
 /**
  * 所有动效预设目录 — 对齐 Kinetic UI 网站展示的全部效果
@@ -35,6 +36,19 @@ object EffectCatalog {
         EffectSection("折叠 Collapse", listOf(
             EffectDemoItem("Collapse In", "展开 0→auto", EffectPresets.COLLAPSE_IN, true),
             EffectDemoItem("Collapse Out", "折叠 auto→0", EffectPresets.COLLAPSE_OUT, false),
+        )),
+        EffectSection("弹性/缩放/旋转 Emphasis", listOf(
+            EffectDemoItem("Bounce In", "弹性进入 scale 0.3→1（bounce 缓动过冲）", EffectPresets.BOUNCE_IN, true, EasingCurves.BOUNCE),
+            EffectDemoItem("Zoom In", "缩放进入 scale 0.5→1", EffectPresets.ZOOM_IN, true),
+            EffectDemoItem("Zoom Slide In", "缩放上滑 scale 0.9→1 + 上滑 32", EffectPresets.ZOOM_SLIDE_IN, true),
+            EffectDemoItem("Spin In", "旋转进入 -180°→0°", EffectPresets.SPIN_IN, true, EasingCurves.EXPRESSIVE),
+        )),
+        EffectSection("预置业务组件 Components", listOf(
+            EffectDemoItem("Bubble Expand", "气泡展开：阻尼谐振子弹性展开 + 文字后段淡入", emptyList(), true, component = "bubble"),
+            EffectDemoItem("Continue Watching", "最近播放浮层：滑入→停留→详情淡出→收缩→变形小浮窗", emptyList(), true, component = "continue"),
+            EffectDemoItem("Toast", "pill 消息条（SLIDE_UP_IN 滑入 + 自动退出）", emptyList(), true, component = "toast"),
+            EffectDemoItem("Notification Banner", "应用内通知横幅（fade + 下滑）", emptyList(), true, component = "notification"),
+            EffectDemoItem("Spotlight Overlay", "聚光灯引导遮罩：挖空高亮 + 提示（淡入）", emptyList(), true, component = "spotlight"),
         )),
     )
 
