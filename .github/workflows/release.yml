@@ -49,9 +49,9 @@ jobs:
 
       - name: Build (core + react + vue)
         run: >-
-          pnpm --filter "@fade-animation/core"
-               --filter "@fade-animation/react"
-               --filter "@fade-animation/vue" build
+          pnpm --filter "@kinetic-motion/core"
+               --filter "@kinetic-motion/react"
+               --filter "@kinetic-motion/vue" build
 
       - name: Test (发布前守护)
         run: pnpm test
@@ -73,6 +73,6 @@ jobs:
             echo "== DRY RUN：只预演，不真正上传 =="
           fi
           for pkg in core react vue; do
-            echo "== publish @fade-animation/$pkg =="
+            echo "== publish @kinetic-motion/$pkg =="
             ( cd "packages/$pkg" && pnpm publish $FLAGS )
           done

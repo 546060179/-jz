@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import Motion from './Motion.vue';
-import { setMotionLevel } from '@fade-animation/core';
+import { setMotionLevel } from '@kinetic-motion/core';
 
 function mockMatchMedia(reducedMotion: boolean) {
   Object.defineProperty(window, 'matchMedia', {

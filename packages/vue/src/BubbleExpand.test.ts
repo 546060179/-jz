@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import BubbleExpand from './BubbleExpand.vue';
-import { setMotionLevel } from '@fade-animation/core';
+import { setMotionLevel } from '@kinetic-motion/core';
 
 describe('BubbleExpand (Vue)', () => {
   beforeEach(() => setMotionLevel('none'));

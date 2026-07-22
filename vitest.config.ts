@@ -7,7 +7,7 @@ export default defineConfig({
   root: path.resolve(__dirname),
   resolve: {
     alias: {
-      '@fade-animation/core': path.resolve(__dirname, 'packages/core/src'),
+      '@kinetic-motion/core': path.resolve(__dirname, 'packages/core/src'),
     },
   },
   test: {

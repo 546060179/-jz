@@ -1,4 +1,4 @@
-// @fade-animation/vue entry point
+// @kinetic-motion/vue entry point
 
 // Generic Motion component
 export { default as Motion } from './Motion.vue';
@@ -30,4 +30,4 @@ export type {
   FadeProps, PresetSpeed, ResolvedFadeConfig, StaggerOptions,
   TimingScale, TimingAlias, EasingName, MotionIntent, MotionLevel,
   MotionEffect, EffectPresetName, EffectType,
-} from '@fade-animation/core';
+} from '@kinetic-motion/core';

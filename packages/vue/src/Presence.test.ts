@@ -3,7 +3,7 @@ import { mount, flushPromises } from '@vue/test-utils';
 import { defineComponent, h, ref, nextTick } from 'vue';
 import Presence from './Presence.vue';
 import Motion from './Motion.vue';
-import { setMotionLevel } from '@fade-animation/core';
+import { setMotionLevel } from '@kinetic-motion/core';
 
 function mockMatchMedia(reducedMotion: boolean) {
   const mql = {

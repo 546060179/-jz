@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, type CSSProperties } from 'vue';
-import { TIMING_SCALES, EASING_CURVES, stagger } from '@fade-animation/core';
+import { TIMING_SCALES, EASING_CURVES, stagger } from '@kinetic-motion/core';
 
 const props = withDefaults(
   defineProps<{

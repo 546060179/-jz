@@ -4,7 +4,7 @@ import {
   SPRING_PRESETS,
   type SpringConfig,
   type SpringPresetName,
-} from '@fade-animation/core';
+} from '@kinetic-motion/core';
 
 export interface UseSpringOptions {
   /** Spring 配置或预设名称 */

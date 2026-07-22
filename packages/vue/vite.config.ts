@@ -15,7 +15,7 @@ export default defineConfig({
       fileName: (format) => `index.${format === 'es' ? 'mjs' : 'cjs'}`,
     },
     rollupOptions: {
-      external: ['vue', '@fade-animation/core'],
+      external: ['vue', '@kinetic-motion/core'],
     },
     outDir: 'dist',
     emptyOutDir: true,

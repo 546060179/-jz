@@ -18,9 +18,9 @@
 
 ```
 packages/
-├── core/     # @fade-animation/core — 框架无关的核心逻辑、tokens、工具函数
-├── react/    # @fade-animation/react — React 组件（Fade、Motion、FadeGroup）
-├── vue/      # @fade-animation/vue — Vue 组件（Fade、Motion、FadeGroup）
+├── core/     # @kinetic-motion/core — 框架无关的核心逻辑、tokens、工具函数
+├── react/    # @kinetic-motion/react — React 组件（Fade、Motion、FadeGroup）
+├── vue/      # @kinetic-motion/vue — Vue 组件（Fade、Motion、FadeGroup）
 ├── android/  # Android Kotlin 模块（FadeAnimator、MotionAnimator）
 └── ios/      # iOS Swift Package（FadeAnimator、MotionAnimator）
 ```
@@ -30,8 +30,8 @@ packages/
 ### Web（React / Vue）
 
 ```bash
-npm install @fade-animation/react   # 或 @fade-animation/vue
-# 依赖 @fade-animation/core 会被自动带入
+npm install @kinetic-motion/react   # 或 @kinetic-motion/vue
+# 依赖 @kinetic-motion/core 会被自动带入
 ```
 
 ### iOS（Swift Package Manager）
@@ -91,7 +91,7 @@ MotionAnimator(card).start(entering = true, effects = EffectPresets.SCALE_FADE_I
 ### React
 
 ```tsx
-import { Fade, Motion, FadeGroup } from '@fade-animation/react';
+import { Fade, Motion, FadeGroup } from '@kinetic-motion/react';
 
 // 基础淡入
 <Fade in={show}>Hello</Fade>
@@ -155,7 +155,7 @@ import { Fade, Motion, FadeGroup } from '@fade-animation/react';
 </template>
 
 <script setup>
-import { Fade, Motion, FadeGroup } from '@fade-animation/vue';
+import { Fade, Motion, FadeGroup } from '@kinetic-motion/vue';
 </script>
 ```
 
@@ -336,7 +336,7 @@ animator.start(entering: true, effects: [
 | `SpotlightOverlayView` | 聚光灯引导 | 半透明遮罩挖空高亮 + 提示 |
 | `ContinueWatchingView` | 最近播放浮层 | 5 阶段序列：滑入→停留→详情淡出→收缩→变形小浮窗 |
 
-> **Web（React / Vue）** 也导出了对应的业务组件：`TypingDots`、`BubbleExpand`、`ContinueWatching`（`@fade-animation/react` 与 `@fade-animation/vue` 同名，用 scaleX 弹簧展开 / CSS transition 分阶段驱动，尊重 `prefers-reduced-motion`）。
+> **Web（React / Vue）** 也导出了对应的业务组件：`TypingDots`、`BubbleExpand`、`ContinueWatching`（`@kinetic-motion/react` 与 `@kinetic-motion/vue` 同名，用 scaleX 弹簧展开 / CSS transition 分阶段驱动，尊重 `prefers-reduced-motion`）。
 
 ```swift
 // 气泡展开
@@ -424,7 +424,7 @@ bar.show()
 根据元素尺寸和移动距离自动推算合理时长：
 
 ```ts
-import { dynamicDuration } from '@fade-animation/core';
+import { dynamicDuration } from '@kinetic-motion/core';
 
 dynamicDuration({ size: 50 })      // → 100ms (小组件)
 dynamicDuration({ size: 300 })     // → 300ms (中等)
@@ -436,7 +436,7 @@ dynamicDuration({ distance: 200 }) // → 200ms
 计算多元素交错延迟：
 
 ```ts
-import { stagger } from '@fade-animation/core';
+import { stagger } from '@kinetic-motion/core';
 
 stagger(5, { interval: 50 })                          // → [0, 50, 100, 150, 200]
 stagger(5, { interval: 50, direction: 'center' })     // → [100, 50, 0, 50, 100]
@@ -460,7 +460,7 @@ val delays = stagger(items.size, StaggerOptions(interval = 60L))
 按顺序累计每步的 delay + duration，返回每步应使用的累计延迟。四端一致：
 
 ```ts
-import { planSequence } from '@fade-animation/core';
+import { planSequence } from '@kinetic-motion/core';
 
 const plan = planSequence([
   { effects: [{ type: 'fade' }], duration: 350 },
@@ -494,7 +494,7 @@ anim.start(onUpdate = { p -> view.scaleX = 0.9f + 0.1f * p; view.scaleY = 0.9f +
 ### CSS Token 输出
 
 ```ts
-import { generateCSSTokens, injectCSSTokens } from '@fade-animation/core';
+import { generateCSSTokens, injectCSSTokens } from '@kinetic-motion/core';
 
 const css = generateCSSTokens();  // 生成 CSS Custom Properties 字符串
 injectCSSTokens();                // 直接注入到 <head>
@@ -503,7 +503,7 @@ injectCSSTokens();                // 直接注入到 <head>
 ### Motion Level — 动效级别控制
 
 ```ts
-import { setMotionLevel } from '@fade-animation/core';
+import { setMotionLevel } from '@kinetic-motion/core';
 
 setMotionLevel('full');      // 完整动效
 setMotionLevel('reduced');   // 减弱动效（clamp 到 100ms）

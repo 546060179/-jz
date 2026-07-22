@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onUnmounted, nextTick } from 'vue';
-import { resolveConfig, type FadeProps, type MotionIntent, type TimingScale, type TimingAlias } from '@fade-animation/core';
+import { resolveConfig, type FadeProps, type MotionIntent, type TimingScale, type TimingAlias } from '@kinetic-motion/core';
 
 const props = withDefaults(
   defineProps<{

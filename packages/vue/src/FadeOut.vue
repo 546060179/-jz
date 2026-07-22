@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type FadeProps, type MotionIntent, type TimingScale, type TimingAlias } from '@fade-animation/core';
+import { type FadeProps, type MotionIntent, type TimingScale, type TimingAlias } from '@kinetic-motion/core';
 import Fade from './Fade.vue';
 
 defineProps<{

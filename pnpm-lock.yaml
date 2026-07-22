@@ -43,7 +43,7 @@ importers:
 
   packages/react:
     dependencies:
-      '@fade-animation/core':
+      '@kinetic-motion/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -68,7 +68,7 @@ importers:
 
   packages/vue:
     dependencies:
-      '@fade-animation/core':
+      '@kinetic-motion/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:

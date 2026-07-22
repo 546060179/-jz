@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, type CSSProperties } from 'vue';
-import { resolveMotionLevel, BUBBLE_EXPAND_DEFAULTS } from '@fade-animation/core';
+import { resolveMotionLevel, BUBBLE_EXPAND_DEFAULTS } from '@kinetic-motion/core';
 
 type BubbleArrowDirection = 'left' | 'right';
 

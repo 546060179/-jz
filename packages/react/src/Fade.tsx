@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { resolveConfig, type FadeProps } from '@fade-animation/core';
+import { resolveConfig, type FadeProps } from '@kinetic-motion/core';
 
 export interface FadeComponentProps extends FadeProps {
   children?: ReactNode;

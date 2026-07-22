@@ -10,7 +10,7 @@ import {
   type MotionIntent,
   type TimingScale,
   type TimingAlias,
-} from '@fade-animation/core';
+} from '@kinetic-motion/core';
 
 const props = withDefaults(
   defineProps<{

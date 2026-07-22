@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, act } from '@testing-library/react';
 import React, { createRef } from 'react';
 import { BubbleExpand, type BubbleExpandHandle } from './BubbleExpand';
-import { setMotionLevel } from '@fade-animation/core';
+import { setMotionLevel } from '@kinetic-motion/core';
 
 describe('BubbleExpand (React)', () => {
   beforeEach(() => {

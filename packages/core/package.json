@@ -1,5 +1,5 @@
 {
-  "name": "@fade-animation/core",
+  "name": "@kinetic-motion/core",
   "version": "0.3.0",
   "description": "Framework-agnostic core logic for fade animation library",
   "main": "dist/index.js",

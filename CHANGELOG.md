@@ -2,9 +2,14 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 与 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-三端(`@fade-animation/core`·`@fade-animation/react`·`@fade-animation/vue`、Android `com.fadeanimation:fade-animation-android`、iOS `FadeAnimation` SwiftPM)版本号统一发布，共享同一份跨端契约 `contract/motion-contract.json`。
+三端(`@kinetic-motion/core`·`@kinetic-motion/react`·`@kinetic-motion/vue`、Android `com.fadeanimation:fade-animation-android`、iOS `FadeAnimation` SwiftPM)版本号统一发布，共享同一份跨端契约 `contract/motion-contract.json`。
+
+> npm scope 说明：Web 三包发布 scope 为 **`@kinetic-motion`**(`@fade-animation` 与 `fade-animation` 均已被占用)。Android 包名 `com.fadeanimation` 与 iOS `FadeAnimation` 保持不变。
 
 ## [0.3.0] - 2026-07-21
+
+### Published
+- Web 三包已发布至 npm:`@kinetic-motion/core@0.3.0`、`@kinetic-motion/react@0.3.0`、`@kinetic-motion/vue@0.3.0`(react/vue 依赖已由 `workspace:*` 正确转为 `@kinetic-motion/core: 0.3.0`)。
 
 ### Added
 - **业务组件三端补齐**：`BubbleExpand`、`ContinueWatching`、`ToastView`、`NotificationBanner`、`SpotlightOverlayView` 五个组件在 iOS(Swift)与 Android(Kotlin)均已提供，类名一致。

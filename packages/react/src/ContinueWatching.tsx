@@ -7,7 +7,7 @@ import React, {
   forwardRef,
   type CSSProperties,
 } from 'react';
-import { resolveMotionLevel, CONTINUE_WATCHING_TIMING } from '@fade-animation/core';
+import { resolveMotionLevel, CONTINUE_WATCHING_TIMING } from '@kinetic-motion/core';
 
 export type CWPhase =
   | 'hidden'

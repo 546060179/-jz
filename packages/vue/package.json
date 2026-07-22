@@ -1,5 +1,5 @@
 {
-  "name": "@fade-animation/vue",
+  "name": "@kinetic-motion/vue",
   "version": "0.3.0",
   "description": "Vue components for fade animation library",
   "main": "dist/index.cjs",
@@ -18,7 +18,7 @@
     "test": "vitest --run"
   },
   "dependencies": {
-    "@fade-animation/core": "workspace:*"
+    "@kinetic-motion/core": "workspace:*"
   },
   "peerDependencies": {
     "vue": ">=3.3.0"

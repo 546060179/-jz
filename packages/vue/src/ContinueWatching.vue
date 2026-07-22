@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, type CSSProperties } from 'vue';
-import { resolveMotionLevel, CONTINUE_WATCHING_TIMING } from '@fade-animation/core';
+import { resolveMotionLevel, CONTINUE_WATCHING_TIMING } from '@kinetic-motion/core';
 
 type CWPhase =
   | 'hidden'

@@ -1,4 +1,4 @@
-// @fade-animation/react entry point
+// @kinetic-motion/react entry point
 
 // Generic Motion component
 export { Motion } from './Motion';

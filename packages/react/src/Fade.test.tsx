@@ -4,7 +4,7 @@ import React from 'react';
 import { Fade } from './Fade';
 import { FadeIn } from './FadeIn';
 import { FadeOut } from './FadeOut';
-import { setMotionLevel } from '@fade-animation/core';
+import { setMotionLevel } from '@kinetic-motion/core';
 
 function mockMatchMedia(reducedMotion: boolean) {
   const mql = {

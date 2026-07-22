@@ -1,5 +1,5 @@
 import React, { type ReactNode, Children } from 'react';
-import { stagger, type StaggerOptions, type FadeProps } from '@fade-animation/core';
+import { stagger, type StaggerOptions, type FadeProps } from '@kinetic-motion/core';
 import { Fade } from './Fade';
 
 export interface FadeGroupProps extends Omit<FadeProps, 'delay'> {

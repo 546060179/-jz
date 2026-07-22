@@ -1,5 +1,5 @@
 import React, { type CSSProperties } from 'react';
-import { TIMING_SCALES, EASING_CURVES, stagger } from '@fade-animation/core';
+import { TIMING_SCALES, EASING_CURVES, stagger } from '@kinetic-motion/core';
 
 export interface TypingDotsProps {
   /** 圆点数量，默认 3 */

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import ContinueWatching from './ContinueWatching.vue';
-import { setMotionLevel } from '@fade-animation/core';
+import { setMotionLevel } from '@kinetic-motion/core';
 
 describe('ContinueWatching (Vue)', () => {
   beforeEach(() => setMotionLevel('none'));

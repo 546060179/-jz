@@ -4,7 +4,7 @@ import { nextTick } from 'vue';
 import Fade from './Fade.vue';
 import FadeIn from './FadeIn.vue';
 import FadeOut from './FadeOut.vue';
-import { setMotionLevel } from '@fade-animation/core';
+import { setMotionLevel } from '@kinetic-motion/core';
 
 function mockMatchMedia(reducedMotion: boolean) {
   const mql = {

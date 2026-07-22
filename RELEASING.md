@@ -32,7 +32,7 @@ cd packages/ios && xcodebuild -scheme FadeAnimation -sdk iphonesimulator \
 不想本地 `npm login`，可让 GitHub Actions 代发到 npmjs.org：
 
 一次性配置：
-1. 有一个对 `@fade-animation` scope 有发布权限的 npm 账号（scope 未创建就先在 npmjs.com 建同名 org/user scope）。
+1. 有一个对 `@kinetic-motion` scope 有发布权限的 npm 账号（scope 未创建就先在 npmjs.com 建同名 org/user scope）。
 2. npmjs.com → Access Tokens → 生成 **Automation** 令牌。
 3. GitHub 仓库 → Settings → Secrets and variables → Actions → 新增 secret `NPM_TOKEN`。
 
@@ -45,16 +45,16 @@ git tag v0.3.0 && git push origin v0.3.0   # 推 tag 触发工作流，自动 bu
 
 下面是等价的**本地手动**发布步骤（二选一）：
 
-## 2. Web —— npm 发布（@fade-animation/*）
+## 2. Web —— npm 发布（@kinetic-motion/*）
 
-包为 pnpm workspace，`@fade-animation/react|vue` 依赖 `@fade-animation/core: workspace:*`。
+包为 pnpm workspace，`@kinetic-motion/react|vue` 依赖 `@kinetic-motion/core: workspace:*`。
 发布时 pnpm 会自动把 `workspace:*` 替换为已发布的真实版本，因此**必须先发 core**。
 
 ```bash
 # 构建
 pnpm -r --filter "./packages/core" --filter "./packages/react" --filter "./packages/vue" build
 
-# 登录（需 npm 账号 + 对 @fade-animation scope 的发布权限）
+# 登录（需 npm 账号 + 对 @kinetic-motion scope 的发布权限）
 npm whoami || npm login
 
 # 按依赖顺序发布（--access public 因为是 scoped 包）

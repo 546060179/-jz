@@ -6,7 +6,7 @@ import {
   type MotionEffect,
   type EffectPresetName,
   EFFECT_PRESETS,
-} from '@fade-animation/core';
+} from '@kinetic-motion/core';
 
 const DEFAULT_EFFECT: MotionEffect[] = [{ type: 'fade' }];
 

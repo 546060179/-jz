@@ -6,7 +6,7 @@ import React, {
   forwardRef,
   type CSSProperties,
 } from 'react';
-import { resolveMotionLevel, BUBBLE_EXPAND_DEFAULTS } from '@fade-animation/core';
+import { resolveMotionLevel, BUBBLE_EXPAND_DEFAULTS } from '@kinetic-motion/core';
 
 export type BubbleArrowDirection = 'left' | 'right';
 
