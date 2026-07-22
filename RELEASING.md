@@ -27,6 +27,24 @@ cd packages/ios && xcodebuild -scheme FadeAnimation -sdk iphonesimulator \
 | Android | `packages/android/build.gradle.kts` | `version = "…"` |
 | iOS | Git tag（SwiftPM 用 tag 作版本，`Package.swift` 无版本字段） | `vX.Y.Z` |
 
+## 1.5 推荐：用 GitHub Actions 自动发 npm（`.github/workflows/release.yml`）
+
+不想本地 `npm login`，可让 GitHub Actions 代发到 npmjs.org：
+
+一次性配置：
+1. 有一个对 `@fade-animation` scope 有发布权限的 npm 账号（scope 未创建就先在 npmjs.com 建同名 org/user scope）。
+2. npmjs.com → Access Tokens → 生成 **Automation** 令牌。
+3. GitHub 仓库 → Settings → Secrets and variables → Actions → 新增 secret `NPM_TOKEN`。
+
+发布：
+```bash
+git tag v0.3.0 && git push origin v0.3.0   # 推 tag 触发工作流，自动 build+test+publish(core→react→vue)
+```
+- 想先预演不真正发：GitHub Actions 页手动运行 “Release (npm)”，`dry_run` 保持 `true`。
+- 未配置 `NPM_TOKEN` / 未推 tag 前，工作流不会发布任何东西。
+
+下面是等价的**本地手动**发布步骤（二选一）：
+
 ## 2. Web —— npm 发布（@fade-animation/*）
 
 包为 pnpm workspace，`@fade-animation/react|vue` 依赖 `@fade-animation/core: workspace:*`。

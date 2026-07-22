@@ -1,0 +1,78 @@
+name: Release (npm)
+
+# 打 tag 触发发布：推送形如 v0.3.0 的 tag 时，自动构建并把三个 Web 包
+# 按依赖顺序(core → react → vue)发布到 npmjs.org。
+#
+# 前置(一次性)：
+#   1. 有一个对 @fade-animation scope 有发布权限的 npm 账号
+#      （若 scope 未创建，先在 npmjs.com 新建同名 org/user scope）
+#   2. 生成 npm 访问令牌(Automation token)：npmjs.com → Access Tokens
+#   3. 仓库 Settings → Secrets and variables → Actions → 新增 secret：
+#         名称 NPM_TOKEN，值为上面的令牌
+#   4. 推送 tag：git tag v0.3.0 && git push origin v0.3.0
+#
+# 在未配置 NPM_TOKEN、未推送 tag 之前，本工作流不会运行、不会发布任何内容。
+# 也可在 Actions 页手动触发(workflow_dispatch)先跑构建/测试而不发布(见 dry_run)。
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: '只预演不真正发布(true/false)'
+        required: false
+        default: 'true'
+
+jobs:
+  publish:
+    name: Build & publish to npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build (core + react + vue)
+        run: >-
+          pnpm --filter "@fade-animation/core"
+               --filter "@fade-animation/react"
+               --filter "@fade-animation/vue" build
+
+      - name: Test (发布前守护)
+        run: pnpm test
+
+      - name: Publish core → react → vue
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # 手动触发默认 dry-run；tag 触发则真正发布
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run || 'false' }}
+        run: |
+          set -eo pipefail
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::error::缺少 NPM_TOKEN secret，无法发布。请在仓库 Secrets 配置 NPM_TOKEN。"
+            exit 1
+          fi
+          FLAGS="--no-git-checks --access public"
+          if [ "$DRY_RUN" = "true" ]; then
+            FLAGS="$FLAGS --dry-run"
+            echo "== DRY RUN：只预演，不真正上传 =="
+          fi
+          for pkg in core react vue; do
+            echo "== publish @fade-animation/$pkg =="
+            ( cd "packages/$pkg" && pnpm publish $FLAGS )
+          done
