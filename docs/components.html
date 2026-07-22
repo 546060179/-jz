@@ -801,11 +801,27 @@ function renderIntro() {
   '<li>🎬 <b style="color:var(--t1)">18 种预设</b> — scale-fade-in / slide-up-in / blur-fade-in 等开箱即用</li>'+
   '</ul></div>'+
   '<div class="sec"><h2>安装</h2>'+
-  '<div class="ct"><div class="ct-body"># Web — React / Vue\nnpm install @kinetic-motion/react   # 或 @kinetic-motion/vue\n# 依赖 @kinetic-motion/core 会自动带入\n\n# iOS — Swift Package Manager（最低 iOS 13，全 API public）\n// Package.swift\n.package(path: "packages/ios")\n// 或独立仓库：.package(url: "https://github.com/&lt;org&gt;/fade-animation-ios", from: "0.1.0")\n\n# Android — Gradle / Maven（坐标 com.fadeanimation:fade-animation-android:0.1.0）\n// 先发布到本地：./gradlew publishToMavenLocal\nimplementation("com.fadeanimation:fade-animation-android:0.1.0")</div></div></div>'+
+  '<div class="ct"><div class="ct-body" style="white-space:pre-wrap;font-family:var(--mono);font-size:13px;line-height:1.7">'+
+  '# ─── Web（React / Vue）── npm 已发布 ───\n'+
+  'npm install @kinetic-motion/react   # 或 @kinetic-motion/vue\n'+
+  '# 依赖 @kinetic-motion/core 会自动带入\n\n'+
+  '# ─── iOS（Swift Package Manager） ───\n'+
+  '# Xcode: File → Add Package Dependencies…\n'+
+  '# URL: https://github.com/546060179/kinetic-motion-ios\n'+
+  '# Dependency Rule: Up to Next Major 0.3.0\n'+
+  '# 或 Package.swift:\n'+
+  '.package(url: "https://github.com/546060179/kinetic-motion-ios", from: "0.3.0")\n'+
+  '// 产品名: FadeAnimation（import FadeAnimation）\n\n'+
+  '# ─── Android（JitPack） ───\n'+
+  '// settings.gradle.kts repositories 加:\n'+
+  'maven { url = uri("https://jitpack.io") }\n\n'+
+  '// 模块 build.gradle.kts:\n'+
+  'implementation("com.github.546060179.kinetic-motion-android:fade-animation-android:0.3.0")'+
+  '</div></div></div>'+
   '<div class="sec"><h2>快速开始</h2>'+
   '<div class="ct"><div class="ct-tabs"><div class="ct-tab on" onclick="switchTab(this,\'intro-code\',0)">React</div><div class="ct-tab" onclick="switchTab(this,\'intro-code\',1)">Vue</div><div class="ct-tab" onclick="switchTab(this,\'intro-code\',2)">iOS</div><div class="ct-tab" onclick="switchTab(this,\'intro-code\',3)">Android</div></div>'+
   '<div class="ct-body" id="intro-code">import { Fade, Motion } from \'@kinetic-motion/react\';\n\n// 淡入\n<Fade in={show} intent="enter">\n  <Content />\n</Fade>\n\n// 缩放淡入\n<Motion in={show} effect="scale-fade-in" intent="enter">\n  <Modal />\n</Motion></div></div></div>'+
-  '<div class="sec"><h2>相关链接</h2><p><a href="https://github.com/546060179/jiuzhou" target="_blank">GitHub 源码仓库</a></p></div>';
+  '<div class="sec"><h2>相关链接</h2><p><a href="https://github.com/546060179/-jz" target="_blank">GitHub 主仓库（Web + monorepo）</a></p><p><a href="https://github.com/546060179/kinetic-motion-ios" target="_blank">iOS 独立仓库（SwiftPM）</a></p><p><a href="https://github.com/546060179/kinetic-motion-android" target="_blank">Android 独立仓库（JitPack）</a></p><p><a href="https://www.npmjs.com/org/kinetic-motion" target="_blank">npm @kinetic-motion</a></p></div>';
 }
 
 var INTRO_CODES = [

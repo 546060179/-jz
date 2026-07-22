@@ -36,16 +36,21 @@ npm install @kinetic-motion/react   # 或 @kinetic-motion/vue
 
 ### iOS（Swift Package Manager）
 
-`packages/ios` 是一个独立的 Swift Package（`FadeAnimation`，最低 iOS 13），全部 API 已 `public`，可直接依赖。
+`packages/ios` 是一个独立的 Swift Package（`FadeAnimation`，最低 iOS 13），全部 API 已 `public`。
 
-- Xcode：File → Add Package Dependencies… 填入仓库地址，选择 `FadeAnimation` 库。
+独立仓库已发布：[`kinetic-motion-ios`](https://github.com/546060179/kinetic-motion-ios)，支持一行依赖：
+
+- Xcode：File → Add Package Dependencies… 填入 `https://github.com/546060179/kinetic-motion-ios`，选择 `FadeAnimation` 库。
 - 或在 `Package.swift` 中：
 
 ```swift
 dependencies: [
-    // 本地路径依赖（monorepo 内）
-    .package(path: "packages/ios")
-    // 或独立仓库：.package(url: "https://github.com/<org>/fade-animation-ios", from: "0.3.0")
+    .package(url: "https://github.com/546060179/kinetic-motion-ios", from: "0.3.0")
+],
+targets: [
+    .target(name: "YourApp", dependencies: [
+        .product(name: "FadeAnimation", package: "kinetic-motion-ios")
+    ])
 ]
 ```
 
@@ -56,24 +61,25 @@ view.fadeIn(options: FadeOptions(intent: .enter))
 MotionAnimator(targetView: card).start(entering: true, effects: EffectPresets.scaleFadeIn)
 ```
 
-### Android（Gradle / Maven）
+### Android（JitPack / Gradle）
 
-`packages/android` 通过 `maven-publish` 发布，坐标 `com.fadeanimation:fade-animation-android:0.3.0`。
+`packages/android` 通过 JitPack 分发，坐标 `com.github.546060179.kinetic-motion-android:fade-animation-android:0.3.0`。
 
-```bash
-# 发到本地 ~/.m2 便于验证
-cd packages/android && ./gradlew publishToMavenLocal
-```
+独立仓库：[`kinetic-motion-android`](https://github.com/546060179/kinetic-motion-android)
 
 ```kotlin
-// settings.gradle.kts 里确保有 mavenLocal()（或你的私有仓库）
+// settings.gradle.kts
 dependencyResolutionManagement {
-    repositories { mavenLocal(); google(); mavenCentral() }
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
 }
 
 // app/build.gradle.kts
 dependencies {
-    implementation("com.fadeanimation:fade-animation-android:0.3.0")
+    implementation("com.github.546060179.kinetic-motion-android:fade-animation-android:0.3.0")
 }
 ```
 
