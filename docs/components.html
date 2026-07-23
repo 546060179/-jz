@@ -842,6 +842,18 @@ function switchTab(tab, bodyId, idx) {
 
 function renderCautions() {
   return '<h1 class="pg-t">更新内容</h1><p class="pg-d">KINETIC UI 动效组件库版本更新记录。</p>'+
+  '<div class="dt-section"><h2>V1.3.0 <span style="font-size:12px;color:var(--t3);font-weight:400;margin-left:8px">2026-07-22</span></h2>'+
+  '<div class="tip" style="margin-bottom:16px"><b>📦 三端正式发布 + 一行依赖可用</b></div>'+
+  '<p style="font-size:14px;color:var(--t2);line-height:2;margin-bottom:16px">'+
+  '• <b style="color:var(--t1)">npm 发布</b>：Web 三包正式发布到 npm（<code>@kinetic-motion/core</code>、<code>@kinetic-motion/react</code>、<code>@kinetic-motion/vue</code> 均 0.3.0）<br>'+
+  '• <b style="color:var(--t1)">iOS SwiftPM 发布</b>：独立仓库 <code>kinetic-motion-ios</code> 已推送 GitHub（tag 0.3.0），Xcode 一行依赖即可用<br>'+
+  '• <b style="color:var(--t1)">Android JitPack 发布</b>：独立仓库 <code>kinetic-motion-android</code> 已推送（tag 0.3.0），JitPack 按需构建<br>'+
+  '• <b style="color:var(--t1)">Scope 迁移</b>：npm 包由 <code>@fade-animation/*</code> 全面迁移为 <code>@kinetic-motion/*</code>（Android/iOS 包名不变）<br>'+
+  '• <b style="color:var(--t1)">业务组件</b>：<code>BubbleExpand</code>、<code>ContinueWatching</code>、<code>ToastView</code>、<code>NotificationBanner</code>、<code>SpotlightOverlayView</code> 五端对齐<br>'+
+  '• <b style="color:var(--t1)">blur-fade-in 统一</b>：五端 blur-fade-in 预设统一为 fade(0.6→1) + blur(14→0)，iOS 实现改用截图+CIGaussianBlur<br>'+
+  '• <b style="color:var(--t1)">契约扩展</b>：<code>effectPresets.blurFadeIn</code> + <code>components</code>（BubbleExpand/ContinueWatching 时长参数）纳入跨端契约<br>'+
+  '• <b style="color:var(--t1)">文档</b>：所有代码片段已审核与真实 API 对齐，安装指南三端可直接复制使用'+
+  '</p></div>'+
   '<div class="dt-section"><h2>V1.2.0 <span style="font-size:12px;color:var(--t3);font-weight:400;margin-left:8px">2026-07-20</span></h2>'+
   '<div class="tip" style="margin-bottom:16px"><b>🎯 双端对齐 + 性能优化</b></div>'+
   '<p style="font-size:14px;color:var(--t2);line-height:2;margin-bottom:16px">'+
