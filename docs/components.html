@@ -712,7 +712,7 @@ function buildSidebar() {
   var cautOn = (currentPage === 'cautions') ? ' on' : '';
   h += '<div class="side-group" style="border-top:none">';
   h += '<div class="si si-top'+ovOn+'" onclick="showPage(\'overview\')">组件总览</div>';
-  h += '<div class="si'+cautOn+'" style="display:flex;justify-content:space-between;align-items:center;padding:12px 8px 12px 24px" onclick="showPage(\'cautions\')">更新内容<span style="font-family:Rubik;font-size:12px;font-weight:600;color:var(--ch);background:rgba(24,108,229,.1);padding:4px 8px;border-radius:8px">NEW</span></div>';
+  h += '<div class="si'+cautOn+'" style="display:flex;justify-content:space-between;align-items:center;padding:12px 8px 12px 24px" onclick="markCautionsRead();showPage(\'cautions\')">更新内容<span id="cautions-new-badge" style="font-family:Rubik;font-size:12px;font-weight:600;color:var(--ch);background:rgba(24,108,229,.1);padding:4px 8px;border-radius:8px;display:'+(localStorage.getItem('cautions_read')?'none':'inline')+'">NEW</span></div>';
   h += '</div>';
   // Detail page: extract current caseId
   var activeCaseId = '';
@@ -951,7 +951,10 @@ function renderDetail(catId, caseId) {
   var nav = NAV.find(function(n){return n.id===catId;});
   var h = '';
 
-  // Title
+  // Title with back button
+  h += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">';
+  h += '<button onclick="showPage(\'overview\')" style="background:none;border:1px solid var(--bd);border-radius:8px;color:var(--t2);padding:6px 12px;cursor:pointer;font-size:13px;font-family:var(--ff);transition:all .2s" onmouseover="this.style.borderColor=\'var(--c)\';this.style.color=\'var(--t1)\'" onmouseout="this.style.borderColor=\'var(--bd)\';this.style.color=\'var(--t2)\'">← 返回</button>';
+  h += '</div>';
   h += '<h1 class="dt-title">'+cs.name+'</h1>';
   h += '<p class="dt-desc">'+cs.desc+'</p>';
 
@@ -1552,6 +1555,12 @@ function fallbackCopy(text) {
   ta.select();
   try { document.execCommand('copy'); } catch(e) {}
   document.body.removeChild(ta);
+}
+
+function markCautionsRead() {
+  try { localStorage.setItem('cautions_read', '1'); } catch(e){}
+  var badge = document.getElementById('cautions-new-badge');
+  if(badge) badge.style.display = 'none';
 }
 
 function replayDetailDemo(caseId) {
